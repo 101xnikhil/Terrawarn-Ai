@@ -18,19 +18,37 @@ const SensorNodePage: React.FC = () => {
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Top Banner */}
-      <div className="card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
           <div className="flex items-center gap-2.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-pulse" />
-            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">{node.name} ({node.id})</h1>
-            <span className="badge badge-elite text-[10px]">Online</span>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+              {node.name} ({node.id})
+            </h2>
+            <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold">
+              LIVE STREAM
+            </span>
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
             {node.location.description} · Elevation: {node.location.altitude_m}m ASL · Sector 7 (Shimla Northern Face)
           </p>
         </div>
-        <PrototypeLabel text="Live Telemetry Stream — ESP32 Sensor Node (LG-N01)" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <Radio className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="text-slate-700 dark:text-slate-200 font-mono">LoRa: {formatRSSI(currentReading.rssi_dbm)}</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <Battery className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-slate-700 dark:text-slate-200 font-mono">{formatBattery(currentReading.battery_mv)}</span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <Activity className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span className="text-slate-700 dark:text-slate-200 font-mono">Interval: {node.reading_interval_s}s</span>
+          </div>
+        </div>
       </div>
 
       {/* Grid Row 1: Hardware Specifications & Link Diagnostics */}

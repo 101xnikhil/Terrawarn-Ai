@@ -12,5 +12,5 @@ def test_root_endpoint(client):
     response = client.get("/")
     assert response.status_code == 200
     data = response.json()
-    assert data["system"] == "LANDGUARD AI Backend"
+    assert data["system"] == "Terrawarn-Ai Backend"
     assert data["docs"] == "/docs"

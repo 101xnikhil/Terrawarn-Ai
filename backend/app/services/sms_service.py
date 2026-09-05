@@ -245,9 +245,9 @@ class SMSService:
         fos_str = f" FoS={alert.risk_result.factor_of_safety:.2f}" if getattr(alert, "risk_result", None) and alert.risk_result.factor_of_safety else ""
         
         # Example format (approx 125-140 chars):
-        # [LANDGUARD ALERT] CRITICAL hazard on LG-N01! FoS=0.88 Risk=88%. Immediate evacuation advised. Helpline: 1070/112
+        # [TERRAWARN ALERT] CRITICAL hazard on LG-N01! FoS=0.88 Risk=88%. Immediate evacuation advised. Helpline: 1070/112
         message = (
-            f"[LANDGUARD ALERT] {alert_sev} hazard on {alert.node_id}!{fos_str} "
+            f"[TERRAWARN ALERT] {alert_sev} hazard on {alert.node_id}!{fos_str} "
             f"Risk={risk_pct}%. Immediate caution. Emergency: 1070/112"
         )
         if len(message) > 160:

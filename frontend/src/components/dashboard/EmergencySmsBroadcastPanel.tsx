@@ -107,7 +107,7 @@ const INITIAL_BLE_DEVICES: NearbyBleDevice[] = [
 
 // Production Arduino sketch for Unpaired BLE Non-Connectable Advertising
 const ESP32_ZERO_PAIRING_BLE_CODE = `// ==============================================================================
-// ESP32 LANDGUARD AI — Zero-Pairing Passive BLE Emergency Alert Broadcaster
+// ESP32 Terrawarn-Ai — Zero-Pairing Passive BLE Emergency Alert Broadcaster
 // (Transmits raw alert beacons to ANY phone with Bluetooth ON — NO PAIRING REQUIRED)
 // ==============================================================================
 #include <BLEDevice.h>
@@ -119,7 +119,7 @@ BLEAdvertising *pAdvertising;
 
 void setupZeroPairingBLE() {
   // Initialize BLE Stack with Emergency Broadcast Identity
-  BLEDevice::init("LANDGUARD_EMERGENCY_ALARM");
+  BLEDevice::init("TERRAWARN_EMERGENCY_ALARM");
 
   pAdvertising = BLEDevice::getAdvertising();
 
@@ -180,7 +180,7 @@ export default function EmergencySmsBroadcastPanel() {
       recipientCount: INITIAL_BLE_DEVICES.length + 1420,
       sector: 'Sector 7 (Shimla — Solan NH-5 Corridor, HP)',
       severity: 'CRITICAL',
-      message: '🚨 [EMERGENCY ALERT: LANDGUARD AI / NDMA]\nLOCATION: Sector 7 (Shimla-Solan NH-5 Corridor)\nSTATUS: CRITICAL LANDSLIDE RISK (Hazard 88%)\nTELEMETRY: Moisture 86.4%, Bishop FoS 0.85 (Failure Imminent)\nACTION: Evacuate downhill structures immediately. Move to Shelter.\nHELPLINE: 1070 / 112',
+      message: '🚨 [EMERGENCY ALERT: TERRAWARN-AI / NDMA]\nLOCATION: Sector 7 (Shimla-Solan NH-5 Corridor)\nSTATUS: CRITICAL LANDSLIDE RISK (Hazard 88%)\nTELEMETRY: Moisture 86.4%, Bishop FoS 0.85 (Failure Imminent)\nACTION: Evacuate downhill structures immediately. Move to Shelter.\nHELPLINE: 1070 / 112',
       deliveryStatus: 'DELIVERED',
       broadcastMode: 'BLE_NON_CONNECTABLE_ADV',
     },
@@ -275,7 +275,7 @@ export default function EmergencySmsBroadcastPanel() {
     const fos = state?.currentRisk.fos_estimate.toFixed(2) || '0.86';
     const hazardPct = state?.currentRisk ? Math.round(state.currentRisk.risk_score * 100) : 85;
 
-    const formattedMessage = `🚨 [EMERGENCY ALERT: LANDGUARD AI / DISASTER OPS]\nLOCATION: ${targetSector}\nSTATUS: ${severity} LANDSLIDE HAZARD (${hazardPct}% Risk Score)\nTELEMETRY: Moisture ${moisture}% VWC · Bishop FoS ${fos} (${Number(fos) < 1.0 ? 'Failure Imminent' : 'High Creep'})\nACTION: ${customActionText}\nEMERGENCY HELPLINE: 1070 / 112`;
+    const formattedMessage = `🚨 [EMERGENCY ALERT: TERRAWARN-AI / DISASTER OPS]\nLOCATION: ${targetSector}\nSTATUS: ${severity} LANDSLIDE HAZARD (${hazardPct}% Risk Score)\nTELEMETRY: Moisture ${moisture}% VWC · Bishop FoS ${fos} (${Number(fos) < 1.0 ? 'Failure Imminent' : 'High Creep'})\nACTION: ${customActionText}\nEMERGENCY HELPLINE: 1070 / 112`;
 
     const newSms: DispatchedSms = {
       id: `sms-${Date.now()}`,
@@ -428,63 +428,63 @@ export default function EmergencySmsBroadcastPanel() {
 
         {/* Real-time Broadcast Stats Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 font-mono text-xs">
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <span className="text-slate-400 text-[9px] uppercase font-bold block">Passive Detection Mode</span>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-slate-300 text-[9.5px] uppercase font-bold block">Passive Detection Mode</span>
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="w-2 h-2 rounded-full bg-blue-400 animate-ping" />
               <strong className="text-sm text-blue-300">Zero-Pairing Broadcast</strong>
             </div>
-            <span className="text-[9px] text-slate-400 font-sans">Listens to 2.4GHz Advertising frames</span>
+            <span className="text-[10px] text-slate-300 font-sans">Listens to 2.4GHz Advertising frames</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <span className="text-slate-400 text-[9px] uppercase font-bold block">Nearby Devices in Range</span>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-slate-300 text-[9.5px] uppercase font-bold block">Nearby Devices in Range</span>
             <strong className="text-sm text-orange-400 mt-0.5 block">{bleDevices.length} Phones / Wearables</strong>
-            <span className="text-[9px] text-slate-400 font-sans">Within 50m slope danger zone</span>
+            <span className="text-[10px] text-slate-300 font-sans">Within 50m slope danger zone</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <span className="text-slate-400 text-[9px] uppercase font-bold block">Delivery Method</span>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-slate-300 text-[9.5px] uppercase font-bold block">Delivery Method</span>
             <strong className="text-sm text-emerald-400 mt-0.5 block">BLE Beacon + Cell Push</strong>
-            <span className="text-[9px] text-slate-400 font-sans">Instant lockscreen display</span>
+            <span className="text-[10px] text-slate-300 font-sans">Instant lockscreen display</span>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-black/40 border border-white/10">
-            <span className="text-slate-400 text-[9px] uppercase font-bold block">Automated Dispatch</span>
+          <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+            <span className="text-slate-300 text-[9.5px] uppercase font-bold block">Automated Dispatch</span>
             <div className="flex items-center justify-between mt-0.5">
               <strong className="text-sm text-purple-400">ACTIVE (LIVE)</strong>
               <button
                 onClick={() => setIsAutoBroadcastEnabled(!isAutoBroadcastEnabled)}
-                className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 hover:text-white"
+                className="text-[10px] px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200"
               >
                 {isAutoBroadcastEnabled ? 'Pause' : 'Resume'}
               </button>
             </div>
-            <span className="text-[9px] text-slate-400 font-sans">Triggers when Bishop FoS &lt; 1.0</span>
+            <span className="text-[10px] text-slate-300 font-sans">Triggers when Bishop FoS &lt; 1.0</span>
           </div>
         </div>
       </div>
 
       {/* ── Section: Passive BLE Device Discovery Stream (No Pairing Needed) ── */}
-      <div className="card p-5 border border-white/10 space-y-4 rounded-3xl shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/10 pb-3">
+      <div className="card p-5 border border-slate-200 dark:border-white/10 space-y-4 rounded-3xl shadow-sm dark:shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-white/10 pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-blue-950/80 border border-blue-500/40 text-blue-400">
+            <div className="p-2 rounded-xl bg-blue-50 dark:bg-blue-950/80 border border-blue-200 dark:border-blue-500/40 text-blue-600 dark:text-blue-400">
               <Radio className="w-4 h-4 animate-pulse" />
             </div>
             <div>
-              <h3 className="font-serif italic text-xl text-white font-bold">
+              <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">
                 Nearby Phones with Bluetooth ON (Captured Passively via 2.4GHz Advertising)
               </h3>
-              <p className="text-[11px] font-mono text-slate-400">
+              <p className="text-xs text-slate-600 dark:text-slate-400 font-sans mt-0.5 font-medium">
                 These devices are actively receiving emergency alert packets without any pairing dialog
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 font-mono text-xs">
-            <span className="px-2.5 py-1 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-700/50 flex items-center gap-1.5 text-[10px]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700/50 flex items-center gap-1.5 text-[10px] font-bold">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
               PASSIVE BEACON STREAM ACTIVE
             </span>
           </div>
@@ -499,46 +499,46 @@ export default function EmergencySmsBroadcastPanel() {
                 setCustomPhone(device.phoneMock);
                 triggerEmergencyBroadcast('CRITICAL', `Targeted BLE Dispatch to ${device.name}`);
               }}
-              className="p-3.5 rounded-2xl bg-black/40 border border-white/10 hover:border-blue-500/50 transition-all cursor-pointer space-y-2.5 group shadow-md"
+              className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-white/10 hover:border-blue-500 dark:hover:border-blue-500/50 hover:shadow-md transition-all cursor-pointer space-y-2.5 group"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-slate-900 border border-white/10 text-cyan-400 group-hover:text-blue-400 transition-colors">
+                  <div className="p-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 text-blue-600 dark:text-cyan-400 group-hover:text-blue-700 transition-colors shadow-xs">
                     <Smartphone className="w-4 h-4" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-slate-100 text-xs truncate max-w-[170px]">{device.name}</h4>
-                    <span className="text-[10px] text-slate-400">MAC: {device.mac}</span>
+                    <h4 className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate max-w-[170px]">{device.name}</h4>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">MAC: {device.mac}</span>
                   </div>
                 </div>
 
                 <span className={clsx(
                   'px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase shrink-0',
-                  device.status === 'IN DANGER ZONE' ? 'bg-red-950 text-red-300 border-red-800 animate-pulse' :
-                  device.status === 'PROXIMITY WARNING' ? 'bg-amber-950 text-amber-300 border-amber-800' :
-                  'bg-emerald-950 text-emerald-300 border-emerald-800'
+                  device.status === 'IN DANGER ZONE' ? 'bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-300 border-red-300 dark:border-red-800 animate-pulse' :
+                  device.status === 'PROXIMITY WARNING' ? 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800' :
+                  'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
                 )}>
                   {device.status}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-[10px] text-slate-400 bg-slate-950/60 p-2 rounded-xl border border-white/5">
+              <div className="grid grid-cols-2 gap-2 text-[10.5px] bg-white dark:bg-slate-950/60 p-2.5 rounded-xl border border-slate-200 dark:border-white/5">
                 <div>
-                  <span className="text-slate-400 block text-[8px] uppercase">SIGNAL (RSSI)</span>
-                  <strong className="text-slate-200">{device.rssi} dBm</strong>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[8.5px] uppercase font-bold">SIGNAL (RSSI)</span>
+                  <strong className="text-slate-800 dark:text-slate-200">{device.rssi} dBm</strong>
                 </div>
                 <div>
-                  <span className="text-slate-400 block text-[8px] uppercase">PROXIMITY DISTANCE</span>
-                  <strong className="text-orange-400">~{device.distanceMeters} Meters</strong>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[8.5px] uppercase font-bold">PROXIMITY DISTANCE</span>
+                  <strong className="text-orange-600 dark:text-orange-400">~{device.distanceMeters} Meters</strong>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between text-[10px] pt-1 border-t border-white/5">
-                <span className="text-emerald-400 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+              <div className="flex items-center justify-between text-[10.5px] pt-1 border-t border-slate-200 dark:border-white/5">
+                <span className="text-emerald-700 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
                   BEACON RECEIVED (UNPAIRED)
                 </span>
-                <span className="text-slate-400 group-hover:text-cyan-300 flex items-center gap-0.5 transition-colors">
+                <span className="text-blue-600 dark:text-slate-400 group-hover:text-blue-700 dark:group-hover:text-cyan-300 font-bold flex items-center gap-0.5 transition-colors">
                   Push SMS &rarr;
                 </span>
               </div>
@@ -552,28 +552,28 @@ export default function EmergencySmsBroadcastPanel() {
         {/* Left 7 Cols: Dispatch Controls & Broadcast Feed */}
         <div className="lg:col-span-7 space-y-5">
           {/* Dispatch Controller Card */}
-          <div className="card p-5 border border-white/10 space-y-4 rounded-3xl shadow-xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="card p-5 border border-slate-200 dark:border-white/10 space-y-4 rounded-3xl shadow-sm dark:shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <Send className="w-4 h-4 text-orange-400" />
-                <h3 className="font-serif italic text-lg text-white font-bold">
+                <Send className="w-4 h-4 text-orange-500" />
+                <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
                   Emergency Broadcast Dispatcher
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 LIVE GATEWAY READY
               </span>
             </div>
 
-            <div className="space-y-3 font-mono text-xs">
+            <div className="space-y-3 font-sans text-xs">
               <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
                   Target Landslide Vulnerability Sector
                 </label>
                 <select
                   value={targetSector}
                   onChange={(e) => setTargetSector(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 font-sans text-xs shadow-xs"
                 >
                   <option value="Sector 7 (Shimla — Solan NH-5 Corridor, HP)">Sector 7 (Shimla — Solan NH-5 Corridor, HP)</option>
                   <option value="Wayanad Scarp Zone (Chooralmala & Meppadi, Kerala)">Wayanad Scarp Zone (Chooralmala & Meppadi, Kerala)</option>
@@ -584,20 +584,20 @@ export default function EmergencySmsBroadcastPanel() {
               </div>
 
               <div>
-                <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
                   Evacuation Instructions / Action Advisory
                 </label>
                 <textarea
                   rows={2}
                   value={customActionText}
                   onChange={(e) => setCustomActionText(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-sans text-xs leading-relaxed"
+                  className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2.5 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 font-sans text-xs leading-relaxed shadow-xs"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
-                  <label className="block text-[10px] text-slate-400 uppercase font-bold mb-1">
+                  <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
                     Audience Target Mobile Number
                   </label>
                   <input
@@ -605,7 +605,7 @@ export default function EmergencySmsBroadcastPanel() {
                     value={customPhone}
                     onChange={(e) => setCustomPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl p-2 text-slate-100 focus:outline-none focus:ring-1 focus:ring-orange-500 font-mono text-xs"
+                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono text-xs shadow-xs"
                   />
                 </div>
 
@@ -613,7 +613,7 @@ export default function EmergencySmsBroadcastPanel() {
                   <button
                     onClick={() => triggerEmergencyBroadcast('CRITICAL')}
                     disabled={isDispatching}
-                    className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:opacity-90 disabled:opacity-50 text-white font-mono font-bold text-xs uppercase shadow-md shadow-red-950 flex items-center justify-center gap-1.5 transition-all"
+                    className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:opacity-90 disabled:opacity-50 text-white font-mono font-bold text-xs uppercase shadow-md shadow-red-950/20 flex items-center justify-center gap-1.5 transition-all"
                   >
                     <AlertTriangle className="w-4 h-4" />
                     <span>{isDispatching ? 'Transmitting...' : 'Send Red Alert SMS'}</span>
@@ -622,7 +622,7 @@ export default function EmergencySmsBroadcastPanel() {
                   <button
                     onClick={() => triggerEmergencyBroadcast('WARNING')}
                     disabled={isDispatching}
-                    className="py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-slate-950 font-mono font-bold text-xs uppercase shadow-sm transition-all"
+                    className="py-2 px-3 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-mono font-bold text-xs uppercase shadow-sm transition-all"
                     title="Send Moderate Advisory Warning"
                   >
                     Advisory
@@ -635,8 +635,8 @@ export default function EmergencySmsBroadcastPanel() {
                   className={clsx(
                     'p-3.5 rounded-2xl border text-xs font-mono flex items-start justify-between gap-3 transition-all',
                     dispatchNotice.type === 'success'
-                      ? 'bg-emerald-950/80 border-emerald-500/60 text-emerald-200'
-                      : 'bg-red-950/80 border-red-500/60 text-red-200'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/80 border-emerald-300 dark:border-emerald-500/60 text-emerald-800 dark:text-emerald-200'
+                      : 'bg-red-50 dark:bg-red-950/80 border-red-300 dark:border-red-500/60 text-red-800 dark:text-red-200'
                   )}
                 >
                   <div className="flex items-start gap-2.5">
@@ -644,14 +644,14 @@ export default function EmergencySmsBroadcastPanel() {
                       {dispatchNotice.type === 'success' ? '✅' : '⚠️'}
                     </span>
                     <div className="space-y-1">
-                      <strong className="block font-bold text-white text-xs">
+                      <strong className="block font-bold text-slate-900 dark:text-white text-xs">
                         {dispatchNotice.type === 'success' ? 'Emergency SMS Transmitted' : 'SMS Gateway Response'}
                       </strong>
-                      <p className="text-[11px] leading-relaxed text-slate-300 font-sans">
+                      <p className="text-[11px] leading-relaxed text-slate-700 dark:text-slate-300 font-sans">
                         {dispatchNotice.text}
                       </p>
                       {dispatchNotice.text.includes('100 INR') && (
-                        <div className="mt-2 p-2 rounded-xl bg-amber-950/50 border border-amber-500/40 text-amber-200 text-[11px] font-sans">
+                        <div className="mt-2 p-2 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/40 text-amber-900 dark:text-amber-200 text-[11px] font-sans">
                           <strong>Fast2SMS Account Activation:</strong> Fast2SMS provides ₹50 free wallet credits for testing via their web dashboard, but requires a one-time recharge of ₹100 INR to unlock the <strong>Developer API</strong> route. Once recharged via <em>Add Credit</em> on your Fast2SMS dashboard, automated website SMS will deliver instantly to any Indian mobile number!
                         </div>
                       )}
@@ -659,7 +659,7 @@ export default function EmergencySmsBroadcastPanel() {
                   </div>
                   <button
                     onClick={() => setDispatchNotice(null)}
-                    className="text-slate-400 hover:text-white text-sm shrink-0 px-1 py-0.5"
+                    className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-sm shrink-0 px-1 py-0.5"
                     title="Dismiss"
                   >
                     &times;
@@ -670,20 +670,20 @@ export default function EmergencySmsBroadcastPanel() {
           </div>
 
           {/* Broadcast Dispatch Queue Feed */}
-          <div className="card p-5 border border-white/10 space-y-3 rounded-3xl shadow-xl">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+          <div className="card p-5 border border-slate-200 dark:border-white/10 space-y-3 rounded-3xl shadow-sm dark:shadow-xl">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-cyan-400" />
-                <h3 className="font-serif italic text-lg text-white font-bold">
+                <Clock className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
+                <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
                   Recent Transmission & Proximity Dispatch Log
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
                 {dispatchedHistory.length} TRANSMISSIONS
               </span>
             </div>
 
-            <div className="space-y-2.5 max-h-[280px] overflow-y-auto font-mono text-xs">
+            <div className="space-y-2.5 max-h-[280px] overflow-y-auto font-mono text-xs pr-1">
               {dispatchedHistory.map((sms) => (
                 <div
                   key={sms.id}
@@ -691,40 +691,40 @@ export default function EmergencySmsBroadcastPanel() {
                   className={clsx(
                     'p-3 rounded-xl border transition-all cursor-pointer space-y-1.5',
                     latestSmsOnPhone.id === sms.id
-                      ? 'bg-orange-950/40 border-orange-500/60 ring-1 ring-orange-500'
-                      : 'bg-black/30 border-white/5 hover:bg-white/[0.03]'
+                      ? 'bg-orange-50 dark:bg-orange-950/40 border-orange-400 dark:border-orange-500/60 ring-1 ring-orange-500'
+                      : 'bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/5 hover:bg-slate-100 dark:hover:bg-white/[0.05]'
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className={clsx(
                         'w-2 h-2 rounded-full',
-                        sms.severity === 'CRITICAL' ? 'bg-red-400 animate-pulse' : 'bg-amber-400'
+                        sms.severity === 'CRITICAL' ? 'bg-red-500 animate-pulse' : 'bg-amber-500'
                       )} />
-                      <strong className="text-slate-200 text-xs">{sms.sector.split('(')[0]}</strong>
+                      <strong className="text-slate-900 dark:text-slate-200 text-xs">{sms.sector.split('(')[0]}</strong>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] text-slate-400">{sms.timestamp}</span>
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{sms.timestamp}</span>
                       <span className={clsx(
-                        'px-2 py-0.2 rounded-full text-[9px] font-bold border',
+                        'px-2 py-0.5 rounded-full text-[9px] font-bold border uppercase',
                         sms.deliveryStatus === 'DELIVERED'
-                          ? 'bg-emerald-950 text-emerald-300 border-emerald-800'
+                          ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800'
                           : sms.deliveryStatus === 'FAILED'
-                          ? 'bg-red-950 text-red-300 border-red-800'
-                          : 'bg-orange-950 text-orange-300 border-orange-800 animate-pulse'
+                          ? 'bg-red-100 dark:bg-red-950 text-red-800 dark:text-red-300 border-red-300 dark:border-red-800'
+                          : 'bg-orange-100 dark:bg-orange-950 text-orange-800 dark:text-orange-300 border-orange-300 dark:border-orange-800 animate-pulse'
                       )}>
                         {sms.deliveryStatus}
                       </span>
                     </div>
                   </div>
 
-                  <p className="text-[11px] text-slate-300 font-sans line-clamp-2 leading-relaxed">
+                  <p className="text-[11px] text-slate-700 dark:text-slate-300 font-sans line-clamp-2 leading-relaxed">
                     {sms.message}
                   </p>
 
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1 border-t border-white/5">
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200 dark:border-white/5">
                     <span>Target: {sms.recipientGroup}</span>
-                    <span className="text-orange-400 font-bold">{sms.recipientCount} Devices Reached</span>
+                    <span className="text-orange-600 dark:text-orange-400 font-bold">{sms.recipientCount} Devices Reached</span>
                   </div>
                 </div>
               ))}
@@ -735,10 +735,10 @@ export default function EmergencySmsBroadcastPanel() {
         {/* Right 5 Cols: Citizen Mobile Phone Simulator */}
         <div className="lg:col-span-5 flex flex-col items-center">
           <div className="text-center mb-3">
-            <span className="font-serif italic text-base text-white font-bold">
+            <span className="text-base sm:text-lg font-bold text-slate-900 dark:text-white block font-sans">
               Citizen Mobile Phone Alert Simulator
             </span>
-            <p className="text-[11px] font-mono text-slate-400">
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-sans mt-0.5 font-medium">
               Passively displays alert directly on nearby phone lockscreen
             </p>
           </div>
@@ -826,29 +826,29 @@ export default function EmergencySmsBroadcastPanel() {
 
       {/* ── ESP32 BLE Firmware Code Modal ────────────────────── */}
       {showFirmwareModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-          <div className="bg-[#0e1220] border border-white/10 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-md animate-fade-in font-sans">
+          <div className="bg-white dark:bg-[#0e1220] border border-slate-200 dark:border-white/10 rounded-3xl max-w-2xl w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-3">
               <div className="flex items-center gap-2">
-                <Code2 className="w-5 h-5 text-cyan-400" />
-                <h3 className="font-serif italic text-xl text-white">
+                <Code2 className="w-5 h-5 text-blue-600 dark:text-cyan-400" />
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white">
                   ESP32 Zero-Pairing BLE Beacon Firmware (Non-Connectable Advertising)
                 </h3>
               </div>
               <button
                 onClick={() => setShowFirmwareModal(false)}
-                className="p-1.5 rounded-xl hover:bg-slate-800 text-slate-400 hover:text-white"
+                className="p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-slate-300 font-sans leading-relaxed">
+            <p className="text-xs text-slate-600 dark:text-slate-300 font-sans leading-relaxed">
               This C++ Arduino sketch uses non-connectable BLE advertising (<code>ADV_NONCONN_IND</code>). It transmits emergency alert strings in the broadcast frame itself so all nearby smartphones with Bluetooth <strong>ON</strong> passively receive the warning without pairing or user confirmation.
             </p>
 
             <div className="relative">
-              <pre className="p-4 rounded-2xl bg-black/70 border border-white/10 font-mono text-[11px] text-cyan-300 overflow-x-auto max-h-72">
+              <pre className="p-4 rounded-2xl bg-slate-950 border border-slate-800 font-mono text-[11px] text-cyan-300 overflow-x-auto max-h-72">
                 {ESP32_ZERO_PAIRING_BLE_CODE}
               </pre>
               <button
@@ -863,7 +863,7 @@ export default function EmergencySmsBroadcastPanel() {
             <div className="pt-2 flex justify-end">
               <button
                 onClick={() => setShowFirmwareModal(false)}
-                className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-mono text-xs font-semibold"
               >
                 Close
               </button>

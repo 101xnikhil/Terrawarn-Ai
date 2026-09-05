@@ -25,9 +25,16 @@ if is_postgres:
     engine = create_engine(
         normalized_db_url,
         pool_pre_ping=True,      # Tests connection before use (auto-reconnects when Neon wakes up)
-        pool_recycle=300,        # Recycle connections every 5 minutes for Neon auto-suspend
+        pool_recycle=60,         # Recycle connections every 60s to prevent stale serverless sockets
         pool_size=10,            # Active connection pool size
         max_overflow=20,         # Maximum burst overflow connections
+        connect_args={
+            "connect_timeout": 15,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 5,
+        },
     )
 else:
     logger.info("Configuring local SQLite database engine with WAL mode...")

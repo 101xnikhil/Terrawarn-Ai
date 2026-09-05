@@ -10,7 +10,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    PROJECT_NAME: str = "LANDGUARD AI Backend"
+    PROJECT_NAME: str = "Terrawarn-Ai Backend"
     API_PREFIX: str = "/api"
     APP_VERSION: str = "0.1.0-prototype"
     BACKEND_URL: str = "http://127.0.0.1:8000"

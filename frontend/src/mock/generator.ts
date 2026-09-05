@@ -1,5 +1,5 @@
 /**
- * LANDGUARD AI — Mock Telemetry Generator
+ * Terrawarn-Ai — Mock Telemetry Generator
  *
  * Generates realistic, time-varying sensor data for the prototype dashboard.
  * Data evolves smoothly over time with noise, simulating a real slope sensor.

@@ -43,18 +43,27 @@ const AnalyticsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 font-sans pb-12">
-      {/* Top Banner */}
-      <div className="card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
-          <div className="flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">Telemetry Analytics & AI Explainability</h1>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
-            Time-series telemetry decomposition, geotechnical limit equilibrium curves, and SHAP feature attributions.
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+            Telemetry Analytics & AI Explainability
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
+            Time-series telemetry decomposition, limit equilibrium Bishop curves, and SHAP feature attributions
           </p>
         </div>
-        <PrototypeLabel text="Synthetic Data Model Diagnostics" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <Cpu className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="text-slate-700 dark:text-slate-200">Model: <strong>XGBoost 2.0.3</strong></span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span className="text-slate-700 dark:text-slate-200">Horizon: <strong>52 Weeks</strong></span>
+          </div>
+        </div>
       </div>
 
       {/* Summary Statistics Table */}

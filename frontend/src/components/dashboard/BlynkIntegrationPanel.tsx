@@ -13,8 +13,8 @@ interface Props {
 
 export default function BlynkIntegrationPanel({ reading, risk }: Props) {
   const [copied, setCopied] = useState(false);
-  const [templateId, setTemplateId] = useState(() => localStorage.getItem('blynk_template_id') || 'TMPL_LANDGUARD');
-  const [templateName, setTemplateName] = useState(() => localStorage.getItem('blynk_template_name') || 'Landguard AI');
+  const [templateId, setTemplateId] = useState(() => localStorage.getItem('blynk_template_id') || 'TMPL_TERRAWARN');
+  const [templateName, setTemplateName] = useState(() => localStorage.getItem('blynk_template_name') || 'Terrawarn-Ai');
   const [blynkAuthToken, setBlynkAuthToken] = useState(() => localStorage.getItem('blynk_auth_token') || 'YOUR_BLYNK_AUTH_TOKEN');
   
   const [isSyncing, setIsSyncing] = useState(false);
@@ -75,7 +75,7 @@ export default function BlynkIntegrationPanel({ reading, risk }: Props) {
   }, [autoSync, blynkAuthToken]);
 
   const arduinoSnippet = `// =================================================================
-// LANDGUARD AI — ESP32 Real-Time Blynk IoT & LoRa Multi-Link Firmware
+// Terrawarn-Ai — ESP32 Real-Time Blynk IoT & LoRa Multi-Link Firmware
 // =================================================================
 #define BLYNK_TEMPLATE_ID "${templateId}"
 #define BLYNK_TEMPLATE_NAME "${templateName}"
@@ -195,7 +195,7 @@ void loop() {
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-0.5 font-normal">
-              Connect real ESP32 sensors via Wi-Fi or USB Serial to display real-time landslide telemetry simultaneously in LANDGUARD AI and the Blynk mobile app.
+              Connect real ESP32 sensors via Wi-Fi or USB Serial to display real-time landslide telemetry simultaneously in Terrawarn-Ai and the Blynk mobile app.
             </p>
           </div>
         </div>
@@ -237,7 +237,7 @@ void loop() {
             value={templateId}
             onChange={(e) => setTemplateId(e.target.value)}
             className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-            placeholder="TMPL_LANDGUARD"
+            placeholder="TMPL_TERRAWARN"
           />
         </div>
 
@@ -250,7 +250,7 @@ void loop() {
             value={templateName}
             onChange={(e) => setTemplateName(e.target.value)}
             className="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-white/10 rounded-xl p-2 text-slate-900 dark:text-white font-mono text-xs focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-            placeholder="Landguard AI"
+            placeholder="Terrawarn-Ai"
           />
         </div>
 
@@ -384,7 +384,7 @@ void loop() {
           {activeCodeTab === 'serial' && (
             <div className="space-y-2.5">
               <p className="text-slate-600 dark:text-slate-300">
-                Plug your ESP32 into your computer via USB cable. Run the high-speed forwarder bridge to transmit live telemetry from USB Serial to both LandGuard AI local server and Blynk IoT Cloud:
+                Plug your ESP32 into your computer via USB cable. Run the high-speed forwarder bridge to transmit live telemetry from USB Serial to both Terrawarn-Ai local server and Blynk IoT Cloud:
               </p>
               <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl font-mono text-xs text-blue-700 dark:text-blue-400 flex items-center justify-between">
                 <code>python3 tools/serial_gateway_bridge.py /dev/tty.usbserial-0001 {blynkAuthToken}</code>
@@ -398,7 +398,7 @@ void loop() {
           {activeCodeTab === 'webhook' && (
             <div className="space-y-2">
               <p className="text-slate-600 dark:text-slate-300">
-                In your Blynk IoT Web Console, navigate to <strong>Settings $\rightarrow$ Webhooks</strong> to forward inbound telemetry directly to your local LANDGUARD AI gateway:
+                In your Blynk IoT Web Console, navigate to <strong>Settings $\rightarrow$ Webhooks</strong> to forward inbound telemetry directly to your local Terrawarn-Ai gateway:
               </p>
               <div className="p-3 bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl font-mono text-xs text-slate-800 dark:text-slate-200 space-y-1">
                 <div>• Webhook URL: <strong className="text-blue-700 dark:text-blue-400">http://127.0.0.1:8000/api/blynk/webhook</strong></div>

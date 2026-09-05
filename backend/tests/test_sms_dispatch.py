@@ -13,7 +13,7 @@ def test_format_emergency_sms_message():
     }
     msg = format_emergency_sms_message(alert_payload)
     
-    assert "EMERGENCY ALERT: LANDGUARD AI" in msg
+    assert "EMERGENCY ALERT: TERRAWARN-AI" in msg
     assert "LG-N01" in msg
     assert "CRITICAL LANDSLIDE HAZARD" in msg
     assert "92% Risk Score" in msg

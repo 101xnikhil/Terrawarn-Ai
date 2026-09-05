@@ -216,7 +216,7 @@ export default function AboutPage() {
                 name: formName.trim(),
                 role: formRole.trim() || 'Core Engineer',
                 specialization: formSpec.trim() || 'Hardware & Software Engineering',
-                bio: formBio.trim() || 'Contributor to LANDGUARD AI Early Warning System.',
+                bio: formBio.trim() || 'Contributor to Terrawarn-Ai Early Warning System.',
                 github: formGithub.trim(),
                 linkedin: formLinkedin.trim(),
                 email: formEmail.trim(),
@@ -236,7 +236,7 @@ export default function AboutPage() {
         name: formName.trim(),
         role: formRole.trim() || 'Core Engineer',
         specialization: formSpec.trim() || 'Hardware & Software Engineering',
-        bio: formBio.trim() || 'Contributor to LANDGUARD AI Early Warning System.',
+        bio: formBio.trim() || 'Contributor to Terrawarn-Ai Early Warning System.',
         github: formGithub.trim(),
         linkedin: formLinkedin.trim(),
         email: formEmail.trim(),
@@ -257,34 +257,32 @@ export default function AboutPage() {
 
   return (
     <div className="space-y-8 font-sans pb-16">
-      {/* ── Section 1: Hero Banner ─────────────────────────── */}
-      <div className="card p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div className="space-y-2 max-w-3xl">
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
+        <div>
           <div className="flex items-center gap-2">
-            <span className="badge badge-blue">
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+              About Terrawarn-Ai
+            </h2>
+            <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700 text-[10px] font-bold">
               Autonomous Early Warning System
             </span>
-            <span className="text-xs text-slate-400 dark:text-slate-400 font-medium">Smart India Hackathon</span>
+            <span className="text-xs text-slate-400 dark:text-slate-400 font-medium hidden sm:inline">· Smart India Hackathon</span>
           </div>
-
-          <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0f172a] dark:text-white tracking-tight">
-            About LANDGUARD AI
-          </h1>
-
-          <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-            An ultra-low-cost, offline-first IoT & Edge AI telemetry system engineered to prevent catastrophic landslide fatalities across mountainous terrain, rail cutting slopes, and vulnerable human settlements.
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
+            An ultra-low-cost, offline-first IoT & Edge AI telemetry system engineered to prevent catastrophic landslide fatalities
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+        <div className="flex flex-wrap items-center gap-2">
           <a
             href="https://github.com"
             target="_blank"
             rel="noreferrer"
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-all"
+            className="px-3.5 py-1.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white text-xs font-bold shadow-sm flex items-center gap-1.5 transition-all"
           >
-            <Github className="w-4 h-4" />
-            <span>GitHub Repository</span>
+            <Github className="w-3.5 h-3.5" />
+            <span>GitHub</span>
           </a>
         </div>
       </div>

@@ -85,7 +85,7 @@ async def lifespan(app: FastAPI):
         db.close()
 
     yield
-    logger.info("LANDGUARD AI Backend shutting down.")
+    logger.info("Terrawarn-Ai Backend shutting down.")
 
 
 def create_app() -> FastAPI:
@@ -93,7 +93,7 @@ def create_app() -> FastAPI:
         title=settings.PROJECT_NAME,
         version=settings.APP_VERSION,
         description="""
-# 🛡️ LANDGUARD AI — Geotechnical Landslide Monitoring & Early Warning System
+# 🛡️ Terrawarn-Ai — Geotechnical Landslide Monitoring & Early Warning System
 
 ### 🔐 Authorization & Security
 This API is protected by **JWT Bearer Token Authentication** and **Role-Based Access Control (RBAC)**:
@@ -132,7 +132,7 @@ Click the **Authorize 🔓** button above to authenticate interactively!
     @app.get("/", tags=["Root"])
     def root():
         return {
-            "system": "LANDGUARD AI Backend",
+            "system": "Terrawarn-Ai Backend",
             "version": settings.APP_VERSION,
             "docs": "/docs",
             "auth": f"{settings.API_PREFIX}/auth/login",

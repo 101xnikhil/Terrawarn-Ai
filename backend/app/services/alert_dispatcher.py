@@ -37,7 +37,7 @@ def format_emergency_sms_message(alert_payload: Dict[str, Any], custom_action: O
     action = custom_action or "Evacuate downhill homes immediately. Avoid slope cut zones. Move to nearest relief shelter."
 
     return (
-        f"🚨 [EMERGENCY ALERT: LANDGUARD AI / DISASTER OPS]\n"
+        f"🚨 [EMERGENCY ALERT: TERRAWARN-AI / DISASTER OPS]\n"
         f"LOCATION: Node {node_id} (Sector 7)\n"
         f"STATUS: {risk_level} LANDSLIDE HAZARD ({score_pct}% Risk Score)\n"
         f"TRIGGER: {reasons_str}\n"

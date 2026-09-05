@@ -137,7 +137,7 @@ const PRESET_QUESTIONS = [
   { label: '🏔️ Live Station Status', prompt: 'What is the current live geotechnical stability and risk level at station LG-N01?' },
   { label: '📍 Wayanad Disaster', prompt: 'Tell me about the recurring landslide risks and causes in Wayanad, Kerala.' },
   { label: '🛣️ Shimla NH-5 Risk', prompt: 'Why do landslides happen repeatedly along the Shimla-Solan NH-5 corridor?' },
-  { label: '🚂 Railway Cuttings', prompt: 'How does LANDGUARD AI protect rail corridors in the Konkan and Ghat sectors?' },
+  { label: '🚂 Railway Cuttings', prompt: 'How does Terrawarn-Ai protect rail corridors in the Konkan and Ghat sectors?' },
   { label: '❓ Why landslides recur?', prompt: 'What are the main scientific reasons landslides happen in the same specific locations repeatedly?' },
 ];
 
@@ -156,7 +156,7 @@ export default function VirtualChatbotModal() {
     {
       id: 'msg-init',
       sender: 'bot',
-      text: "Hello! I am LandGuard GeoBot — your interactive Geotechnical AI Assistant. I provide real-time updates on active slope situations, explain why recurring landslides happen, and analyze vulnerable high-risk geographic corridors across India.",
+      text: "Hello! I am Terrawarn GeoBot — your interactive Geotechnical AI Assistant. I provide real-time updates on active slope situations, explain why recurring landslides happen, and analyze vulnerable high-risk geographic corridors across India.",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -242,7 +242,7 @@ export default function VirtualChatbotModal() {
         id: `bot-${Date.now()}`,
         sender: 'bot',
         text: `📍 **Shimla — Solan NH-5 Corridor — Geotechnical Disaster Profile**\n\n` +
-          `The Shimla hills consist of fractured Jutogh Group phyllites and colluvium. Road widening has cut away the natural slope toe support, while heavy monsoon cloudbursts trigger deep-seated rotational slides and mud deluges. LANDGUARD AI monitors both pore pressure and tilt acceleration to warn highway authorities before road collapse.`,
+          `The Shimla hills consist of fractured Jutogh Group phyllites and colluvium. Road widening has cut away the natural slope toe support, while heavy monsoon cloudbursts trigger deep-seated rotational slides and mud deluges. Terrawarn-Ai monitors both pore pressure and tilt acceleration to warn highway authorities before road collapse.`,
         timestamp,
         locationCard: loc,
       };
@@ -255,7 +255,7 @@ export default function VirtualChatbotModal() {
         id: `bot-${Date.now()}`,
         sender: 'bot',
         text: `📍 **Konkan Railway Deep Cuttings — Rockfall & Mudslide Protection**\n\n` +
-          `Deep artificial railway cuttings through weathered Deccan Traps basalt experience sudden boulder falls and planar mudslides during heavy Western Ghats monsoon deluges. LANDGUARD AI's LoRa mesh triggers automated railway track signal interlocks (<1.2s latency) to stop high-speed passenger trains before entering hazardous slip sections.`,
+          `Deep artificial railway cuttings through weathered Deccan Traps basalt experience sudden boulder falls and planar mudslides during heavy Western Ghats monsoon deluges. Terrawarn-Ai's LoRa mesh triggers automated railway track signal interlocks (<1.2s latency) to stop high-speed passenger trains before entering hazardous slip sections.`,
         timestamp,
         locationCard: loc,
       };
@@ -271,7 +271,7 @@ export default function VirtualChatbotModal() {
           `2. **Pore-Water Pressure Saturation**: Ingressing rain fills soil voids ($u_w > 0$), reducing effective normal stress ($\\sigma' = \\sigma - u$) until shear stress exceeds shear resistance ($FoS < 1.0$).\n` +
           `3. **Anthropogenic Toe Scouring**: Road excavations and construction cut away the resisting toe mass of the slope, making the slope statically unstable.\n` +
           `4. **Hydrological Channeling**: Natural subterranean drainage paths funnel water into the exact same slip zones year after year.\n\n` +
-          `💡 *LANDGUARD AI tracks these factors continuously via multi-sensor fusion (Capacitive Moisture VWC + 6-Axis IMU Creep Velocity + Infinite Slope FoS).*`,
+          `💡 *Terrawarn-Ai tracks these factors continuously via multi-sensor fusion (Capacitive Moisture VWC + 6-Axis IMU Creep Velocity + Infinite Slope FoS).*`,
         timestamp,
       };
     }
@@ -318,7 +318,7 @@ export default function VirtualChatbotModal() {
         {!isOpen && (
           <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-md border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xl animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            <span>Ask LandGuard GeoBot</span>
+            <span>Ask Terrawarn GeoBot</span>
           </div>
         )}
 
@@ -331,7 +331,7 @@ export default function VirtualChatbotModal() {
               : 'bg-[#2563eb] text-white hover:scale-105 shadow-blue-500/30'
           )}
           aria-label="Open Landslide AI Assistant"
-          title="Open LandGuard Virtual AI Assistant"
+          title="Open Terrawarn Virtual AI Assistant"
         >
           {isOpen ? (
             <X className="w-6 h-6" />
@@ -359,7 +359,7 @@ export default function VirtualChatbotModal() {
               <div>
                 <div className="flex items-center gap-2">
                   <h3 className="text-base text-slate-900 dark:text-white font-bold tracking-tight leading-none">
-                    LandGuard GeoBot
+                    Terrawarn GeoBot
                   </h3>
                   <span className="px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700 text-[9.5px] font-bold">
                     AI AUDIENCE COPILOT

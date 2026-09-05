@@ -20,7 +20,7 @@ async def websocket_telemetry_endpoint(websocket: WebSocket):
         welcome_frame = {
             "type": "connection_established",
             "status": "connected",
-            "message": "LANDGUARD AI Real-Time Telemetry Stream Connected",
+            "message": "Terrawarn-Ai Real-Time Telemetry Stream Connected",
             "timestamp": datetime.utcnow().isoformat(),
         }
         await websocket.send_text(json.dumps(welcome_frame))

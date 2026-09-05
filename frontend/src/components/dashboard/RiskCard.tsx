@@ -35,9 +35,9 @@ export default function RiskCard({ risk }: Props) {
     LOW: {
       label: 'NOMINAL STABILITY',
       action: 'Standard Routine Surveillance — Slope shear forces within safe limits',
-      colorText: 'text-emerald-400',
-      colorBg: 'bg-emerald-950/40',
-      colorBorder: 'border-emerald-500/40',
+      colorText: 'text-emerald-800 dark:text-emerald-300',
+      colorBg: 'bg-emerald-50 dark:bg-emerald-950/40',
+      colorBorder: 'border-emerald-300 dark:border-emerald-500/40',
       strokeGradient: '#10b981',
       icon: ShieldCheck,
       badgeClass: 'badge-low',
@@ -45,9 +45,9 @@ export default function RiskCard({ risk }: Props) {
     MODERATE: {
       label: 'ELEVATED SURVEILLANCE',
       action: 'Advisory Alert — Precipitation accumulation & pore pressure rising',
-      colorText: 'text-amber-400',
-      colorBg: 'bg-amber-950/40',
-      colorBorder: 'border-amber-500/40',
+      colorText: 'text-amber-800 dark:text-amber-300',
+      colorBg: 'bg-amber-50 dark:bg-amber-950/40',
+      colorBorder: 'border-amber-300 dark:border-amber-500/40',
       strokeGradient: '#f59e0b',
       icon: Shield,
       badgeClass: 'badge-moderate',
@@ -55,9 +55,9 @@ export default function RiskCard({ risk }: Props) {
     HIGH: {
       label: 'HIGH WARNING TIER',
       action: 'Warning Active — Significant angular creep & matrix saturation',
-      colorText: 'text-orange-400',
-      colorBg: 'bg-orange-950/40',
-      colorBorder: 'border-orange-500/50',
+      colorText: 'text-orange-800 dark:text-orange-300',
+      colorBg: 'bg-orange-50 dark:bg-orange-950/40',
+      colorBorder: 'border-orange-300 dark:border-orange-500/50',
       strokeGradient: '#f97316',
       icon: AlertTriangle,
       badgeClass: 'badge-high',
@@ -65,9 +65,9 @@ export default function RiskCard({ risk }: Props) {
     CRITICAL: {
       label: 'CRITICAL EMERGENCY',
       action: 'Emergency Siren Active — Limit equilibrium failure imminent (FoS < 1.0)',
-      colorText: 'text-red-400',
-      colorBg: 'bg-red-950/50',
-      colorBorder: 'border-red-500/60',
+      colorText: 'text-red-800 dark:text-red-300',
+      colorBg: 'bg-red-50 dark:bg-red-950/50',
+      colorBorder: 'border-red-300 dark:border-red-500/60',
       strokeGradient: '#ef4444',
       icon: ShieldAlert,
       badgeClass: 'badge-critical',
@@ -179,34 +179,34 @@ export default function RiskCard({ risk }: Props) {
         </div>
 
         {/* Geotechnical Stability Indicator (FoS) */}
-        <div className="bg-black/50 border border-white/10 rounded-2xl p-3 font-mono shadow-inner">
+        <div className="bg-slate-50 dark:bg-black/50 border border-slate-200 dark:border-white/10 rounded-2xl p-3 font-mono shadow-xs">
           <div className="flex justify-between items-center text-xs">
-            <span className="text-slate-200 font-bold flex items-center gap-1.5">
-              <Gauge className="w-4 h-4 text-cyan-400" />
+            <span className="text-slate-800 dark:text-slate-200 font-bold flex items-center gap-1.5">
+              <Gauge className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
               Bishop Factor of Safety (FoS)
             </span>
             <span className={clsx("font-black text-base tabular-nums", fosStatus.color)}>
               {fos.toFixed(2)}
             </span>
           </div>
-          <div className="flex justify-between items-center text-[10px] text-slate-400 mt-1">
+          <div className="flex justify-between items-center text-[10px] text-slate-500 dark:text-slate-400 mt-1">
             <span>Infinite slope limit equilibrium</span>
             <span className={clsx("font-bold", fosStatus.color)}>{fosStatus.label}</span>
           </div>
         </div>
 
         {/* Action / Operational Advisory Recommendation */}
-        <div className={clsx("px-3.5 py-2.5 rounded-2xl border text-xs font-mono leading-relaxed shadow-sm", config.colorBg, config.colorBorder, config.colorText)}>
+        <div className={clsx("px-3.5 py-2.5 rounded-2xl border text-xs font-mono leading-relaxed shadow-xs", config.colorBg, config.colorBorder, config.colorText)}>
           <span className="font-bold uppercase tracking-wider block text-[9.5px] opacity-90 mb-0.5">Response Protocol:</span>
           {config.action}
         </div>
       </div>
 
       {/* Card Footer */}
-      <div className="px-4 py-2.5 bg-black/60 border-t border-white/10 flex justify-between items-center text-[10px] font-mono text-slate-400">
-        <span>Engine: <strong className="text-slate-200">XGBoost v0.2-Physics</strong></span>
-        <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+      <div className="px-4 py-2.5 bg-slate-50 dark:bg-black/60 border-t border-slate-200 dark:border-white/10 flex justify-between items-center text-[10px] font-mono text-slate-500 dark:text-slate-400">
+        <span>Engine: <strong className="text-slate-800 dark:text-slate-200">XGBoost v0.2-Physics</strong></span>
+        <span className="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
           Physics-ML Calibrated
         </span>
       </div>

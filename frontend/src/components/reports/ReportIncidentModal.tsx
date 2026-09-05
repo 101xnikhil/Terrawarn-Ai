@@ -113,12 +113,12 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
       // Buffer locally in offline queue
       queueReport(payload);
       setIsSubmitting(false);
-      setSubmitSuccessMsg('Network Offline: Report buffered locally in secure storage. It will auto-sync to Disaster Authority upon reconnection.');
+      setSubmitSuccessMsg('Network Offline: Report buffered locally in secure storage. Auto-sync will record it to database on connection.');
+      onReportSubmitted?.();
       setTimeout(() => {
         setSubmitSuccessMsg(null);
-        onReportSubmitted?.();
         onClose();
-      }, 3000);
+      }, 2000);
       return;
     }
 
@@ -130,13 +130,14 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
       });
 
       if (res.ok) {
+        const createdReport = await res.json();
         setIsSubmitting(false);
-        setSubmitSuccessMsg('Ground-Truth Report Submitted! Forwarded to District Disaster Management Authority (DDMA).');
+        setSubmitSuccessMsg(`Report #${createdReport.report_id} saved to PostgreSQL database! Recorded with timestamp and forwarded to DDMA.`);
+        onReportSubmitted?.();
         setTimeout(() => {
           setSubmitSuccessMsg(null);
-          onReportSubmitted?.();
           onClose();
-        }, 2200);
+        }, 1800);
       } else {
         throw new Error('API server returned error');
       }
@@ -144,12 +145,12 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
       // Fallback to offline queue
       queueReport(payload);
       setIsSubmitting(false);
-      setSubmitSuccessMsg('Network transmission failed: Report stored in offline cache. It will auto-sync automatically.');
+      setSubmitSuccessMsg('Network transmission failed: Report stored in offline buffer. It will sync to database automatically.');
+      onReportSubmitted?.();
       setTimeout(() => {
         setSubmitSuccessMsg(null);
-        onReportSubmitted?.();
         onClose();
-      }, 3000);
+      }, 2000);
     }
   };
 

@@ -865,10 +865,14 @@ const MapCameraController: React.FC<{ target: { center: [number, number]; zoom: 
 
 // ─── 2D Bishop Geotechnical Subsurface Cross-Section Visualizer ───
 const SlopeCrossSectionDiagram: React.FC<{ station: MapStation }> = ({ station }) => {
-  const waterHeightPct = Math.min(95, Math.max(15, station.soil_moisture_pct));
-  const isCritical = station.fos_estimate < 1.0;
-  const isWarning = station.fos_estimate >= 1.0 && station.fos_estimate < 1.25;
+  if (!station) return null;
+  const soilMoisture = station.soil_moisture_pct ?? 30;
+  const waterHeightPct = Math.min(95, Math.max(15, soilMoisture));
+  const fos = station.fos_estimate ?? 1.5;
+  const isCritical = fos < 1.0;
+  const isWarning = fos >= 1.0 && fos < 1.25;
   const arcColor = isCritical ? '#ef4444' : isWarning ? '#f97316' : '#10b981';
+  const geologyText = (station.geology || 'Schist').split(' ')[0];
 
   return (
     <div className="space-y-3 p-3 rounded-2xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-white/10 font-sans">
@@ -912,7 +916,7 @@ const SlopeCrossSectionDiagram: React.FC<{ station: MapStation }> = ({ station }
           {/* 1. Bedrock Basement (Base Layer) */}
           <path d="M 0 160 L 120 160 L 260 190 L 400 190 L 400 200 L 0 200 Z" fill="#334155" />
           <path d="M 0 160 L 120 160 L 260 190 L 400 190 L 400 200 L 0 200 Z" fill="url(#rockHatch)" />
-          <text x="14" y="190" fill="#94a3b8" fontSize="9" fontWeight="700" fontFamily="sans-serif">BEDROCK BASEMENT ({station.geology.split(' ')[0]})</text>
+          <text x="14" y="190" fill="#94a3b8" fontSize="9" fontWeight="700" fontFamily="sans-serif">BEDROCK BASEMENT ({geologyText})</text>
 
           {/* 2. Colluvial Overburden Soil Layer */}
           <path d="M 0 50 L 140 50 L 280 160 L 400 160 L 400 190 L 260 190 L 120 160 L 0 160 Z" fill="#b45309" fillOpacity="0.25" />
@@ -1080,24 +1084,24 @@ const RiskMapPage: React.FC = () => {
 
   // Current active inspected station
   const activeStation = useMemo(() => {
-    return stations.find((s) => s.id === selectedNodeId) || stations[0];
+    return stations.find((s) => s.id === selectedNodeId) || stations[0] || PAN_INDIA_STATIONS[0];
   }, [stations, selectedNodeId]);
 
   // Associated nearest shelter
   const activeShelter = useMemo(() => {
-    return EMERGENCY_SHELTERS.find((sh) => sh.associatedNodeId === activeStation.id) || EMERGENCY_SHELTERS[0];
+    return (activeStation && EMERGENCY_SHELTERS.find((sh) => sh.associatedNodeId === activeStation.id)) || EMERGENCY_SHELTERS[0];
   }, [activeStation]);
 
   // Associated evacuation route for active station
   const activeEvacRoute = useMemo(() => {
-    return EVACUATION_ROUTES.find((r) => r.stationId === activeStation.id);
+    return activeStation ? EVACUATION_ROUTES.find((r) => r.stationId === activeStation.id) : undefined;
   }, [activeStation]);
 
   // Station Marker Icon Generator
   const getStationMarkerIcon = (station: MapStation, isSelected: boolean) => {
-    const color = RISK_COLORS[station.risk_level] || '#10b981';
-    const isPulsing = station.risk_level === 'HIGH' || station.risk_level === 'CRITICAL';
-    const initials = station.id.replace('LG-', '');
+    const color = RISK_COLORS[station?.risk_level] || '#10b981';
+    const isPulsing = station?.risk_level === 'HIGH' || station?.risk_level === 'CRITICAL';
+    const initials = (station?.id || 'LG-XX').replace('LG-', '');
     
     return L.divIcon({
       className: 'custom-leaflet-marker',
@@ -1218,6 +1222,43 @@ const RiskMapPage: React.FC = () => {
         ? "fixed inset-0 z-[9990] bg-[#080c14] p-4 flex flex-col h-screen" 
         : "flex flex-col h-[calc(100vh-8.5rem)]"
     )}>
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+        <div>
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+            Geospatial Sector GIS & Road Network
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
+            Pan-India landslide monitoring stations, slope hazard overlays, and relief shelter routing
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={handleResetToAllIndia}
+            className={clsx(
+              "px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5",
+              selectedRegion === 'ALL'
+                ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                : "bg-white dark:bg-[#0f172a] border-[#e5e9f2] dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-blue-600"
+            )}
+          >
+            <span>🇮🇳 All India</span>
+          </button>
+          <button
+            onClick={handleFocusNER}
+            className={clsx(
+              "px-3 py-1.5 rounded-xl border text-xs font-semibold shadow-xs transition-all flex items-center gap-1.5",
+              selectedRegion === 'Northeast'
+                ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300"
+                : "bg-white dark:bg-[#0f172a] border-[#e5e9f2] dark:border-white/10 text-slate-700 dark:text-slate-300 hover:text-blue-600"
+            )}
+          >
+            <span>🏔️ Focus NER</span>
+          </button>
+        </div>
+      </div>
+
       {/* ── IMD Monsoon Weather & Meteorological Warning Ticker ──── */}
       <div className="bg-blue-50/90 dark:bg-gradient-to-r dark:from-blue-900/40 dark:via-sky-900/30 dark:to-slate-900/40 border border-blue-200 dark:border-blue-500/20 rounded-2xl px-4 py-2 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0 backdrop-blur-md shadow-xs">
         <div className="flex items-center gap-2">
@@ -1776,14 +1817,23 @@ const RiskMapPage: React.FC = () => {
             ))}
 
             {/* ── 6. Vulnerable Road Corridors (Vector Polyline Network) ── */}
-            {showRoadStatus && roadCorridors.map((c) => {
+            {showRoadStatus && roadCorridors.map((c, idx) => {
+              const positions = c.path || c.coordinates;
+              if (!positions || !Array.isArray(positions) || positions.length === 0) return null;
               const isBlocked = c.status === 'BLOCKED';
               const isRestricted = c.status === 'RESTRICTED';
               const color = isBlocked ? '#ef4444' : isRestricted ? '#f59e0b' : '#10b981';
+              const corridorCode = c.corridor || c.code || `Corridor-${idx + 1}`;
+              const key = c.corridor || c.id || `corridor-${idx}`;
+              const blockageReason = c.hazardCause || c.blockage_reason;
+              const clearingEta = c.clearanceEstHours ? `~${c.clearanceEstHours}h` : c.clearing_eta;
+              const detourRoute = c.alternateRoute || c.detour_route;
+              const stretch = c.impactedSection || c.stretch;
+
               return (
                 <Polyline
-                  key={c.id}
-                  positions={c.coordinates}
+                  key={key}
+                  positions={positions}
                   pathOptions={{
                     color: color,
                     weight: isBlocked ? 6 : 4,
@@ -1793,13 +1843,13 @@ const RiskMapPage: React.FC = () => {
                 >
                   {showLocationNames && (
                     <Tooltip permanent direction="top" className="station-location-label">
-                      <span>{c.code}: {c.status}</span>
+                      <span>{corridorCode}: {c.status}</span>
                     </Tooltip>
                   )}
                   <Popup>
                     <div className="p-1.5 text-slate-900 dark:text-slate-100 font-sans min-w-[240px] text-xs">
                       <div className="flex items-center justify-between border-b pb-1 mb-1 font-bold">
-                        <span className="font-mono text-sm font-extrabold" style={{ color }}>{c.code}</span>
+                        <span className="font-mono text-sm font-extrabold" style={{ color }}>{corridorCode}</span>
                         <span className={clsx(
                           "px-2 py-0.5 rounded text-[10px] font-bold uppercase",
                           isBlocked ? "bg-red-100 text-red-700 dark:bg-red-900/60 dark:text-red-300" :
@@ -1810,24 +1860,26 @@ const RiskMapPage: React.FC = () => {
                         </span>
                       </div>
                       <div className="font-bold text-slate-900 dark:text-white text-xs">{c.name}</div>
-                      <div className="text-[10px] text-slate-500 mt-0.5">{c.state} &middot; {c.stretch}</div>
+                      <div className="text-[10px] text-slate-500 mt-0.5">{c.state}{stretch ? ` · ${stretch}` : ''}</div>
 
-                      {c.blockage_reason && (
+                      {blockageReason && (
                         <div className="mt-2 p-1.5 bg-red-50 dark:bg-red-950/40 rounded-lg text-red-700 dark:text-red-300 text-[10.5px]">
-                          <strong>Blockage Cause:</strong> {c.blockage_reason}
-                          {c.clearing_eta && <div className="text-[10px] text-red-500 mt-0.5 font-medium">ETA: {c.clearing_eta}</div>}
+                          <strong>Blockage Cause:</strong> {blockageReason}
+                          {clearingEta && <div className="text-[10px] text-red-500 mt-0.5 font-medium">ETA: {clearingEta}</div>}
                         </div>
                       )}
 
-                      {c.detour_route && (
+                      {detourRoute && (
                         <div className="mt-1.5 p-1.5 bg-sky-50 dark:bg-sky-950/40 rounded-lg text-sky-800 dark:text-sky-300 text-[10.5px]">
-                          <strong>Alternate Detour:</strong> {c.detour_route}
+                          <strong>Alternate Detour:</strong> {detourRoute}
                         </div>
                       )}
 
-                      <div className="mt-2 text-[10px] text-slate-500 border-t pt-1">
-                        <strong>Critical Links:</strong> {c.critical_infrastructure}
-                      </div>
+                      {(c.critical_infrastructure || c.responsibleAuthority) && (
+                        <div className="mt-2 text-[10px] text-slate-500 border-t pt-1">
+                          <strong>Authority:</strong> {c.responsibleAuthority || c.critical_infrastructure}
+                        </div>
+                      )}
                     </div>
                   </Popup>
                 </Polyline>
@@ -1835,66 +1887,75 @@ const RiskMapPage: React.FC = () => {
             })}
 
             {/* ── 7. Citizen & Field Official Crowdsourced Incident Reports ── */}
-            {showCitizenReports && citizenReports.map((rep) => (
-              <Marker
-                key={rep.id}
-                position={[rep.latitude, rep.longitude]}
-                icon={getCitizenReportMarkerIcon(rep)}
-              >
-                {showLocationNames && (
-                  <Tooltip permanent direction="top" className="station-location-label">
-                    <span>📸 {rep.location_name}</span>
-                  </Tooltip>
-                )}
-                <Popup>
-                  <div className="p-1.5 text-slate-900 dark:text-slate-100 font-sans min-w-[230px] max-w-[280px] text-xs">
-                    <div className="flex items-center justify-between border-b pb-1 mb-1 font-bold">
-                      <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
-                        {rep.hazard_category.replace('_', ' ')}
-                      </span>
-                      <span className={clsx(
-                        "text-[9.5px] px-1.5 py-0.5 rounded font-bold uppercase",
-                        rep.verified ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300" : "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
-                      )}>
-                        {rep.verified ? "✓ Verified" : "Pending Verification"}
-                      </span>
-                    </div>
+            {showCitizenReports && citizenReports.map((rep, idx) => {
+              if (!rep || typeof rep.latitude !== 'number' || typeof rep.longitude !== 'number') return null;
+              const categoryStr = (rep.category || rep.hazard_category || 'GROUND_CRACKS').replace('_', ' ');
+              const isVerified = Boolean(rep.is_verified || rep.verified);
+              const reporterRole = (rep.reporter_type || rep.reporter_role || 'CITIZEN').replace('_', ' ');
+              const key = rep.report_id || rep.id || `report-${idx}`;
 
-                    <div className="font-bold text-slate-900 dark:text-white text-xs mt-1">
-                      {rep.location_name}
-                    </div>
-                    <div className="text-[10px] text-slate-500">
-                      {rep.district}, {rep.state}
-                    </div>
-
-                    {rep.photo_url && (
-                      <div className="mt-1.5 rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 max-h-32">
-                        <img 
-                          src={rep.photo_url} 
-                          alt={rep.location_name}
-                          className="w-full h-28 object-cover" 
-                          onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
-                        />
+              return (
+                <Marker
+                  key={key}
+                  position={[rep.latitude, rep.longitude]}
+                  icon={getCitizenReportMarkerIcon(rep)}
+                >
+                  {showLocationNames && (
+                    <Tooltip permanent direction="top" className="station-location-label">
+                      <span>📸 {rep.location_name}</span>
+                    </Tooltip>
+                  )}
+                  <Popup>
+                    <div className="p-1.5 text-slate-900 dark:text-slate-100 font-sans min-w-[230px] max-w-[280px] text-xs">
+                      <div className="flex items-center justify-between border-b pb-1 mb-1 font-bold">
+                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">
+                          {categoryStr}
+                        </span>
+                        <span className={clsx(
+                          "text-[9.5px] px-1.5 py-0.5 rounded font-bold uppercase",
+                          isVerified ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300" : "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
+                        )}>
+                          {isVerified ? "✓ Verified" : "Pending Verification"}
+                        </span>
                       </div>
-                    )}
 
-                    <p className="mt-1.5 text-[10.5px] text-slate-700 dark:text-slate-300 leading-tight">
-                      {rep.description}
-                    </p>
+                      <div className="font-bold text-slate-900 dark:text-white text-xs mt-1">
+                        {rep.location_name}
+                      </div>
+                      <div className="text-[10px] text-slate-500">
+                        {rep.district}, {rep.state}
+                        {rep.highway_corridor && <span className="ml-1 font-mono font-bold text-blue-600">({rep.highway_corridor})</span>}
+                      </div>
 
-                    <div className="mt-2 pt-1 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[9.5px] text-slate-500 dark:text-slate-400">
-                      <span>By: <strong>{rep.reporter_name}</strong> ({rep.reporter_role})</span>
-                      <span className={clsx(
-                        "font-bold uppercase",
-                        rep.severity === 'CRITICAL' ? 'text-red-500' : rep.severity === 'HIGH' ? 'text-amber-500' : 'text-blue-500'
-                      )}>
-                        {rep.severity}
-                      </span>
+                      {rep.photo_url && (
+                        <div className="mt-1.5 rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 max-h-32">
+                          <img 
+                            src={rep.photo_url} 
+                            alt={rep.location_name}
+                            className="w-full h-28 object-cover" 
+                            onError={(e) => { (e.target as HTMLElement).style.display = 'none'; }}
+                          />
+                        </div>
+                      )}
+
+                      <p className="mt-1.5 text-[10.5px] text-slate-700 dark:text-slate-300 leading-tight">
+                        {rep.description}
+                      </p>
+
+                      <div className="mt-2 pt-1 border-t border-slate-200 dark:border-white/10 flex items-center justify-between text-[9.5px] text-slate-500 dark:text-slate-400">
+                        <span>By: <strong>{rep.reporter_name || 'Anonymous'}</strong> ({reporterRole})</span>
+                        <span className={clsx(
+                          "font-bold uppercase",
+                          rep.severity === 'CRITICAL' ? 'text-red-500' : rep.severity === 'HIGH' ? 'text-amber-500' : 'text-blue-500'
+                        )}>
+                          {rep.severity}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                </Popup>
-              </Marker>
-            ))}
+                  </Popup>
+                </Marker>
+              );
+            })}
           </MapContainer>
 
           {/* Map Floating Coordinates Tag (Original Beloved Format) */}

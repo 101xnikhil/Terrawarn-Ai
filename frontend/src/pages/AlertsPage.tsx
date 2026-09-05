@@ -87,18 +87,42 @@ const AlertsPage: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-12 font-sans">
-      {/* Top Banner */}
-      <div className="card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">Alert & Incident Command Center</h1>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+              Incident Command Center
+            </h2>
+            {criticalCount > 0 ? (
+              <span className="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800 text-[10px] font-bold animate-pulse">
+                {criticalCount} CRITICAL
+              </span>
+            ) : (
+              <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold">
+                ALL CLEAR
+              </span>
+            )}
           </div>
-          <p className="text-xs text-slate-500 dark:text-slate-300 mt-1">
-            Real-time threshold violation logs, hazard trigger reasons, and automated public emergency dispatch.
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
+            Real-time threshold violation logs, hazard trigger reasons, and automated cellular emergency dispatch
           </p>
         </div>
-        <PrototypeLabel text="Incident Dispatch Active" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-red-500" />
+            <span className="text-slate-700 dark:text-slate-200">Critical: <strong className="font-mono text-red-600 dark:text-red-400">{criticalCount}</strong></span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-amber-500" />
+            <span className="text-slate-700 dark:text-slate-200">High: <strong className="font-mono text-amber-600 dark:text-amber-400">{highCount}</strong></span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-700/60 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-xs">
+            <Bell className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span>Unacknowledged: <strong className="font-mono">{unackTotal}</strong></span>
+          </div>
+        </div>
       </div>
 
       {/* Incident Metrics Bar */}

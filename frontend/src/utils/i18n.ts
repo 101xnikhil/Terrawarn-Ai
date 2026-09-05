@@ -18,7 +18,7 @@ export const SUPPORTED_LANGUAGES: LanguageOption[] = [
 export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
   en: {
     // Brand & Header
-    appTitle: 'LANDGUARD AI',
+    appTitle: 'Terrawarn-Ai',
     appSubtitle: 'NER Geotechnical Early Warning System',
     missionControl: 'Mission Control & Metrics',
     stationTelemetry: 'Station Telemetry',
@@ -27,7 +27,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     geotechnicalAnalytics: 'Geotechnical Analytics',
     citizenFieldReports: 'Citizen & Field Reports',
     settings: 'Hardware & Settings',
-    about: 'About LANDGUARD AI',
+    about: 'About Terrawarn-Ai',
     
     // Status & Weather
     imdWarningTicker: 'IMD National Geospatial Warning Service',
@@ -73,7 +73,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
   
   hi: {
     // Brand & Header
-    appTitle: 'लैंडगार्ड AI',
+    appTitle: 'टेरावार्न-एआई (Terrawarn-Ai)',
     appSubtitle: 'पूर्वोत्तर भूस्खलन पूर्व चेतावनी प्रणाली',
     missionControl: 'मिशन कंट्रोल एवं मेट्रिक्स',
     stationTelemetry: 'स्टेशन टेलीमेट्री',
@@ -82,7 +82,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     geotechnicalAnalytics: 'भू-तकनीकी विश्लेषण',
     citizenFieldReports: 'नागरिक एवं फील्ड रिपोर्ट',
     settings: 'हार्डवेयर एवं सेटिंग्स',
-    about: 'लैंडगार्ड AI के बारे में',
+    about: 'टेरावार्न-एआई (Terrawarn-Ai) के बारे में',
     
     // Status & Weather
     imdWarningTicker: 'आईएमडी राष्ट्रीय भू-स्थानिक चेतावनी सेवा',
@@ -128,7 +128,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
   
   as: {
     // Brand & Header
-    appTitle: 'লেণ্ডগাৰ্ড AI',
+    appTitle: 'টেৰাৱাৰ্ন-এআই (Terrawarn-Ai)',
     appSubtitle: 'উত্তৰ-পূৰ্বাঞ্চল ভূমিস্খলন আগতীয়া সতৰ্কবাৰ্তা ব্যৱস্থা',
     missionControl: 'মিছন কণ্ট্ৰল আৰু পৰিসংখ্যা',
     stationTelemetry: 'ষ্টেচন টেলিমেট্ৰী',
@@ -137,7 +137,7 @@ export const TRANSLATIONS: Record<SupportedLanguage, Record<string, string>> = {
     geotechnicalAnalytics: 'ভূতাত্ত্বিক বিশ্লেষণ',
     citizenFieldReports: 'ৰাইজ আৰু ফিল্ড প্ৰতিবেদন',
     settings: 'হাৰ্ডৱেৰ আৰু ছেটিংছ',
-    about: 'লেণ্ডগাৰ্ড AI সম্পৰ্কে',
+    about: 'টেৰাৱাৰ্ন-এআই (Terrawarn-Ai) সম্পৰ্কে',
     
     // Status & Weather
     imdWarningTicker: 'IMD ৰাষ্ট্ৰীয় ভূ-স্থানিক সতৰ্কবাৰ্তা সেৱা',
@@ -241,10 +241,10 @@ export function generateMultilingualSms(
   shelterName: string
 ): string {
   if (lang === 'hi') {
-    return `[आपात चेतावनी] ${sector} पर ${riskLevel} भूस्खलन खतरा। तुरंत ${shelterName} शरण स्थल जाएं। - LandGuard DDMA`;
+    return `[आपात चेतावनी] ${sector} पर ${riskLevel} भूस्खलन खतरा। तुरंत ${shelterName} शरण स्थल जाएं। - Terrawarn-Ai DDMA`;
   }
   if (lang === 'as') {
-    return `[জৰুৰী সতৰ্কতা] ${sector} ত ${riskLevel} ভূমিস্খলনৰ শংকা। অনুগ্ৰহ কৰি অবিলম্বে ${shelterName} লৈ যাওক। - LandGuard DDMA`;
+    return `[জৰুৰী সতৰ্কতা] ${sector} ত ${riskLevel} ভূমিস্খলনৰ শংকা। অনুগ্ৰহ কৰি অবিলম্বে ${shelterName} লৈ যাওক। - Terrawarn-Ai DDMA`;
   }
-  return `[CRITICAL ALERT] ${riskLevel} Landslide Risk at ${sector}. Evacuate immediately to ${shelterName}. - LandGuard DDMA`;
+  return `[CRITICAL ALERT] ${riskLevel} Landslide Risk at ${sector}. Evacuate immediately to ${shelterName}. - Terrawarn-Ai DDMA`;
 }

@@ -47,18 +47,27 @@ const SettingsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-12 font-sans">
-      {/* Top Banner */}
-      <div className="card p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* ── Section Header (matches Metrics page format) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
-          <div className="flex items-center gap-2">
-            <Settings className="w-5 h-5 text-blue-600" />
-            <h1 className="text-xl font-bold text-[#0f172a] dark:text-white tracking-tight">Hardware & Ingestion Settings</h1>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Configure data ingestion modes: Real ESP32 Sensors via LoRa Gateway, Blynk IoT Cloud Webhooks, or Geotechnical Scenarios.
+          <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
+            Hardware & Ingestion Settings
+          </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
+            Configure telemetry ingestion: Real ESP32 Sensors via LoRa Gateway, Fast2SMS Cellular, or Geotechnical Scenarios
           </p>
         </div>
-        <PrototypeLabel text="Live Telemetry Active" />
+
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold shadow-xs">
+            <Radio className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <span>Gateway: <strong>Online</strong></span>
+          </div>
+          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-xs">
+            <MessageSquare className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+            <span>Fast2SMS: <strong>{smsStatus?.enabled ? 'Active' : 'Configured'}</strong></span>
+          </div>
+        </div>
       </div>
 
       {/* Section 0: UI Theme & Mission Control Appearance */}
@@ -286,7 +295,7 @@ const SettingsPage: React.FC = () => {
         </div>
         <div className="card-body space-y-3">
           <p className="text-xs text-slate-600 dark:text-slate-300 font-sans">
-            LANDGUARD AI operates completely offline on local compute with zero cloud or internet dependency. Use the controls below to test gateway buffering and local edge processing during network degradation or total offline conditions:
+            Terrawarn-Ai operates completely offline on local compute with zero cloud or internet dependency. Use the controls below to test gateway buffering and local edge processing during network degradation or total offline conditions:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
@@ -460,7 +469,7 @@ const SettingsPage: React.FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div>
               <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">Application</span>
-              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">LANDGUARD AI</span>
+              <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">Terrawarn-Ai</span>
             </div>
             <div>
               <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">Version</span>

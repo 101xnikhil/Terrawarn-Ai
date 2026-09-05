@@ -185,7 +185,7 @@ async def send_test_sms():
             "recipients_count": 0,
         }
 
-    test_message = "[LANDGUARD DEV TEST] Fast2SMS Quick Route live test dispatch."
+    test_message = "[TERRAWARN DEV TEST] Fast2SMS Quick Route live test dispatch."
     dispatch_res = await sms_service.send_sms(numbers=recipients, message=test_message)
     return {
         "status": "success" if dispatch_res.get("sent") else "failed",

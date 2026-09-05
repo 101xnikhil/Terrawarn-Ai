@@ -3,6 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import VirtualChatbotModal from '../common/VirtualChatbotModal';
+import ErrorBoundary from '../common/ErrorBoundary';
 
 interface LayoutProps {
   alertCount?: number;
@@ -26,18 +27,20 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
       case '/sensor':
       case '/node':
       case '/nodes':
-        return 'Station Telemetry (LG-N01)';
+        return 'Station Telemetry';
       case '/alerts':
         return 'Alerts & Incidents';
       case '/analytics':
-        return 'Geotechnical Analytics';
+        return 'Analytics';
       case '/map':
       case '/gis':
-        return 'Geospatial Sector GIS';
+        return 'Geospatial GIS';
+      case '/reports':
+        return 'Citizen Reports';
       case '/settings':
-        return 'Hardware & Integrations';
+        return 'Settings';
       case '/about':
-        return 'About LANDGUARD AI';
+        return 'About Terrawarn-Ai';
       default:
         return 'Metrics';
     }
@@ -63,7 +66,9 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
           onMenuToggle={toggleSidebar} 
         />
         <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
-          <Outlet />
+          <ErrorBoundary fallbackTitle="Page Error" fallbackMessage="There was an issue rendering this section. Click below to reload.">
+            <Outlet />
+          </ErrorBoundary>
         </main>
         
         {/* Global Virtual Chatbot AI Assistant */}
@@ -73,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-[1600px] mx-auto">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200">LANDGUARD AI</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">Terrawarn-Ai</span>
               <span className="text-slate-400 dark:text-slate-400">· Early Warning Mission Control</span>
             </div>
             <div className="text-slate-500 dark:text-slate-300 text-[11px]">

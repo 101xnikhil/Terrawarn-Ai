@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     { name: 'Field Reports', path: '/reports', icon: Camera, tooltip: 'Citizen & Field Incident Reports' },
     { name: 'Alerts & Incidents', path: '/alerts', icon: Target, tooltip: 'Alerts & Incidents' },
     { name: 'Geotechnical Analytics', path: '/analytics', icon: Handshake, tooltip: 'Analytics & Physics' },
-    { name: 'About LANDGUARD AI', path: '/about', icon: Briefcase, tooltip: 'About & Documentation' },
+    { name: 'About Terrawarn-Ai', path: '/about', icon: Briefcase, tooltip: 'About & Documentation' },
   ];
 
   return (
@@ -36,10 +36,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     >
       {/* Top Logo */}
       <div className="flex flex-col items-center gap-6 w-full">
-        <Link to="/" className="group p-1" title="LANDGUARD AI">
+        <Link to="/" className="group p-1" title="Terrawarn-Ai">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#10b981] via-[#06b6d4] to-[#2563eb] p-0.5 shadow-sm flex items-center justify-center group-hover:scale-105 transition-transform">
             <div className="w-full h-full bg-white dark:bg-[#0f172a] rounded-[9px] flex items-center justify-center">
-              <span className="font-extrabold text-sm text-[#2563eb] dark:text-[#38bdf8] tracking-tighter">LG</span>
+              <span className="font-extrabold text-sm text-[#2563eb] dark:text-[#38bdf8] tracking-tighter">TW</span>
             </div>
           </div>
         </Link>
@@ -99,9 +99,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         {/* User Avatar Circle */}
         <div 
           className="w-9 h-9 rounded-full bg-gradient-to-tr from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 border border-slate-200 dark:border-slate-600 flex items-center justify-center text-xs font-bold text-slate-600 dark:text-slate-300 cursor-pointer shadow-sm"
-          title="LandGuard Operator"
+          title="Terrawarn-Ai Operator"
         >
-          <span>LG</span>
+          <span>TW</span>
         </div>
       </div>
     </aside>
