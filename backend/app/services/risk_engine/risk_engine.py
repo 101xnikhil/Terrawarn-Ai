@@ -10,6 +10,84 @@ from app.services.risk_engine.features import FeatureEngineeringPipeline
 logger = logging.getLogger("landguard.risk_engine")
 
 
+class RemoteXGBoostPredictor:
+    """
+    HTTP Client adapter for external XGBoost Server APIs.
+    Communicates via REST with external microservices (FastAPI, Flask, Cloud Run, Docker).
+    """
+    def __init__(self, api_url: str, timeout: float = 4.0):
+        self.api_url = api_url.strip()
+        self.timeout = timeout
+        self.model_version = "remote-xgboost-api"
+
+    def predict(
+        self,
+        soil_moisture: float,
+        rainfall: float,
+        rainfall_24h: float,
+        slope_angle: float,
+        tilt_rate: float,
+        factor_of_safety: float,
+    ) -> Dict[str, Any]:
+        import httpx
+        payload = {
+            "soil_moisture": float(soil_moisture),
+            "rainfall": float(rainfall),
+            "rainfall_24h": float(rainfall_24h),
+            "slope_angle": float(slope_angle),
+            "tilt_rate": float(tilt_rate),
+            "factor_of_safety": float(factor_of_safety),
+            "features": [
+                float(soil_moisture),
+                float(rainfall),
+                float(rainfall_24h),
+                float(slope_angle),
+                float(tilt_rate),
+                float(factor_of_safety),
+            ],
+        }
+        with httpx.Client(timeout=self.timeout) as client:
+            resp = client.post(self.api_url, json=payload)
+            resp.raise_for_status()
+            data = resp.json()
+
+            raw_score = (
+                data.get("risk_score_normalized")
+                if data.get("risk_score_normalized") is not None
+                else (
+                    data.get("risk_score")
+                    if data.get("risk_score") is not None
+                    else data.get("probability", data.get("risk_prob", 0.5))
+                )
+            )
+            score_norm = float(raw_score)
+            if score_norm > 1.0:
+                score_norm = round(score_norm / 100.0, 3)
+            else:
+                score_norm = round(score_norm, 3)
+
+            risk_level = data.get("risk_level")
+            if not risk_level:
+                if score_norm >= 0.75 or factor_of_safety < 1.0:
+                    risk_level = "CRITICAL"
+                elif score_norm >= 0.50 or factor_of_safety < 1.2:
+                    risk_level = "HIGH"
+                elif score_norm >= 0.25:
+                    risk_level = "MODERATE"
+                else:
+                    risk_level = "LOW"
+
+            return {
+                "risk_score": int(round(score_norm * 100)),
+                "risk_score_normalized": score_norm,
+                "risk_level": risk_level,
+                "confidence": float(data.get("confidence", 0.88)),
+                "factor_of_safety": float(data.get("factor_of_safety", factor_of_safety)),
+                "top_factors": data.get("top_factors") or data.get("shap_values") or [],
+                "model_version": data.get("model_version", self.model_version),
+            }
+
+
 class GrayBoxRiskEngine:
     """
     Modular Gray-Box Landslide Hazard Risk Engine.
@@ -30,12 +108,25 @@ class GrayBoxRiskEngine:
         self._init_ml_predictor()
 
     def _init_ml_predictor(self):
-        """Attempts to load ML predictor from ml package."""
+        """Initializes ML predictor: prefers remote XGBoost API if configured, otherwise local bundle."""
+        try:
+            from app.config import settings
+            remote_url = getattr(settings, "XGBOOST_API_URL", "").strip()
+            if remote_url:
+                self.ml_predictor = RemoteXGBoostPredictor(
+                    remote_url,
+                    timeout=getattr(settings, "XGBOOST_TIMEOUT_SECONDS", 4.0),
+                )
+                logger.info(f"Connected GrayBoxRiskEngine to Remote XGBoost API at {remote_url}")
+                return
+        except Exception as e:
+            logger.warning(f"Note on XGBOOST_API_URL config: {e}")
+
         try:
             from ml.inference.predictor import predictor
             if predictor.model is not None:
                 self.ml_predictor = predictor
-                logger.info("Successfully connected ML predictor to GrayBoxRiskEngine.")
+                logger.info("Successfully connected local ML predictor to GrayBoxRiskEngine.")
         except Exception as e:
             logger.info(f"ML predictor optional initialization note: {e}")
 

@@ -82,3 +82,65 @@ def reset_demo() -> Dict[str, Any]:
     """Resets the demonstration back to NORMAL baseline."""
     demo_service.reset()
     return {"status": "reset", "state": "NORMAL", "stage": 1, "message": "Demonstration reset to NORMAL baseline."}
+
+
+@router.post("/sync-cloud")
+async def sync_from_cloud_xgboost_server(db: Session = Depends(get_db)) -> Dict[str, Any]:
+    """
+    Pulls live sensor telemetry and XGBoost prediction from the external cloud server
+    (http://34.131.240.174:8000/api/demo/telemetry), records it in the database,
+    evaluates alerts, and broadcasts it immediately to the live dashboard.
+    """
+    import httpx
+    from app.schemas.telemetry import TelemetryCreate
+    from app.services.telemetry_service import telemetry_service
+
+    cloud_url = "http://34.131.240.174:8000/api/demo/telemetry"
+    try:
+        async with httpx.AsyncClient(timeout=6.0) as client:
+            resp = await client.get(cloud_url)
+            resp.raise_for_status()
+            cloud_data = resp.json()
+
+        telem = cloud_data.get("telemetry", {})
+        risk = cloud_data.get("risk", {})
+
+        telemetry_in = TelemetryCreate(
+            node_id=telem.get("node_id", "LG-N01"),
+            soil_moisture=float(telem.get("soil_moisture", 45.0)),
+            rainfall=float(telem.get("rainfall_1h", 0.0)),
+            rainfall_24h=float(telem.get("rainfall_24h", 0.0)),
+            rain_detected=float(telem.get("rainfall_1h", 0.0)) > 0.5,
+            tilt_angle=float(telem.get("tilt_angle", 20.0)),
+            tilt_rate=float(telem.get("tilt_rate", 0.0)),
+            battery=90.0,
+            rssi=-62,
+        )
+
+        telemetry, risk_result, alert = await telemetry_service.process_and_store_telemetry(
+            db=db,
+            data=telemetry_in,
+        )
+
+        # Update with external XGBoost model risk attributes
+        if risk:
+            raw_score = float(risk.get("risk_score", 0.0))
+            risk_result.risk_score = raw_score / 100.0 if raw_score > 1.0 else raw_score
+            risk_result.risk_level = risk.get("risk_level", risk_result.risk_level)
+            risk_result.model_version = risk.get("model_version", "prototype-xgboost-v1")
+            db.commit()
+
+        return {
+            "status": "success",
+            "message": "Fetched telemetry and XGBoost risk from cloud server (34.131.240.174)",
+            "source_endpoint": cloud_url,
+            "cloud_telemetry": telem,
+            "cloud_risk": risk,
+            "telemetry_id": telemetry.id,
+            "alert_generated": alert is not None,
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Failed to fetch telemetry from cloud XGBoost server ({cloud_url}): {e}",
+        )

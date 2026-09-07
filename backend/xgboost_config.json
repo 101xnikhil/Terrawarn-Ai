@@ -1,0 +1,7 @@
+{
+  "api_url": "http://34.131.240.174:8000",
+  "timeout_seconds": 5.0,
+  "auto_stream_enabled": false,
+  "auto_stream_interval_seconds": 5,
+  "updated_at": "2026-09-07T05:51:19Z"
+}

@@ -151,7 +151,7 @@ class SMSService:
 
         for attempt in range(2):
             try:
-                async with httpx.AsyncClient(timeout=8.0) as client:
+                async with httpx.AsyncClient(timeout=3.0) as client:
                     resp = await client.post(FAST2SMS_URL, headers=headers, json=json_body)
                     
                     try:

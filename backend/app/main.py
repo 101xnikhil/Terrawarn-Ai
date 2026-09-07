@@ -27,19 +27,22 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing database tables...")
     Base.metadata.create_all(bind=engine)
 
-    # Automatically add missing columns if upgrading existing SQLite databases
-    if "sqlite" in settings.DATABASE_URL:
-        from sqlalchemy import text
-        with engine.connect() as conn:
-            for col_sql in [
-                "ALTER TABLE alerts ADD COLUMN trigger_reason TEXT;",
-                "ALTER TABLE alerts ADD COLUMN created_at DATETIME;",
-                "ALTER TABLE alerts ADD COLUMN sms_sent BOOLEAN DEFAULT 0;",
-                "ALTER TABLE alerts ADD COLUMN sms_sent_at DATETIME;",
-                "ALTER TABLE alerts ADD COLUMN sms_error TEXT;",
-            ]:
+    # Automatically add missing columns for PostgreSQL & SQLite migrations
+    from sqlalchemy import text
+    with engine.connect() as conn:
+        for col, typ in [
+            ("trigger_reason", "TEXT"),
+            ("created_at", "TIMESTAMP"),
+            ("sms_sent", "BOOLEAN DEFAULT FALSE"),
+            ("sms_sent_at", "TIMESTAMP"),
+            ("sms_error", "TEXT"),
+        ]:
+            try:
+                conn.execute(text(f"ALTER TABLE alerts ADD COLUMN IF NOT EXISTS {col} {typ};"))
+                conn.commit()
+            except Exception:
                 try:
-                    conn.execute(text(col_sql))
+                    conn.execute(text(f"ALTER TABLE alerts ADD COLUMN {col} {typ};"))
                     conn.commit()
                 except Exception:
                     pass

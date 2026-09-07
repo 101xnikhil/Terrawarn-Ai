@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 import json
+from pydantic import BaseModel, Field
 
 from app.database import get_db
 from app.schemas.risk import RiskResponse, RiskHistoryResponse
@@ -29,6 +30,51 @@ def _format_risk_response(risk: RiskResult) -> RiskResponse:
         features=feat_data,
         model_version=risk.model_version,
     )
+
+
+class RiskEvaluateRequest(BaseModel):
+    soil_moisture: float = Field(default=45.0, description="Volumetric Soil Moisture (%)")
+    rainfall: float = Field(default=10.0, description="Rainfall intensity rate (mm/h)")
+    rainfall_24h: float = Field(default=35.0, description="Cumulative 24h rainfall (mm)")
+    slope_angle: float = Field(default=25.0, description="Slope inclination dip angle (deg)")
+    tilt_rate: float = Field(default=0.01, description="Tilt velocity (deg/min)")
+
+
+@router.get("/status/engine")
+def get_ml_engine_status():
+    """Retrieve active ML risk engine configuration (Remote XGBoost vs Local ML vs Physics)."""
+    from app.config import settings
+    from app.services.risk_engine import risk_engine
+    
+    predictor_type = "heuristic_physics"
+    remote_url = getattr(settings, "XGBOOST_API_URL", "")
+    if risk_engine.ml_predictor is not None:
+        predictor_type = type(risk_engine.ml_predictor).__name__
+
+    return {
+        "status": "online",
+        "active_predictor": predictor_type,
+        "remote_api_configured": bool(remote_url),
+        "remote_api_url": remote_url if remote_url else None,
+        "timeout_seconds": getattr(settings, "XGBOOST_TIMEOUT_SECONDS", 4.0),
+    }
+
+
+@router.post("/evaluate")
+def evaluate_risk_realtime(req: RiskEvaluateRequest):
+    """
+    On-demand risk prediction endpoint for XGBoost integration testing.
+    Evaluates sensor parameters through the active XGBoost/Gray-box pipeline and returns real-time risk scores + SHAP values.
+    """
+    from app.services.risk_engine import risk_engine
+    result = risk_engine.evaluate(
+        soil_moisture_pct=req.soil_moisture,
+        rainfall_pct=req.rainfall,
+        rainfall_24h_mm=req.rainfall_24h,
+        slope_angle_deg=req.slope_angle,
+        tilt_rate_deg_min=req.tilt_rate,
+    )
+    return result
 
 
 @router.get("/{node_id}", response_model=RiskResponse)

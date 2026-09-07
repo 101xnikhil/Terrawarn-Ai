@@ -6,6 +6,7 @@ import { Server, Settings, Database, RefreshCw, AlertTriangle, Cpu, Layers, Shie
 import { Scenario } from '../mock/generator';
 import clsx from 'clsx';
 import BlynkIntegrationPanel from '../components/dashboard/BlynkIntegrationPanel';
+import XGBoostServerConfigPanel from '../components/dashboard/XGBoostServerConfigPanel';
 import { useTheme } from '../context/ThemeContext';
 
 const SettingsPage: React.FC = () => {
@@ -274,6 +275,9 @@ const SettingsPage: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* External / Cloud XGBoost Server Integration (Reconfigurable IP/Port) */}
+      <XGBoostServerConfigPanel />
 
       {/* Blynk IoT Cloud Hardware Integration */}
       <BlynkIntegrationPanel reading={state.currentReading} risk={state.currentRisk} />

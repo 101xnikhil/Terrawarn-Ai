@@ -61,6 +61,10 @@ class Settings(BaseSettings):
     BLYNK_AUTH_TOKEN: str = ""
     GCP_WEBHOOK_URL: str = ""
 
+    # External XGBoost ML Server API Integration
+    XGBOOST_API_URL: str = ""
+    XGBOOST_TIMEOUT_SECONDS: float = 4.0
+
     @property
     def emergency_phones(self) -> List[str]:
         if isinstance(self.EMERGENCY_PHONE_NUMBERS, list):
