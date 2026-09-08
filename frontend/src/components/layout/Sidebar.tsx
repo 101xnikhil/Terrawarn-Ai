@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
-  BarChart2, Radio, Map, Target, Handshake, Briefcase, 
-  Settings, Bell, Users, Shield, Cpu, Flame, Layers, GitFork,
+  LayoutDashboard, Radio, Map, Handshake, Briefcase, 
+  Settings, Bell, Shield, Cpu, Flame, Layers, GitFork,
   Camera
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -19,11 +19,11 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const { t } = useI18n();
 
   const navItems = [
-    { name: t('NAV_METRICS'), path: '/', icon: BarChart2, tooltip: t('NAV_METRICS') },
+    { name: t('NAV_METRICS'), path: '/', icon: LayoutDashboard, tooltip: t('NAV_METRICS') },
     { name: t('NAV_STATION_TELEMETRY'), path: '/sensor', icon: GitFork, tooltip: t('NAV_STATION_TELEMETRY') },
-    { name: t('NAV_GEOSPATIAL_GIS'), path: '/map', icon: Users, tooltip: t('NAV_GEOSPATIAL_GIS') },
+    { name: t('NAV_GEOSPATIAL_GIS'), path: '/map', icon: Map, tooltip: t('NAV_GEOSPATIAL_GIS') },
     { name: t('NAV_FIELD_REPORTS'), path: '/reports', icon: Camera, tooltip: t('NAV_FIELD_REPORTS') },
-    { name: t('NAV_ALERTS'), path: '/alerts', icon: Target, tooltip: t('NAV_ALERTS') },
+    { name: t('NAV_ALERTS'), path: '/alerts', icon: Bell, tooltip: t('NAV_ALERTS') },
     { name: t('NAV_ANALYTICS'), path: '/analytics', icon: Handshake, tooltip: t('NAV_ANALYTICS') },
     { name: t('NAV_ABOUT'), path: '/about', icon: Briefcase, tooltip: t('NAV_ABOUT') },
   ];

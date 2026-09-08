@@ -5,7 +5,7 @@
  */
 export const UI_STRINGS = {
   // ── Nav / chrome ──────────────────────────────────────────
-  NAV_METRICS: 'Metrics',
+  NAV_METRICS: 'Overview',
   NAV_STATION_TELEMETRY: 'Station Telemetry',
   NAV_GEOSPATIAL_GIS: 'Geospatial Sector GIS',
   NAV_FIELD_REPORTS: 'Field Reports',
@@ -14,7 +14,7 @@ export const UI_STRINGS = {
   NAV_ABOUT: 'About Terrawarn-Ai',
   NAV_SETTINGS: 'Hardware & Settings',
   NAV_ALERTS_CENTER: 'Alerts Center',
-  PAGE_METRICS: 'Metrics',
+  PAGE_METRICS: 'Overview',
   PAGE_STATION_TELEMETRY: 'Station Telemetry',
   PAGE_ALERTS: 'Alerts & Incidents',
   PAGE_ANALYTICS: 'Analytics',

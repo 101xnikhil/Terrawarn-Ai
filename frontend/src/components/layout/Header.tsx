@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
             <Menu className="w-5 h-5" />
           </button>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-[#0b1220] dark:text-white tracking-tight shrink-0">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#253DA1] dark:text-[#7aa2ff] tracking-tight shrink-0">
             {title}
           </h1>
         </div>

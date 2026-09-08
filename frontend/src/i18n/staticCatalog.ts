@@ -7,7 +7,7 @@ import type { UIStringKey } from './strings';
 type Pack = Partial<Record<UIStringKey, string>>;
 
 const hi: Pack = {
-  NAV_METRICS: 'मेट्रिक्स',
+  NAV_METRICS: 'अवलोकन',
   NAV_STATION_TELEMETRY: 'स्टेशन टेलीमेट्री',
   NAV_GEOSPATIAL_GIS: 'भू-स्थानिक सेक्टर जीआईएस',
   NAV_FIELD_REPORTS: 'क्षेत्र रिपोर्ट',
@@ -16,7 +16,7 @@ const hi: Pack = {
   NAV_ABOUT: 'टेरावार्न-एआई के बारे में',
   NAV_SETTINGS: 'हार्डवेयर और सेटिंग्स',
   NAV_ALERTS_CENTER: 'अलर्ट केंद्र',
-  PAGE_METRICS: 'मेट्रिक्स',
+  PAGE_METRICS: 'अवलोकन',
   PAGE_STATION_TELEMETRY: 'स्टेशन टेलीमेट्री',
   PAGE_ALERTS: 'अलर्ट और घटनाएँ',
   PAGE_ANALYTICS: 'विश्लेषण',
@@ -176,7 +176,7 @@ const hi: Pack = {
 };
 
 const ne: Pack = {
-  NAV_METRICS: 'मेट्रिक्स',
+  NAV_METRICS: 'अवलोकन',
   NAV_STATION_TELEMETRY: 'स्टेशन टेलिमेट्री',
   NAV_GEOSPATIAL_GIS: 'भू-स्थानिक सेक्टर जीआईएस',
   NAV_FIELD_REPORTS: 'क्षेत्र रिपोर्ट',
@@ -185,7 +185,7 @@ const ne: Pack = {
   NAV_ABOUT: 'टेरावार्न-एआई बारे',
   NAV_SETTINGS: 'हार्डवेयर र सेटिङ',
   NAV_ALERTS_CENTER: 'अलर्ट केन्द्र',
-  PAGE_METRICS: 'मेट्रिक्स',
+  PAGE_METRICS: 'अवलोकन',
   PAGE_STATION_TELEMETRY: 'स्टेशन टेलिमेट्री',
   PAGE_ALERTS: 'अलर्ट र घटनाहरू',
   PAGE_ANALYTICS: 'विश्लेषण',
@@ -221,13 +221,13 @@ const ne: Pack = {
 };
 
 const as: Pack = {
-  NAV_METRICS: 'মেট্ৰিক্স',
+  NAV_METRICS: 'অৱলোকন',
   NAV_STATION_TELEMETRY: 'ষ্টেচন টেলিমেট্ৰী',
   NAV_ALERTS: 'সতৰ্কবাৰ্তা আৰু ঘটনা',
   NAV_ANALYTICS: 'ভূ-প্ৰযুক্তি বিশ্লেষণ',
   NAV_ABOUT: 'টেৰাৱাৰ্ণ-এআইৰ বিষয়ে',
   NAV_SETTINGS: 'হাৰ্ডৱেৰ আৰু ছেটিংছ',
-  PAGE_METRICS: 'মেট্ৰিক্স',
+  PAGE_METRICS: 'অৱলোকন',
   PAGE_ALERTS: 'সতৰ্কবাৰ্তা আৰু ঘটনা',
   PAGE_SETTINGS: 'ছেটিংছ',
   HEADER_ONLINE: 'অনলাইন',
@@ -246,12 +246,12 @@ const as: Pack = {
 };
 
 const bn: Pack = {
-  NAV_METRICS: 'মেট্রিক্স',
+  NAV_METRICS: 'ওভারভিউ',
   NAV_STATION_TELEMETRY: 'স্টেশন টেলিমেট্রি',
   NAV_ALERTS: 'সতর্কতা ও ঘটনা',
   NAV_ANALYTICS: 'ভূ-প্রযুক্তি বিশ্লেষণ',
   NAV_SETTINGS: 'হার্ডওয়্যার ও সেটিংস',
-  PAGE_METRICS: 'মেট্রিক্স',
+  PAGE_METRICS: 'ওভারভিউ',
   PAGE_ALERTS: 'সতর্কতা ও ঘটনা',
   HEADER_ONLINE: 'অনলাইন',
   HEADER_OFFLINE: 'অফলাইন',
@@ -270,12 +270,12 @@ const bn: Pack = {
 
 
 const ta: Pack = {
-  NAV_METRICS: 'அளவீடுகள்',
+  NAV_METRICS: 'கண்ணோட்டம்',
   NAV_STATION_TELEMETRY: 'நிலைய தொலையளவியல்',
   NAV_ALERTS: 'எச்சரிக்கைகள் மற்றும் நிகழ்வுகள்',
   NAV_ANALYTICS: 'புவிதொழில்நுட்ப பகுப்பாய்வு',
   NAV_SETTINGS: 'வன்பொருள் மற்றும் அமைப்புகள்',
-  PAGE_METRICS: 'அளவீடுகள்',
+  PAGE_METRICS: 'கண்ணோட்டம்',
   HEADER_ONLINE: 'ஆன்லைன்',
   HEADER_OFFLINE: 'ஆஃப்லைன்',
   GEOTECH_STATUS: 'புவிதொழில்நுட்ப நிலை',
@@ -292,10 +292,10 @@ const ta: Pack = {
 };
 
 const mni: Pack = {
-  NAV_METRICS: 'মেট্রিক্স',
+  NAV_METRICS: 'ওভারভিউ',
   NAV_ALERTS: 'অলার্ট অমসুং ইভেন্ট',
   NAV_SETTINGS: 'হার্ডওয়্যার অমসুং সেটিংস',
-  PAGE_METRICS: 'মেট্রিক্স',
+  PAGE_METRICS: 'ওভারভিউ',
   HEADER_ONLINE: 'অনলাইন',
   HEADER_OFFLINE: 'অফলাইন',
   GEOTECH_STATUS: 'জিওটেকনিকেল স্টেটাস',
