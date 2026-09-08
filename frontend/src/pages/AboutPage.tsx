@@ -87,13 +87,6 @@ const PREVIOUS_PROJECTS = [
       'Built a high-precision live cardiac waveform streaming dashboard with automated tachycardia, bradycardia, and PVC event alerts.',
       'Bluetooth Low Energy (BLE) and Wi-Fi dual-link telemetry with offline local buffering during emergency transport.',
     ],
-    stack: ['ESP32', 'AD8232 ECG Transducer', 'Pan-Tompkins Algorithm', 'FastAPI', 'WebSockets', 'React Recharts'],
-    metrics: [
-      { label: 'Sampling Rate', val: '250 Hz' },
-      { label: 'QRS Accuracy', val: '98.4%' },
-      { label: 'Latency', val: '< 15 ms' },
-      { label: 'Battery', val: '18+ Hours' },
-    ],
   },
   {
     id: 'proj-microplastics',
@@ -109,13 +102,6 @@ const PREVIOUS_PROJECTS = [
       'Trained a custom YOLOv8 + EfficientNet convolutional neural network to detect particles down to 10 micrometers with 96.2% precision.',
       'Automated polymer morphological profiling (fibers, fragments, beads, films) with instant density per liter computation.',
       'Created an environmental GIS map displaying regional waterway contamination heatmaps for pollution remediation teams.',
-    ],
-    stack: ['Python', 'PyTorch / YOLOv8', 'OpenCV', 'Fluorescence Spectroscopy', 'Raspberry Pi', 'React GIS'],
-    metrics: [
-      { label: 'Resolution', val: '10 μm' },
-      { label: 'Classification F1', val: '96.2%' },
-      { label: 'Throughput', val: '45 Samples/hr' },
-      { label: 'Polymers', val: '8 Types' },
     ],
   },
 ];
@@ -936,7 +922,7 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* ── Section 7: Previous Engineering Works ────────────── */}
+      {/* ── Previous Engineering Works ────────────── */}
       <div>
         <div className="mb-4">
           <div className="flex items-center gap-2">
@@ -976,7 +962,6 @@ export default function AboutPage() {
                     {proj.summary}
                   </p>
 
-                  {/* Highlights */}
                   <div className="space-y-1.5 mb-4">
                     <span className="text-[11px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">Key Technical Achievements:</span>
                     <ul className="space-y-1 text-xs text-slate-700 dark:text-slate-200">
@@ -988,25 +973,6 @@ export default function AboutPage() {
                       ))}
                     </ul>
                   </div>
-
-                  {/* Tech stack badges */}
-                  <div className="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100 dark:border-white/10">
-                    {proj.stack.map((stk, sIdx) => (
-                      <span key={sIdx} className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-[10.5px] font-medium">
-                        {stk}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Metrics */}
-                <div className="grid grid-cols-4 gap-2 pt-4 mt-4 border-t border-slate-100 dark:border-white/10 text-center">
-                  {proj.metrics.map((m, mIdx) => (
-                    <div key={mIdx} className="bg-slate-50 dark:bg-slate-800/40 p-2 rounded-xl border border-slate-100 dark:border-white/5">
-                      <div className="text-xs font-bold text-slate-900 dark:text-white font-mono">{m.val}</div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400 font-medium">{m.label}</div>
-                    </div>
-                  ))}
                 </div>
               </div>
             );
