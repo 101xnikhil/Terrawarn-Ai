@@ -34,7 +34,7 @@ const LanguageSwitcher: React.FC = () => {
 
   return (
     <div className="flex flex-col items-end gap-1.5">
-      <div className="flex items-center gap-1.5 bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 px-2.5 py-1 rounded-lg shadow-xs">
+      <div className="ui-chip flex items-center gap-1.5 px-2.5 py-1.5">
         <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
         <select
           value={lang}

@@ -378,7 +378,7 @@ export default function VirtualChatbotModal() {
       {/* ── Floating Chatbot Widget Trigger Button ────────────── */}
       <div className="fixed bottom-6 right-6 z-[9998] flex items-center gap-2">
         {!isOpen && (
-          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/90 dark:bg-[#0c1220]/90 backdrop-blur-md border border-[#e4e8ef] dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-xl animate-fade-in">
+          <div className="hidden sm:flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/92 dark:bg-[#0f172a]/92 backdrop-blur-md border border-[#e2e8f0] dark:border-white/10 text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-lg animate-fade-in">
             <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
             <span>{t('GEOBOT_ASK')}</span>
           </div>
@@ -390,7 +390,7 @@ export default function VirtualChatbotModal() {
             'w-14 h-14 rounded-2xl flex items-center justify-center shadow-xl transition-all duration-300 relative group',
             isOpen 
               ? 'bg-slate-800 text-white rotate-90' 
-              : 'bg-[#2563eb] text-white hover:scale-105 shadow-[0_16px_32px_-12px_rgba(37,99,235,0.85)]'
+              : 'bg-[#2563eb] text-white hover:scale-[1.03] shadow-[0_14px_28px_-14px_rgba(37,99,235,0.8)]'
           )}
           aria-label={t('GEOBOT_OPEN')}
           title="Open Terrawarn Virtual AI Assistant"

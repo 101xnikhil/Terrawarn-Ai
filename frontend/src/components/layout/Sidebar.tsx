@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   return (
     <aside
       className={clsx(
-        'fixed top-0 left-0 z-40 h-screen transition-transform bg-white/90 dark:bg-[#0c1220]/90 backdrop-blur-xl border-r border-[#e4e8ef] dark:border-white/[0.07] flex flex-col justify-between items-center py-4',
+        'fixed top-0 left-0 z-40 h-screen transition-transform bg-white/88 dark:bg-[#0f172a]/88 backdrop-blur-xl border-r border-[#e2e8f0] dark:border-white/[0.07] flex flex-col justify-between items-center py-5',
         'w-16 sm:w-16',
         isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       )}
@@ -42,10 +42,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
       {/* Top Logo */}
       <div className="flex flex-col items-center gap-6 w-full">
         <Link to="/" className="group p-1" title={t('FOOTER_BRAND')}>
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#10b981] via-[#06b6d4] to-[#2563eb] p-[1.5px] shadow-[0_8px_18px_-10px_rgba(37,99,235,0.8)] flex items-center justify-center group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-white dark:bg-[#0c1220] rounded-[9px] flex items-center justify-center">
-              <span className="font-extrabold text-sm text-[#2563eb] dark:text-[#38bdf8] tracking-tighter">TW</span>
-            </div>
+          <div className="w-9 h-9 rounded-xl bg-[#253DA1] dark:bg-[#2563eb] flex items-center justify-center shadow-[0_8px_16px_-10px_rgba(37,61,161,0.7)] group-hover:scale-[1.04] transition-transform duration-150">
+            <span className="font-extrabold text-[13px] text-white tracking-tighter">TW</span>
           </div>
         </Link>
 
@@ -63,10 +61,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
                 title={item.tooltip}
                 aria-current={isActive ? 'page' : undefined}
                 className={clsx(
-                  'w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-150 relative group',
+                  'w-10 h-10 rounded-[11px] flex items-center justify-center transition-all duration-150 relative group',
                   isActive
-                    ? 'bg-[#2563eb] text-white shadow-[0_10px_20px_-10px_rgba(37,99,235,0.95)]'
-                    : 'text-slate-400 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100/90 dark:hover:bg-white/[0.06]'
+                    ? 'bg-[#2563eb] text-white shadow-[0_8px_18px_-10px_rgba(37,99,235,0.9)]'
+                    : 'text-slate-400 dark:text-slate-500 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/[0.06]'
                 )}
               >
                 {isActive && (

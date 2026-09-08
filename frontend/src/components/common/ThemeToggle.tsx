@@ -70,10 +70,10 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', clas
       type="button"
       onClick={toggleTheme}
       className={clsx(
-        'relative p-2 rounded-xl border transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500/40',
+        'ui-chip relative p-2 transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500/40',
         resolvedTheme === 'dark'
-          ? 'bg-[#121a2b] border-white/10 text-amber-300 hover:text-amber-200 hover:bg-[#1a2438] hover:border-white/16 shadow-xs'
-          : 'bg-white border-[#e4e8ef] text-slate-600 hover:text-blue-600 hover:border-slate-300 shadow-xs',
+          ? 'text-amber-300 hover:text-amber-200 hover:bg-[#1a2438] hover:border-white/16'
+          : 'text-slate-600 hover:text-blue-600 hover:border-slate-300',
         className
       )}
       title={resolvedTheme === 'dark' ? t('THEME_LIGHT') : t('THEME_DARK')}

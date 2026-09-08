@@ -67,7 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
           isConnected={isConnected}
           onMenuToggle={toggleSidebar} 
         />
-        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
+        <main className="flex-1 overflow-auto p-4 sm:p-6 lg:px-8 lg:py-7 max-w-[1600px] w-full mx-auto">
           <div key={location.pathname} className="page-enter">
             <ErrorBoundary fallbackTitle={t('PAGE_ERROR')} fallbackMessage={t('PAGE_ERROR_MSG')}>
               <Outlet />
@@ -78,7 +78,7 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
         {/* Global Virtual Chatbot AI Assistant */}
         <VirtualChatbotModal />
 
-        <footer className="border-t border-[#e4e8ef] dark:border-white/[0.07] bg-white/80 dark:bg-[#0c1220]/80 backdrop-blur-md px-6 py-3.5 text-xs font-sans text-slate-500 dark:text-slate-300 transition-colors">
+        <footer className="border-t border-[#e2e8f0] dark:border-white/[0.07] bg-white/75 dark:bg-[#0f172a]/75 backdrop-blur-md px-6 py-3 text-xs font-sans text-slate-500 dark:text-slate-400 transition-colors">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-[1600px] mx-auto">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_0_3px_rgba(16,185,129,0.18)]"></span>

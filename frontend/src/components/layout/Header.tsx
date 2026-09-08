@@ -30,13 +30,13 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onMenuToggle}
-            className="lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white focus:outline-none p-2 rounded-xl bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 shadow-sm"
+            className="ui-chip lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white focus:outline-none p-2"
             aria-label={t('TOGGLE_NAV')}
           >
             <Menu className="w-5 h-5" />
           </button>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-[#253DA1] dark:text-[#7aa2ff] tracking-tight shrink-0">
+          <h1 className="text-[1.65rem] sm:text-[1.85rem] font-extrabold text-[#253DA1] dark:text-[#93b4ff] tracking-[-0.035em] shrink-0 leading-none">
             {title}
           </h1>
         </div>
@@ -86,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
               <select
                 value={selectedTeam}
                 onChange={(e) => setSelectedTeam(e.target.value)}
-                className="appearance-none bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 hover:border-slate-300 dark:hover:border-slate-600 text-slate-800 dark:text-slate-100 font-semibold py-1.5 pl-3 pr-7 rounded-xl cursor-pointer shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-xs"
+                className="ui-chip appearance-none hover:border-slate-300 dark:hover:border-slate-500 text-slate-800 dark:text-slate-100 font-semibold py-1.5 pl-3 pr-7 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-xs"
               >
                 <option value="All sectors (2)">{t('HEADER_ALL_SECTORS')}</option>
                 <option value="Sector 7 (Shimla NH-5)">{t('HEADER_SECTOR_SHIMLA')}</option>
@@ -123,13 +123,13 @@ const Header: React.FC<HeaderProps> = ({ title, alertCount, isConnected, onMenuT
           </div>
 
           {/* Date Range Pill */}
-          <div className="hidden xl:flex items-center gap-2 bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 px-3 py-1.5 rounded-xl font-medium text-slate-700 dark:text-slate-100 shadow-sm text-xs">
+          <div className="ui-chip hidden xl:flex items-center gap-2 px-3 py-1.5 font-medium text-slate-700 dark:text-slate-100 text-xs">
             <span>01/01/2026 - 28/08/2026</span>
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
           </div>
 
           {/* Mode Selector Pill (Same line as all other controls) */}
-          <div className="flex items-center bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 p-0.5 rounded-xl shadow-xs">
+          <div className="ui-chip flex items-center p-0.5">
             <button
               onClick={() => setMode('DEMO')}
               className={clsx(
