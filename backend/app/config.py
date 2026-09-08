@@ -53,7 +53,7 @@ class Settings(BaseSettings):
 
     # Fast2SMS Quick Route (q) Live Alert Settings
     ALERT_SMS_RECIPIENTS: Union[List[str], str] = ""
-    SMS_ALERTS_ENABLED: bool = False
+    SMS_ALERTS_ENABLED: bool = True
     SMS_MIN_SEVERITY: str = "HIGH"
     SMS_MAX_PER_DAY: int = 20
 
@@ -64,6 +64,13 @@ class Settings(BaseSettings):
     # External XGBoost ML Server API Integration
     XGBOOST_API_URL: str = ""
     XGBOOST_TIMEOUT_SECONDS: float = 4.0
+
+    # Local Ollama UI translation (offline, no cloud API)
+    OLLAMA_HOST: str = "http://localhost:11434"
+    OLLAMA_MODEL: str = "llama3.2"
+    TRANSLATION_TIMEOUT_SECONDS: float = 60.0
+    TRANSLATION_CHUNK_SIZE: int = 16
+    UI_LANGUAGES: List[str] = ["en", "hi", "ne", "as", "bn", "mni", "ml", "ta", "kn"]
 
     @property
     def emergency_phones(self) -> List[str]:

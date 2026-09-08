@@ -6,6 +6,8 @@ import {
 import clsx from 'clsx';
 import { useOfflineSync } from '../../utils/offlineSync';
 import { useLanguage } from '../../utils/i18n';
+import { useI18n } from '../../i18n/LanguageContext';
+import type { UIStringKey } from '../../i18n/strings';
 
 interface Props {
   isOpen: boolean;
@@ -30,6 +32,14 @@ const NER_STATES = [
 export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultCoords, onReportSubmitted }) => {
   const { isOnline, queueReport } = useOfflineSync();
   const { t } = useLanguage();
+  const { t: tUi, tx } = useI18n();
+  const categoryKey: Record<string, UIStringKey> = {
+    GROUND_CRACKS: 'CAT_CRACKS',
+    SLOPE_SLUMP: 'CAT_SLUMP',
+    ROCKFALL: 'CAT_ROCKFALL',
+    BLOCKED_ROAD: 'CAT_BLOCKED',
+    RIVER_DAMMING: 'CAT_RIVER',
+  };
 
   const [lat, setLat] = useState<number>(defaultCoords ? defaultCoords[0] : 26.1445);
   const [lng, setLng] = useState<number>(defaultCoords ? defaultCoords[1] : 91.7362);
@@ -165,7 +175,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
             </div>
             <div>
               <h2 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-tight">
-                {t('reportIncidentBtn')} &middot; North Eastern Region
+                {tUi('REPORT_INCIDENT')} &middot; North Eastern Region
               </h2>
               <p className="text-[11px] text-slate-500 dark:text-slate-400">
                 Crowdsourced geo-tagged hazard reporting for citizens, BRO, and field officers.
@@ -195,7 +205,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
             <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-800 dark:text-amber-200 flex items-center justify-between text-[11px]">
               <div className="flex items-center gap-2 font-medium">
                 <Radio className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
-                <span>Operating in Low-Network / Offline Mode. Report will be saved to local storage.</span>
+                <span>{tx('Operating in Low-Network / Offline Mode. Report will be saved to local storage.')}</span>
               </div>
               <span className="font-bold text-[10px] uppercase bg-amber-200 dark:bg-amber-900/60 px-2 py-0.5 rounded">
                 Buffer Ready
@@ -225,7 +235,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
                     )}
                   >
                     <Icon className={clsx("w-4 h-4 shrink-0", isSelected ? "text-blue-600 dark:text-blue-400" : "text-slate-400")} />
-                    <span className="text-[11px] leading-tight">{cat.label}</span>
+                    <span className="text-[11px] leading-tight">{categoryKey[cat.id] ? tUi(categoryKey[cat.id]) : cat.label}</span>
                   </button>
                 );
               })}
@@ -253,7 +263,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
                   step="0.0001"
                   value={lat}
                   onChange={(e) => setLat(parseFloat(e.target.value))}
-                  placeholder="Latitude"
+                  placeholder={tx('Latitude')}
                   className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white font-mono text-xs focus:ring-1 focus:ring-blue-500"
                 />
                 <input
@@ -261,7 +271,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
                   step="0.0001"
                   value={lng}
                   onChange={(e) => setLng(parseFloat(e.target.value))}
-                  placeholder="Longitude"
+                  placeholder={tx('Longitude')}
                   className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white font-mono text-xs focus:ring-1 focus:ring-blue-500"
                 />
               </div>
@@ -379,7 +389,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
             <div className="flex items-center gap-3">
               <label className="cursor-pointer px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border border-slate-300 dark:border-white/10 text-slate-700 dark:text-slate-200 flex items-center gap-2 font-semibold transition-all shadow-2xs">
                 <UploadCloud className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-                <span>Select Photo / Video</span>
+                <span>{tx('Select Photo / Video')}</span>
                 <input type="file" accept="image/*,video/*" onChange={handlePhotoSelect} className="hidden" />
               </label>
               {photoPreview && (
@@ -423,7 +433,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
                 type="text"
                 value={reporterName}
                 onChange={(e) => setReporterName(e.target.value)}
-                placeholder="Your Name"
+                placeholder={tx('Your Name')}
                 className="w-full px-2.5 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-lg text-slate-900 dark:text-white text-xs"
               />
             </div>
@@ -465,7 +475,7 @@ export const ReportIncidentModal: React.FC<Props> = ({ isOpen, onClose, defaultC
               ) : (
                 <>
                   <Send className="w-4 h-4" />
-                  <span>{t('submitReport')}</span>
+                  <span>{tUi('SUBMIT_REPORT')}</span>
                 </>
               )}
             </button>

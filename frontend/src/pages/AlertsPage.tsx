@@ -10,15 +10,17 @@ import { RISK_TEXT_CLASSES, type Alert, type AlertSeverity } from '../types';
 import PrototypeLabel from '../components/common/PrototypeLabel';
 import EmergencySmsBroadcastPanel from '../components/dashboard/EmergencySmsBroadcastPanel';
 import clsx from 'clsx';
+import { useI18n } from '../i18n/LanguageContext';
 
 const AlertsPage: React.FC = () => {
   const { state, acknowledgeAlert } = useMockTelemetry();
+  const { t, tx } = useI18n();
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
   const [showAcknowledged, setShowAcknowledged] = useState<boolean>(true);
   const [selectedAlert, setSelectedAlert] = useState<Alert | null>(null);
   
   if (!state) {
-    return <LoadingState message="Loading incident audit logs..." />;
+    return <LoadingState message={t('LOADING_INCIDENTS')} />;
   }
 
   const getAlertReasons = (alert: Alert): string[] => {
@@ -56,28 +58,28 @@ const AlertsPage: React.FC = () => {
     switch (severity) {
       case 'critical':
         return {
-          label: 'CRITICAL RISK',
+          label: t('SEV_CRITICAL'),
           icon: AlertOctagon,
           className: 'bg-red-100 dark:bg-red-950/70 text-red-700 dark:text-red-300 border-red-200 dark:border-red-800',
           indicator: 'bg-red-500',
         };
       case 'high':
         return {
-          label: 'HIGH RISK',
+          label: t('SEV_HIGH'),
           icon: AlertTriangle,
           className: 'bg-orange-100 dark:bg-orange-950/70 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-800',
           indicator: 'bg-orange-500',
         };
       case 'warning':
         return {
-          label: 'MODERATE HAZARD',
+          label: t('SEV_MODERATE'),
           icon: Info,
           className: 'bg-amber-100 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800',
           indicator: 'bg-amber-500',
         };
       default:
         return {
-          label: 'LOW HAZARD',
+          label: t('SEV_LOW'),
           icon: Info,
           className: 'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800',
           indicator: 'bg-emerald-500',
@@ -92,35 +94,35 @@ const AlertsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              Incident Command Center
+              {t('INCIDENT_COMMAND')}
             </h2>
             {criticalCount > 0 ? (
               <span className="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-950/60 text-red-700 dark:text-red-300 border border-red-300 dark:border-red-800 text-[10px] font-bold animate-pulse">
-                {criticalCount} CRITICAL
+                {criticalCount} {t('CRITICAL_COUNT')}
               </span>
             ) : (
               <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold">
-                ALL CLEAR
+                {t('ALL_CLEAR')}
               </span>
             )}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Real-time threshold violation logs, hazard trigger reasons, and automated cellular emergency dispatch
+            {t('INCIDENT_COMMAND_SUB')}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
             <span className="w-2 h-2 rounded-full bg-red-500" />
-            <span className="text-slate-700 dark:text-slate-200">Critical: <strong className="font-mono text-red-600 dark:text-red-400">{criticalCount}</strong></span>
+            <span className="text-slate-700 dark:text-slate-200">{t('LABEL_CRITICAL')}: <strong className="font-mono text-red-600 dark:text-red-400">{criticalCount}</strong></span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-[#0f172a] border border-[#e5e9f2] dark:border-white/10 text-xs font-semibold shadow-xs">
             <span className="w-2 h-2 rounded-full bg-amber-500" />
-            <span className="text-slate-700 dark:text-slate-200">High: <strong className="font-mono text-amber-600 dark:text-amber-400">{highCount}</strong></span>
+            <span className="text-slate-700 dark:text-slate-200">{t('LABEL_HIGH')}: <strong className="font-mono text-amber-600 dark:text-amber-400">{highCount}</strong></span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-700/60 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-xs">
             <Bell className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span>Unacknowledged: <strong className="font-mono">{unackTotal}</strong></span>
+            <span>{t('LABEL_UNACKNOWLEDGED')}: <strong className="font-mono">{unackTotal}</strong></span>
           </div>
         </div>
       </div>
@@ -128,23 +130,23 @@ const AlertsPage: React.FC = () => {
       {/* Incident Metrics Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="card p-4 flex flex-col justify-between">
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Total Logged</span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('TOTAL_LOGGED')}</span>
           <span className="text-2xl sm:text-3xl font-extrabold text-[#0f172a] dark:text-white mt-1 font-mono">{state.alerts.length}</span>
         </div>
         <div className={clsx("card p-4 flex flex-col justify-between", unackTotal > 0 ? "border-red-200 dark:border-red-900/60 bg-red-50/40 dark:bg-red-950/30" : "")}>
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Unacknowledged</span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('LABEL_UNACKNOWLEDGED')}</span>
           <span className={clsx("text-2xl sm:text-3xl font-extrabold mt-1 font-mono", unackTotal > 0 ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400")}>
             {unackTotal}
           </span>
         </div>
         <div className="card p-4 flex flex-col justify-between">
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Critical Alarms</span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('CRITICAL_ALARMS')}</span>
           <span className={clsx("text-2xl sm:text-3xl font-extrabold mt-1 font-mono", criticalCount > 0 ? "text-red-600 dark:text-red-400" : "text-slate-800 dark:text-white")}>
             {criticalCount}
           </span>
         </div>
         <div className="card p-4 flex flex-col justify-between">
-          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">High Warnings</span>
+          <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('HIGH_WARNINGS')}</span>
           <span className={clsx("text-2xl sm:text-3xl font-extrabold mt-1 font-mono", highCount > 0 ? "text-orange-600 dark:text-orange-400" : "text-slate-800 dark:text-white")}>
             {highCount}
           </span>
@@ -158,7 +160,7 @@ const AlertsPage: React.FC = () => {
       <div className="card p-4 flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2">
           <Filter className="w-4 h-4 text-slate-400" />
-          <span className="font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider text-[11px]">Filter Severity:</span>
+          <span className="font-semibold text-slate-700 dark:text-slate-200 uppercase tracking-wider text-[11px]">{t('FILTER_SEVERITY')}</span>
           <div className="flex gap-1.5">
             {['all', 'critical', 'high', 'warning', 'info'].map((sev) => (
               <button
@@ -184,7 +186,7 @@ const AlertsPage: React.FC = () => {
             onChange={(e) => setShowAcknowledged(e.target.checked)}
             className="rounded border-slate-300 text-blue-600 focus:ring-0"
           />
-          <span>Include Acknowledged Incidents</span>
+          <span>{t('INCLUDE_ACKNOWLEDGED')}</span>
         </label>
       </div>
 
@@ -193,8 +195,8 @@ const AlertsPage: React.FC = () => {
         {filteredAlerts.length === 0 ? (
           <div className="card p-12 text-center text-slate-500 text-xs">
             <CheckCircle2 className="w-8 h-8 text-[#10b981] mx-auto mb-2 opacity-90" />
-            <div className="font-bold text-slate-800 dark:text-white text-sm">NO INCIDENTS MATCHING CRITERIA</div>
-            <div className="text-slate-500 dark:text-slate-400 text-[11px] mt-1">All monitored slope parameters are currently within normal baseline thresholds.</div>
+            <div className="font-bold text-slate-800 dark:text-white text-sm">{t('NO_INCIDENTS')}</div>
+            <div className="text-slate-500 dark:text-slate-400 text-[11px] mt-1">{t('NO_INCIDENTS_SUB')}</div>
           </div>
         ) : (
           filteredAlerts.map((alert: Alert) => {
@@ -231,7 +233,7 @@ const AlertsPage: React.FC = () => {
                           title={alert.sms_sent_at ? `SMS delivered at ${formatDateTime(alert.sms_sent_at)}` : 'SMS delivered to responders'}
                         >
                           <Check className="w-3 h-3 text-emerald-600" />
-                          <span>SMS Sent</span>
+                          <span>{tx('SMS Sent')}</span>
                         </span>
                       ) : alert.sms_error ? (
                         <span 
@@ -259,7 +261,7 @@ const AlertsPage: React.FC = () => {
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-slate-100 text-slate-500 border border-slate-200"
                           title="SMS alert not triggered or quota exhausted"
                         >
-                          <span>SMS Not Sent</span>
+                          <span>{tx('SMS Not Sent')}</span>
                         </span>
                       ) : null}
                       <h3 className="font-bold text-slate-900 dark:text-white text-sm">
@@ -269,7 +271,7 @@ const AlertsPage: React.FC = () => {
 
                     {/* Reasons list */}
                     <div className="mt-2 space-y-0.5">
-                      <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase">Reasons:</span>
+                      <span className="text-[11px] font-bold text-slate-500 dark:text-slate-300 uppercase">{tx('Reasons:')}</span>
                       <ul className="text-xs text-slate-700 dark:text-slate-200 space-y-0.5 font-sans ml-2">
                         {reasons.map((r, i) => (
                           <li key={i} className="flex items-center gap-1.5">
@@ -347,10 +349,10 @@ const AlertsPage: React.FC = () => {
             {/* Modal Body */}
             <div className="space-y-3.5 text-xs">
               <div className="bg-slate-50 dark:bg-slate-800/70 p-3 rounded-xl border border-slate-100 dark:border-white/10 grid grid-cols-2 gap-2.5 font-mono text-[11px]">
-                <div>Node ID: <strong className="text-slate-900 dark:text-white">{selectedAlert.node_id}</strong></div>
-                <div>Risk Score: <strong className="text-orange-600 dark:text-orange-400 font-bold">{(selectedAlert.risk_score * 100).toFixed(1)}%</strong></div>
-                <div>Timestamp: <span className="text-slate-700 dark:text-slate-200">{formatDateTime(selectedAlert.timestamp)}</span></div>
-                <div>Status: <strong className={selectedAlert.acknowledged ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>{selectedAlert.acknowledged ? "ACKNOWLEDGED" : "PENDING"}</strong></div>
+                <div>{tx('Node ID:')} <strong className="text-slate-900 dark:text-white">{selectedAlert.node_id}</strong></div>
+                <div>{tx('Risk Score:')} <strong className="text-orange-600 dark:text-orange-400 font-bold">{(selectedAlert.risk_score * 100).toFixed(1)}%</strong></div>
+                <div>{tx('Timestamp:')} <span className="text-slate-700 dark:text-slate-200">{formatDateTime(selectedAlert.timestamp)}</span></div>
+                <div>{tx('Status:')} <strong className={selectedAlert.acknowledged ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}>{selectedAlert.acknowledged ? tx('ACKNOWLEDGED') : tx('PENDING')}</strong></div>
               </div>
 
               <div>

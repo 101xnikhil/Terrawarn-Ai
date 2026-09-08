@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useMockTelemetry } from '../../hooks/useMockTelemetry';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface DispatchedSms {
   id: string;
@@ -160,6 +161,7 @@ void updateEmergencyBeacon(const char* sectorName, float fos, int hazardScore) {
 }`;
 
 export default function EmergencySmsBroadcastPanel() {
+  const { tx } = useI18n();
   const { state } = useMockTelemetry();
   const [isAutoBroadcastEnabled, setIsAutoBroadcastEnabled] = useState(true);
   const [isBleScanning, setIsBleScanning] = useState(true);
@@ -362,7 +364,7 @@ export default function EmergencySmsBroadcastPanel() {
               </div>
               <div>
                 <h2 className="font-serif italic text-2xl sm:text-3xl text-white font-bold tracking-tight">
-                  Zero-Pairing Bluetooth Proximity Alert & SMS Dispatch
+                  {tx('Zero-Pairing Bluetooth Proximity Alert & SMS Dispatch')}
                 </h2>
                 <div className="flex flex-wrap items-center gap-2 mt-0.5">
                   <span className="px-2 py-0.5 rounded-full bg-blue-950 text-blue-300 border border-blue-600/40 text-[9px] font-mono font-bold tracking-wider uppercase">
@@ -400,7 +402,7 @@ export default function EmergencySmsBroadcastPanel() {
               className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-500 hover:opacity-90 disabled:opacity-50 text-white font-mono text-xs font-bold shadow-lg shadow-red-950 transition-all"
             >
               <Zap className="w-4 h-4" />
-              <span>{isDispatching ? 'Broadcasting...' : 'Broadcast to All Nearby Devices'}</span>
+              <span>{isDispatching ? tx('Broadcasting...') : tx('Broadcast to All Nearby Devices')}</span>
             </button>
 
             {/* ESP32 Firmware Source Button */}
@@ -409,7 +411,7 @@ export default function EmergencySmsBroadcastPanel() {
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 hover:text-white font-mono text-xs transition-colors"
             >
               <Code2 className="w-4 h-4 text-cyan-400" />
-              <span>ESP32 Zero-Pairing Code</span>
+              <span>{tx('ESP32 Zero-Pairing Code')}</span>
             </button>
 
             {/* Audio Toggle */}
@@ -419,7 +421,7 @@ export default function EmergencySmsBroadcastPanel() {
                 'p-2 rounded-xl border text-xs font-mono transition-colors',
                 isSoundEnabled ? 'bg-orange-500/20 text-orange-300 border-orange-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'
               )}
-              title={isSoundEnabled ? 'Alert chimes enabled' : 'Muted'}
+              title={isSoundEnabled ? tx('Alert chimes enabled') : tx('Muted')}
             >
               {isSoundEnabled ? <Volume2 className="w-4 h-4 text-orange-400" /> : <VolumeX className="w-4 h-4 text-slate-400" />}
             </button>
@@ -474,7 +476,7 @@ export default function EmergencySmsBroadcastPanel() {
             </div>
             <div>
               <h3 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight font-sans">
-                Nearby Phones with Bluetooth ON (Captured Passively via 2.4GHz Advertising)
+                {tx('Nearby Phones with Bluetooth ON (Captured Passively via 2.4GHz Advertising)')}
               </h3>
               <p className="text-xs text-slate-600 dark:text-slate-400 font-sans mt-0.5 font-medium">
                 These devices are actively receiving emergency alert packets without any pairing dialog
@@ -557,7 +559,7 @@ export default function EmergencySmsBroadcastPanel() {
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4 text-orange-500" />
                 <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
-                  Emergency Broadcast Dispatcher
+                  {tx('Emergency Broadcast Dispatcher')}
                 </h3>
               </div>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
@@ -568,7 +570,7 @@ export default function EmergencySmsBroadcastPanel() {
             <div className="space-y-3 font-sans text-xs">
               <div>
                 <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
-                  Target Landslide Vulnerability Sector
+                  {tx('Target Landslide Vulnerability Sector')}
                 </label>
                 <select
                   value={targetSector}
@@ -585,7 +587,7 @@ export default function EmergencySmsBroadcastPanel() {
 
               <div>
                 <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
-                  Evacuation Instructions / Action Advisory
+                  {tx('Evacuation Instructions / Action Advisory')}
                 </label>
                 <textarea
                   rows={2}
@@ -598,7 +600,7 @@ export default function EmergencySmsBroadcastPanel() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
                   <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
-                    Audience Target Mobile Number
+                    {tx('Audience Target Mobile Number')}
                   </label>
                   <input
                     type="text"
@@ -616,7 +618,7 @@ export default function EmergencySmsBroadcastPanel() {
                     className="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-orange-600 hover:opacity-90 disabled:opacity-50 text-white font-mono font-bold text-xs uppercase shadow-md shadow-red-950/20 flex items-center justify-center gap-1.5 transition-all"
                   >
                     <AlertTriangle className="w-4 h-4" />
-                    <span>{isDispatching ? 'Transmitting...' : 'Send Red Alert SMS'}</span>
+                    <span>{isDispatching ? tx('Broadcasting...') : tx('Send Red Alert SMS')}</span>
                   </button>
 
                   <button
@@ -675,7 +677,7 @@ export default function EmergencySmsBroadcastPanel() {
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-blue-600 dark:text-cyan-400" />
                 <h3 className="font-bold text-base sm:text-lg text-slate-900 dark:text-white font-sans">
-                  Recent Transmission & Proximity Dispatch Log
+                  {tx('Recent Transmission & Proximity Dispatch Log')}
                 </h3>
               </div>
               <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">

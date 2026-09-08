@@ -2,17 +2,19 @@ import React from 'react';
 import { Brain, Cpu, ArrowUpRight, ArrowDownRight, AlertTriangle, ShieldCheck, HelpCircle } from 'lucide-react';
 import { RiskAssessment } from '../../types';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface Props {
   risk: RiskAssessment | null;
 }
 
 export default function AIExplanation({ risk }: Props) {
+  const { tx } = useI18n();
   if (!risk) {
     return (
       <div className="card h-full min-h-[280px] flex flex-col items-center justify-center p-6 text-center text-slate-500">
         <Cpu className="w-6 h-6 animate-pulse mb-2 text-slate-400" />
-        <span className="text-xs">Awaiting AI explainability inference...</span>
+        <span className="text-xs">{tx('Awaiting AI explainability inference...')}</span>
       </div>
     );
   }
@@ -68,11 +70,11 @@ export default function AIExplanation({ risk }: Props) {
         <div className="flex items-center gap-1.5 text-slate-800 dark:text-white">
           <Brain className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <span className="font-bold text-xs uppercase tracking-wider font-sans">
-            AI Hazard Explainability (SHAP)
+            {tx('AI Hazard Explainability (SHAP)')}
           </span>
         </div>
         <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-bold border border-blue-100 dark:border-blue-800">
-          SHAP Analysis
+          {tx('SHAP Analysis')}
         </span>
       </div>
 
@@ -81,10 +83,10 @@ export default function AIExplanation({ risk }: Props) {
         <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wide">
             <HelpCircle className="w-3.5 h-3.5 text-amber-500" />
-            <span>Why is the current risk {risk.risk_level}?</span>
+            <span>{tx('Why is the current risk')} {risk.risk_level}?</span>
           </div>
           <div className="text-[11px] text-slate-500 dark:text-slate-300 mt-0.5 font-sans">
-            Top geotechnical factors identified by XGBoost & Bishop limit equilibrium model:
+            {tx('Top geotechnical factors identified by XGBoost & Bishop limit equilibrium model:')}
           </div>
         </div>
 
@@ -118,7 +120,7 @@ export default function AIExplanation({ risk }: Props) {
                   </span>
                 </div>
                 <div className="text-[11px] text-slate-600 dark:text-slate-200 font-sans mt-0.5 ml-4">
-                  — <span className={isDriver ? "text-red-700 dark:text-red-300 font-medium" : "text-emerald-700 dark:text-emerald-300 font-medium"}>{humanExp.text}</span>
+                  — <span className={isDriver ? "text-red-700 dark:text-red-300 font-medium" : "text-emerald-700 dark:text-emerald-300 font-medium"}>{tx(humanExp.text)}</span>
                 </div>
               </div>
             );
@@ -129,7 +131,7 @@ export default function AIExplanation({ risk }: Props) {
         <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/60 rounded-xl p-2.5 text-[10.5px] text-amber-800 dark:text-amber-200 flex items-start gap-1.5">
           <AlertTriangle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
           <span>
-            <strong>Edge AI Model</strong> — Gray-box physics coupling with 100% offline SHAP TreeExplainer running on local edge gateway.
+            <strong>{tx('Edge AI Model')}</strong> — {tx('Gray-box physics coupling with 100% offline SHAP TreeExplainer running on local edge gateway.')}
           </span>
         </div>
       </div>

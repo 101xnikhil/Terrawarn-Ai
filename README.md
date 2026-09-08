@@ -30,7 +30,8 @@
 6. [SIH Judging 6-State Demo Mode](#-sih-judging-6-state-demo-mode)
 7. [Repository Structure](#-repository-structure)
 8. [Automated Verification & Bench Testing](#-automated-verification--bench-testing)
-9. [Anticipated Jury Q&A](#-anticipated-jury-qa)
+9. [UI Localization (Ollama, landslide-belt languages)](#-ui-localization-ollama-landslide-belt-languages)
+10. [Anticipated Jury Q&A](#-anticipated-jury-qa)
 
 ---
 
@@ -308,6 +309,51 @@ cd frontend
 npm run build
 # Compiles clean TypeScript bundle with zero errors
 ```
+
+---
+
+## 🌐 UI Localization (Ollama, landslide-belt languages)
+
+The operator dashboard is translated **at runtime** by a **local Ollama LLM** (no cloud translation API). English remains the source of truth in `frontend/src/i18n/strings.ts`. Switching language sends the catalog in one batch to `POST /api/v1/translate/ui`. If Ollama is down or times out, the UI stays in English and shows a non-blocking toast.
+
+**Prerequisite:** `ollama serve` with a multilingual model, e.g. `ollama pull llama3.2` (default) or `gemma2:9b`. Config: `OLLAMA_HOST` (default `http://localhost:11434`), `OLLAMA_MODEL`, `TRANSLATION_TIMEOUT_SECONDS=8`.
+
+### Directly translated (LLM-supported)
+
+These codes are sent to the model. They cover the Himalayan belt, Northeast hill states, and Western Ghats:
+
+| Code | Language | Landslide-prone coverage |
+|------|----------|--------------------------|
+| `en` | English | National / fallback |
+| `hi` | Hindi | Uttarakhand, Himachal Pradesh, general Himalayan belt |
+| `ne` | Nepali | Sikkim, Darjeeling hills |
+| `as` | Assamese | Assam hills, NE gateway |
+| `bn` | Bengali | Darjeeling, West Bengal hills |
+| `mni` | Manipuri (Meitei) | Manipur |
+| `ml` | Malayalam | Western Ghats — Kerala |
+| `ta` | Tamil | Western Ghats — Nilgiris, Tamil Nadu |
+| `kn` | Kannada | Western Ghats — Karnataka |
+
+### Regional languages (shown via documented fallback — **not** sent to the LLM)
+
+Hyper-local and tribal languages are **not reliably produced** by current open LLMs. The picker lists them under “Regional languages (approximate)”. Selecting one **redirects** to the mapped language and returns `used_fallback: true` so the UI can show an honest note (e.g. “Shown in Hindi — Garhwali is not reliably supported by LLMs”).
+
+| Requested | ISO | Fallback | Why |
+|-----------|-----|----------|-----|
+| Garhwali | `gbm` | Hindi (`hi`) | Central Pahari; no reliable LLM coverage |
+| Kumaoni | `kfy` | Hindi (`hi`) | Central Pahari; no reliable LLM coverage |
+| Pahari / Western Pahari | `him` | Hindi (`hi`) | Dialect cluster; LLM syntax is unreliable |
+| Kinnauri | `kns` | Hindi (`hi`) | Tibeto-Burman; no open corpus |
+| Dogri | `doi` | Hindi (`hi`) | Hill Indo-Aryan; fragmented LLM output |
+| Khasi | `kha` | English (`en`) | Austroasiatic; Meghalaya admin English (Assamese secondary) |
+| Garo | `grt` | English (`en`) | Meghalaya Garo Hills; admin English (Assamese secondary) |
+| Mizo | `lus` | English (`en`) | Mizoram emergency comms typically English |
+| Lepcha | `lep` | Nepali (`ne`) | Sikkim/Darjeeling indigenous; no reliable LLM |
+| Bhutia | `tsj` | Nepali (`ne`) | Sikkim/Kalimpong Tibetic; no reliable LLM |
+| Nyishi | `njz` | English (`en`) | Arunachal Tani; state admin English (Hindi secondary) |
+| Adi | `adi` | English (`en`) | Arunachal Tani; state admin English (Hindi secondary) |
+
+Source of truth for the map: `backend/app/services/translation_service.py` (`FALLBACK_LANGUAGE_MAP`) and `frontend/src/i18n/fallbackLanguages.ts`. Language catalog API: `GET /api/v1/translate/languages`.
 
 ---
 

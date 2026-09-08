@@ -16,7 +16,7 @@ export default function PrototypeLabel({ text, className = '' }: Props) {
 
   return (
     <div
-      className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-slate-900/90 border border-slate-700/80 text-slate-300 text-[11px] font-mono font-semibold tracking-wide shadow-sm ${className}`}
+      className={`inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-white dark:bg-[#0c1220] border border-[#e4e8ef] dark:border-white/10 text-slate-600 dark:text-slate-300 text-[11px] font-mono font-semibold tracking-wide shadow-sm ${className}`}
     >
       <span className="relative flex h-2 w-2">
         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>

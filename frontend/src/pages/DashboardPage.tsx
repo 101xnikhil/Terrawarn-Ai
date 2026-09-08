@@ -19,6 +19,8 @@ import LoadingState from '../components/common/LoadingState';
 import { WeatherForecastWidget } from '../components/dashboard/WeatherForecastWidget';
 import { DisasterTriagePanel } from '../components/dashboard/DisasterTriagePanel';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '../i18n/LanguageContext';
+import type { UIStringKey } from '../i18n/strings';
 
 // Helper for generating smooth weekly curve points based on actual telemetry
 const generateTelemetryCurve = (currentVal: number, variance: number) => {
@@ -55,6 +57,10 @@ const DashboardPage: React.FC = () => {
 
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const { t } = useI18n();
+  const badgeLabel = (label: 'Critical' | 'Medium' | 'Elite' | 'Low'): UIStringKey => (
+    label === 'Critical' ? 'BADGE_CRITICAL' : label === 'Medium' ? 'BADGE_MEDIUM' : label === 'Elite' ? 'BADGE_ELITE' : 'BADGE_LOW'
+  );
 
   const [groupBy, setGroupBy] = useState<'Day' | 'Week' | 'Month'>('Week');
   const [showScenarioDrawer, setShowScenarioDrawer] = useState(true);
@@ -62,7 +68,7 @@ const DashboardPage: React.FC = () => {
   const [showSecurityDrawer, setShowSecurityDrawer] = useState(false);
 
   if (!state) {
-    return <LoadingState message="Connecting to telemetry ingest gateway..." />;
+    return <LoadingState message={t('CONNECTING_GATEWAY')} />;
   }
 
   const reading = state.currentReading;
@@ -117,10 +123,10 @@ const DashboardPage: React.FC = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              Geotechnical Status
+              {t('GEOTECH_STATUS')}
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
-              Real-time slope stability indices, pore water pressure, and angular displacement metrics
+              {t('GEOTECH_STATUS_SUB')}
             </p>
           </div>
 
@@ -135,7 +141,7 @@ const DashboardPage: React.FC = () => {
               )}
             >
               <Sliders className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-              <span>{showScenarioDrawer ? 'Hide Lab Scenarios' : 'Interactive Lab Scenarios'}</span>
+              <span>{showScenarioDrawer ? t('HIDE_LAB_SCENARIOS') : t('SHOW_LAB_SCENARIOS')}</span>
             </button>
 
             <button
@@ -148,7 +154,7 @@ const DashboardPage: React.FC = () => {
               )}
             >
               <Bluetooth className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-              <span>{showSmsPanel ? 'Hide Bluetooth/SMS' : 'Zero-Pairing SMS Hub'}</span>
+              <span>{showSmsPanel ? t('HIDE_SMS_HUB') : t('SHOW_SMS_HUB')}</span>
             </button>
           </div>
         </div>
@@ -160,11 +166,11 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
-                  <span>Bishop Factor of Safety</span>
+                  <span>{t('BISHOP_FOS')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', fosStatus.badgeClass)}>
-                  {fosStatus.label}
+                  {t(badgeLabel(fosStatus.label as 'Critical' | 'Medium' | 'Elite' | 'Low'))}
                 </span>
               </div>
 
@@ -186,19 +192,19 @@ const DashboardPage: React.FC = () => {
 
               <div className="grid grid-cols-4 gap-1 text-[9.5px] text-slate-500 dark:text-slate-300 font-medium">
                 <div>
-                  <span className="block text-slate-400 dark:text-slate-300">Pore Water</span>
+                  <span className="block text-slate-400 dark:text-slate-300">{t('PORE_WATER')}</span>
                   <strong className="text-slate-700 dark:text-white font-bold">{reading.soil_moisture_pct.toFixed(0)}%</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400 dark:text-slate-300">Creep Rate</span>
+                  <span className="block text-slate-400 dark:text-slate-300">{t('CREEP_RATE')}</span>
                   <strong className="text-slate-700 dark:text-white font-bold">{Math.abs(reading.tilt_rate).toFixed(3)}°</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400 dark:text-slate-300">Slope Dip</span>
+                  <span className="block text-slate-400 dark:text-slate-300">{t('SLOPE_DIP')}</span>
                   <strong className="text-slate-700 dark:text-white font-bold">{reading.tilt_angle.toFixed(1)}°</strong>
                 </div>
                 <div>
-                  <span className="block text-slate-400 dark:text-slate-300">Stability</span>
+                  <span className="block text-slate-400 dark:text-slate-300">{t('STABILITY')}</span>
                   <strong className="text-slate-700 dark:text-white font-bold">{risk.fos_estimate.toFixed(2)}</strong>
                 </div>
               </div>
@@ -210,11 +216,11 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
-                  <span>Soil Moisture (VWC)</span>
+                  <span>{t('SOIL_MOISTURE_VWC')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', moistureStatus.badgeClass)}>
-                  {moistureStatus.label}
+                  {t(badgeLabel(moistureStatus.label as 'Critical' | 'Medium' | 'Elite' | 'Low'))}
                 </span>
               </div>
 
@@ -235,11 +241,11 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
-                  <span>Precipitation (24h)</span>
+                  <span>{t('PRECIPITATION_24H')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', rainStatus.badgeClass)}>
-                  {rainStatus.label}
+                  {t(badgeLabel(rainStatus.label as 'Critical' | 'Medium' | 'Elite' | 'Low'))}
                 </span>
               </div>
 
@@ -260,11 +266,11 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-700 dark:text-white font-semibold text-xs">
-                  <span>Displacement Velocity</span>
+                  <span>{t('DISPLACEMENT_VELOCITY')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 dark:text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', creepStatus.badgeClass)}>
-                  {creepStatus.label}
+                  {t(badgeLabel(creepStatus.label as 'Critical' | 'Medium' | 'Elite' | 'Low'))}
                 </span>
               </div>
 
@@ -311,27 +317,27 @@ const DashboardPage: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              Trends
+              {t('TRENDS')}
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
-              Continuous 52-week geotechnical telemetry evolution & limit equilibrium trajectory
+              {t('TRENDS_SUB')}
             </p>
           </div>
 
           {/* Group by: Day | Week | Month */}
           <div className="flex items-center gap-2 text-slate-600 dark:text-slate-200 font-medium text-xs">
-            <span>Group by:</span>
+            <span>{t('GROUP_BY')}</span>
             <div className="segmented-control">
-              {(['Day', 'Week', 'Month'] as const).map((t) => (
+              {(['Day', 'Week', 'Month'] as const).map((period) => (
                 <button
-                  key={t}
-                  onClick={() => setGroupBy(t)}
+                  key={period}
+                  onClick={() => setGroupBy(period)}
                   className={clsx(
                     'segmented-item',
-                    groupBy === t ? 'segmented-item-active' : 'hover:text-slate-900 dark:hover:text-white'
+                    groupBy === period ? 'segmented-item-active' : 'hover:text-slate-900 dark:hover:text-white'
                   )}
                 >
-                  {t}
+                  {period === 'Day' ? t('GROUP_DAY') : period === 'Week' ? t('GROUP_WEEK') : t('GROUP_MONTH')}
                 </button>
               ))}
             </div>
@@ -345,11 +351,11 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-sm">
-                  <span>Bishop Stability & Safety Factor</span>
+                  <span>{t('BISHOP_STABILITY_CHART')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
                 </div>
                 <span className={clsx('badge', fosStatus.badgeClass)}>
-                  {fosStatus.label}
+                  {t(badgeLabel(fosStatus.label as 'Critical' | 'Medium' | 'Elite' | 'Low'))}
                 </span>
               </div>
 
@@ -406,7 +412,7 @@ const DashboardPage: React.FC = () => {
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Soil Moisture (VWC)</span>
+                  <span>{t('SOIL_MOISTURE_VWC')}</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
                 <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
@@ -429,7 +435,7 @@ const DashboardPage: React.FC = () => {
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Precipitation (24h)</span>
+                  <span>{t('PRECIPITATION_24H')}</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
                 <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
@@ -452,7 +458,7 @@ const DashboardPage: React.FC = () => {
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Slope Incline (Dip)</span>
+                  <span>{t('SLOPE_INCLINE_DIP')}</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
                 <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
@@ -475,7 +481,7 @@ const DashboardPage: React.FC = () => {
             <div className="card p-3.5 flex flex-col justify-between h-[172px]">
               <div>
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>LoRa 433MHz Telemetry</span>
+                  <span>{t('LORA_TELEMETRY')}</span>
                   <Info className="w-3 h-3 text-slate-400" />
                 </div>
                 <div className="text-[10.5px] text-slate-500 dark:text-slate-300 font-medium">
@@ -503,7 +509,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Hazard Probability (XGBoost)</span>
+                  <span>{t('HAZARD_PROBABILITY')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
                 <span className={clsx('badge', risk.risk_level === 'CRITICAL' ? 'badge-low' : risk.risk_level === 'HIGH' ? 'badge-medium' : 'badge-elite')}>
@@ -531,7 +537,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Pore-Water Saturation Index</span>
+                  <span>{t('PORE_WATER_INDEX')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
                 <span className="badge badge-medium">
@@ -559,7 +565,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-1 text-slate-800 dark:text-white font-bold text-xs">
-                  <span>Cell Broadcast & SMS Reach</span>
+                  <span>{t('SMS_REACH')}</span>
                   <Info className="w-3.5 h-3.5 text-slate-400" />
                 </div>
                 <span className="badge badge-blue">
@@ -598,10 +604,10 @@ const DashboardPage: React.FC = () => {
       <div className="space-y-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-            Weather-Linked Risk Forecast &amp; Emergency Prioritisation
+            {t('WEATHER_TRIAGE_TITLE')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
-            IMD Doppler Weather Radar feeds, 72h antecedent rainfall accumulation (ARI-7), and disaster response triage for District Authorities (DDMA/SDRF/NDRF)
+            {t('WEATHER_TRIAGE_SUB')}
           </p>
         </div>
 

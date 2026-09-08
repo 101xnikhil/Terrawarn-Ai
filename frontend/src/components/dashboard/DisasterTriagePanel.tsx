@@ -4,6 +4,7 @@ import {
   ChevronRight, Building2, CheckCircle, Radio
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface TriageItem {
   rank: number;
@@ -19,6 +20,7 @@ interface TriageItem {
 }
 
 export const DisasterTriagePanel: React.FC = () => {
+  const { tx } = useI18n();
   const [triageData, setTriageData] = useState<TriageItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -39,16 +41,16 @@ export const DisasterTriagePanel: React.FC = () => {
           </div>
           <div>
             <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Disaster Response Triage &amp; Deployment Matrix
+              {tx('Disaster Response Triage & Deployment Matrix')}
             </h3>
             <p className="text-[10.5px] text-slate-500 dark:text-slate-400">
-              Prioritized Emergency Allocation for District Disaster Management (NDRF / SDRF / BRO)
+              {tx('Prioritized Emergency Allocation for District Disaster Management (NDRF / SDRF / BRO)')}
             </p>
           </div>
         </div>
 
         <span className="px-2 py-0.5 rounded-full bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-800 text-[10px] font-mono font-bold">
-          LIVE TRIAGE
+          {tx('LIVE TRIAGE')}
         </span>
       </div>
 
@@ -98,7 +100,7 @@ export const DisasterTriagePanel: React.FC = () => {
                     {item.recommendedDispatch.map((rec, rIdx) => (
                       <li key={rIdx} className="flex items-center gap-1.5">
                         <Truck className="w-3 h-3 text-blue-600 dark:text-blue-400 shrink-0" />
-                        <span>{rec}</span>
+                        <span>{tx(rec)}</span>
                       </li>
                     ))}
                   </ul>
@@ -108,10 +110,10 @@ export const DisasterTriagePanel: React.FC = () => {
               {/* Right Contacts & Risk Stats */}
               <div className="flex md:flex-col items-center md:items-end justify-between md:justify-center border-t md:border-t-0 pt-2 md:pt-0 border-slate-200 dark:border-white/10 shrink-0">
                 <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                  Population at Risk: <strong className="text-slate-800 dark:text-slate-200">{item.populationAtRisk.toLocaleString()}</strong>
+                  {tx('Population at Risk:')} <strong className="text-slate-800 dark:text-slate-200">{item.populationAtRisk.toLocaleString()}</strong>
                 </div>
                 <div className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                  Ready Shelters: <strong className="text-emerald-600">{item.sheltersReady} Centers</strong>
+                  {tx('Ready Shelters:')} <strong className="text-emerald-600">{item.sheltersReady} {tx('Centers')}</strong>
                 </div>
                 <div className="mt-1 text-[10.5px] font-semibold text-blue-700 dark:text-blue-300 flex items-center gap-1">
                   <PhoneCall className="w-3 h-3" />

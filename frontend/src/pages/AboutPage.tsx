@@ -9,6 +9,7 @@ import {
   Camera, Upload, Image as ImageIcon
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../i18n/LanguageContext';
 
 interface TeamMember {
   id: string;
@@ -302,6 +303,7 @@ const HARDWARE_BOM = [
 ];
 
 export default function AboutPage() {
+  const { tx } = useI18n();
   const [members, setMembers] = useState<TeamMember[]>(() => {
     try {
       const saved = localStorage.getItem('landguard_team_members');
@@ -441,10 +443,10 @@ export default function AboutPage() {
           <div className="flex flex-wrap items-center gap-2.5 mb-3">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-700/60 text-xs font-bold uppercase tracking-wider">
               <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-              Autonomous Edge Early Warning System
+              {tx('Autonomous Edge Early Warning System')}
             </span>
             <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/60 text-xs font-semibold">
-              100% Offline Edge Autonomy
+              {tx('100% Offline Edge Autonomy')}
             </span>
             <span className="px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-white/10 text-xs font-medium">
               Mission Profile v2.6
@@ -452,11 +454,11 @@ export default function AboutPage() {
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-[#0f172a] dark:text-white tracking-tight mb-3">
-            Terrawarn-Ai Geotechnical Telemetry & Hazard Forecasting
+            {tx('Terrawarn-Ai Geotechnical Telemetry & Hazard Forecasting')}
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed font-normal mb-6">
-            Engineered to safeguard critical transit corridors, mountain rail lines, and vulnerable slope communities from catastrophic rainfall-triggered mass wasting events. Terrawarn-Ai bridges the divide between costly commercial geotechnical stations ($3,000+) and high-latency satellite radar by integrating an ultra-low-cost ($17.60 BOM) autonomous sensor node mesh with real-time Bishop Limit Equilibrium geotechnical physics and explainable XGBoost machine learning.
+            {tx('Engineered to safeguard critical transit corridors, mountain rail lines, and vulnerable slope communities from catastrophic rainfall-triggered mass wasting events. Terrawarn-Ai bridges the divide between costly commercial geotechnical stations ($3,000+) and high-latency satellite radar by integrating an ultra-low-cost ($17.60 BOM) autonomous sensor node mesh with real-time Bishop Limit Equilibrium geotechnical physics and explainable XGBoost machine learning.')}
           </p>
 
           {/* 4 Key Spec Badges */}
@@ -470,7 +472,7 @@ export default function AboutPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                      {metric.label}
+                      {tx(metric.label)}
                     </span>
                     <div className={clsx("p-1.5 rounded-lg border", metric.bg)}>
                       <Icon className="w-3.5 h-3.5" />
@@ -486,7 +488,7 @@ export default function AboutPage() {
                       </span>
                     </div>
                     <p className="text-[11.5px] text-slate-500 dark:text-slate-400 mt-1 leading-normal">
-                      {metric.subtext}
+                      {tx(metric.subtext)}
                     </p>
                   </div>
                 </div>
@@ -501,14 +503,14 @@ export default function AboutPage() {
         <div className="mb-4">
           <div className="flex items-center gap-2">
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              Architectural Pillars
+              {tx('Architectural Pillars')}
             </h2>
             <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700 text-[10px] font-bold">
-              Core Engineering
+              {tx('Core Engineering')}
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Four key technical differentiators powering real-time slope hazard forecasting
+            {tx('Four key technical differentiators powering real-time slope hazard forecasting')}
           </p>
         </div>
 
@@ -526,7 +528,7 @@ export default function AboutPage() {
                   </div>
 
                   <h3 className="font-bold text-base text-slate-900 dark:text-white mb-1">
-                    {pillar.title}
+                    {tx(pillar.title)}
                   </h3>
                   <div className="text-lg font-extrabold text-blue-600 dark:text-blue-400 font-mono mb-2">
                     {pillar.value}
@@ -534,7 +536,7 @@ export default function AboutPage() {
                 </div>
 
                 <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed pt-2 border-t border-slate-100 dark:border-white/10">
-                  {pillar.desc}
+                  {tx(pillar.desc)}
                 </p>
               </div>
             );
@@ -547,14 +549,14 @@ export default function AboutPage() {
         <div className="mb-4">
           <div className="flex items-center gap-2">
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              Telemetry & Early Warning Pipeline
+              {tx('Telemetry & Early Warning Pipeline')}
             </h2>
             <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 text-[10px] font-bold">
-              End-to-End Flow
+              {tx('End-to-End Flow')}
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            How continuous mountain sensor telemetry transforms into life-saving emergency alerts in seconds
+            {tx('How continuous mountain sensor telemetry transforms into life-saving emergency alerts in seconds')}
           </p>
         </div>
 
@@ -572,7 +574,7 @@ export default function AboutPage() {
                       STEP {pipe.step}
                     </span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200/60 dark:border-blue-700/40">
-                      {pipe.badge}
+                      {tx(pipe.badge)}
                     </span>
                   </div>
 
@@ -581,24 +583,24 @@ export default function AboutPage() {
                       <Icon className="w-4 h-4" />
                     </div>
                     <h3 className="font-bold text-sm text-slate-900 dark:text-white leading-snug">
-                      {pipe.title}
+                      {tx(pipe.title)}
                     </h3>
                   </div>
 
                   <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
-                    {pipe.desc}
+                    {tx(pipe.desc)}
                   </p>
                 </div>
 
                 <div className="pt-3 border-t border-slate-100 dark:border-white/10">
                   <span className="text-[10.5px] font-bold text-slate-400 dark:text-slate-300 uppercase tracking-wider block mb-1.5">
-                    Key Implementations:
+                    {tx('Key Implementations:')}
                   </span>
                   <ul className="space-y-1 text-[11.5px] text-slate-700 dark:text-slate-300">
                     {pipe.points.map((pt, pIdx) => (
                       <li key={pIdx} className="flex items-start gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                        <span>{pt}</span>
+                        <span>{tx(pt)}</span>
                       </li>
                     ))}
                   </ul>
@@ -621,9 +623,9 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                    Bishop Limit Equilibrium Physics
+                    {tx('Bishop Limit Equilibrium Physics')}
                   </h3>
-                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Infinite Slope Stability & FoS Modeling</p>
+                  <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">{tx('Infinite Slope Stability & FoS Modeling')}</p>
                 </div>
               </div>
               <span className="badge bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-700 text-[10px] font-bold">
@@ -678,9 +680,9 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                    XGBoost & TreeSHAP Explainability
+                    {tx('XGBoost & TreeSHAP Explainability')}
                   </h3>
-                  <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">Local Feature Attribution & Scientific Causality</p>
+                  <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">{tx('Local Feature Attribution & Scientific Causality')}</p>
                 </div>
               </div>
               <span className="badge bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-700 text-[10px] font-bold">
@@ -695,8 +697,8 @@ export default function AboutPage() {
             {/* SHAP Contribution Visual Breakdown */}
             <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-white/10 mb-4 space-y-2">
               <div className="flex items-center justify-between text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                <span>Real-Time Feature Risk Attribution</span>
-                <span>SHAP Impact</span>
+                <span>{tx('Real-Time Feature Risk Attribution')}</span>
+                <span>{tx('SHAP Impact')}</span>
               </div>
 
               <div className="space-y-1.5 text-xs">
@@ -760,20 +762,20 @@ export default function AboutPage() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-                Hardware Bill of Materials & Economic Viability
+                {tx('Hardware Bill of Materials & Economic Viability')}
               </h2>
               <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 text-[10px] font-bold">
                 $17.60 Total BOM
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-              Democratizing geotechnical slope safety: deploying 100+ dense edge nodes for the cost of a single commercial station
+              {tx('Democratizing geotechnical slope safety: deploying 100+ dense edge nodes for the cost of a single commercial station')}
             </p>
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
             <span className="px-3 py-1 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-xs font-bold">
-              95% Cost Reduction
+              {tx('95% Cost Reduction')}
             </span>
           </div>
         </div>
@@ -783,23 +785,23 @@ export default function AboutPage() {
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-300 font-bold uppercase tracking-wider text-[10.5px]">
-                <th className="py-3 px-4">Component & Transducer</th>
-                <th className="py-3 px-4 hidden md:table-cell">Technical Specifications</th>
-                <th className="py-3 px-4">Geotechnical Telemetry Role</th>
-                <th className="py-3 px-4 text-right">Unit Cost</th>
+                <th className="py-3 px-4">{tx('Component & Transducer')}</th>
+                <th className="py-3 px-4 hidden md:table-cell">{tx('Technical Specifications')}</th>
+                <th className="py-3 px-4">{tx('Geotechnical Telemetry Role')}</th>
+                <th className="py-3 px-4 text-right">{tx('Unit Cost')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-white/5 text-slate-700 dark:text-slate-300">
               {HARDWARE_BOM.map((item, idx) => (
                 <tr key={idx} className="hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors">
                   <td className="py-2.5 px-4 font-bold text-slate-900 dark:text-white">
-                    {item.component}
+                    {tx(item.component)}
                   </td>
                   <td className="py-2.5 px-4 hidden md:table-cell font-mono text-[11px] text-slate-500 dark:text-slate-400">
                     {item.spec}
                   </td>
                   <td className="py-2.5 px-4 text-slate-600 dark:text-slate-300">
-                    {item.role}
+                    {tx(item.role)}
                   </td>
                   <td className="py-2.5 px-4 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">
                     {item.cost}
@@ -808,7 +810,7 @@ export default function AboutPage() {
               ))}
               <tr className="bg-slate-50 dark:bg-slate-800/60 font-bold border-t-2 border-slate-200 dark:border-white/10 text-slate-900 dark:text-white">
                 <td className="py-3 px-4" colSpan={2}>
-                  Total Terrawarn-Ai Edge Node Bill of Materials (BOM)
+                  {tx('Total Terrawarn-Ai Edge Node Bill of Materials (BOM)')}
                 </td>
                 <td className="py-3 px-4 hidden md:table-cell text-slate-500 dark:text-slate-400 text-[11px]">
                   Commercial borehole inclinometers: $3,000.00 – $5,000.00+
@@ -828,14 +830,14 @@ export default function AboutPage() {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-                Team TerraSentinal
+                {tx('Team TerraSentinal')}
               </h2>
               <span className="px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700 text-[10px] font-bold">
                 {members.length} Researchers
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-              Directly type and customize your team roster, roles, and profiles
+              {tx('Directly type and customize your team roster, roles, and profiles')}
             </p>
           </div>
 
@@ -844,7 +846,7 @@ export default function AboutPage() {
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all self-start sm:self-auto"
           >
             <UserPlus className="w-4 h-4" />
-            <span>Add Team Member</span>
+            <span>{tx('Add Team Member')}</span>
           </button>
         </div>
 
@@ -1094,7 +1096,7 @@ export default function AboutPage() {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Full Name *</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('Full Name *')}</label>
                 <input
                   type="text"
                   required
@@ -1107,7 +1109,7 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Role Title</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('Role Title')}</label>
                   <input
                     type="text"
                     value={formRole}
@@ -1118,7 +1120,7 @@ export default function AboutPage() {
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Specialization</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('Specialization')}</label>
                   <input
                     type="text"
                     value={formSpec}
@@ -1130,7 +1132,7 @@ export default function AboutPage() {
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Short Biography & Achievements</label>
+                <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('Short Biography & Achievements')}</label>
                 <textarea
                   rows={3}
                   value={formBio}
@@ -1142,7 +1144,7 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-3 gap-2">
                 <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">GitHub URL</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('GitHub URL')}</label>
                   <input
                     type="url"
                     value={formGithub}
@@ -1152,7 +1154,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">LinkedIn URL</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('LinkedIn URL')}</label>
                   <input
                     type="url"
                     value={formLinkedin}
@@ -1162,7 +1164,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">Email Address</label>
+                  <label className="block font-semibold text-slate-700 dark:text-slate-200 mb-1">{tx('Email Address')}</label>
                   <input
                     type="email"
                     value={formEmail}

@@ -13,6 +13,7 @@ from app.api.citizen_reports import router as reports_router
 from app.api.ner_network import router as ner_router
 from app.api.settings import router as settings_router
 from app.api.tts import router as tts_router
+from app.api.translate import router as translate_router
 
 api_router = APIRouter()
 
@@ -29,5 +30,6 @@ api_router.include_router(reports_router)
 api_router.include_router(ner_router)
 api_router.include_router(settings_router)
 api_router.include_router(tts_router)
+api_router.include_router(translate_router)
 
 __all__ = ["api_router", "ws_router"]

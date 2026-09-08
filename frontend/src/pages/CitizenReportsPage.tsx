@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import clsx from 'clsx';
 import { useOfflineSync, getQueuedReports, flushOfflineReports, QueuedCitizenReport } from '../utils/offlineSync';
 import { useLanguage } from '../utils/i18n';
+import { useI18n } from '../i18n/LanguageContext';
+import type { UIStringKey } from '../i18n/strings';
 import ReportIncidentModal from '../components/reports/ReportIncidentModal';
 import { formatDateTime, formatRelativeTime } from '../utils/formatters';
 
@@ -95,6 +97,14 @@ const formatFullDate = (iso: string): { date: string; time: string; relative: st
 
 const CitizenReportsPage: React.FC = () => {
   const { t } = useLanguage();
+  const { t: tUi, tx } = useI18n();
+  const categoryKey: Record<string, UIStringKey> = {
+    GROUND_CRACKS: 'CAT_CRACKS',
+    SLOPE_SLUMP: 'CAT_SLUMP',
+    ROCKFALL: 'CAT_ROCKFALL',
+    BLOCKED_ROAD: 'CAT_BLOCKED',
+    RIVER_DAMMING: 'CAT_RIVER',
+  };
   const { isOnline, pendingCount, isSyncing, triggerManualSync } = useOfflineSync();
 
   const [dbReports, setDbReports] = useState<ReportItem[]>([]);
@@ -246,15 +256,15 @@ const CitizenReportsPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-              {t('citizenFieldReports')}
+              {tUi('NAV_FIELD_REPORTS')}
             </h2>
             <span className="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-[10px] font-mono font-bold flex items-center gap-1">
               <Database className="w-3 h-3" />
-              <span>Neon PostgreSQL Synced</span>
+              <span>{tx('Neon PostgreSQL Synced')}</span>
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Live ground observations of slope cracks, boulder roll, and road blockages saved to central database with exact timestamps
+            {tx('Live ground observations of slope cracks, boulder roll, and road blockages saved to central database with exact timestamps')}
           </p>
         </div>
 
@@ -293,7 +303,7 @@ const CitizenReportsPage: React.FC = () => {
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all cursor-pointer"
           >
             <Camera className="w-3.5 h-3.5" />
-            <span>{t('reportIncidentBtn')}</span>
+            <span>{tUi('REPORT_INCIDENT')}</span>
           </button>
         </div>
       </div>
@@ -301,27 +311,27 @@ const CitizenReportsPage: React.FC = () => {
       {/* ── Summary KPI Tiles ────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="card p-3.5 bg-white dark:bg-slate-900 border-l-4 border-l-blue-600">
-          <div className="text-[10.5px] uppercase font-bold text-slate-500 dark:text-slate-400">Total Ground Reports</div>
+          <div className="text-[10.5px] uppercase font-bold text-slate-500 dark:text-slate-400">{tx('Total Ground Reports')}</div>
           <div className="text-2xl font-extrabold text-slate-900 dark:text-white font-mono mt-1">{totalReports}</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Crowdsourced &amp; BRO Patrols</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('Crowdsourced & BRO Patrols')}</div>
         </div>
 
         <div className="card p-3.5 bg-white dark:bg-slate-900 border-l-4 border-l-rose-600">
-          <div className="text-[10.5px] uppercase font-bold text-rose-600 dark:text-rose-400">Active Road Blockages</div>
+          <div className="text-[10.5px] uppercase font-bold text-rose-600 dark:text-rose-400">{tx('Active Road Blockages')}</div>
           <div className="text-2xl font-extrabold text-rose-600 dark:text-rose-400 font-mono mt-1">{blockedRoadCount}</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">NH-10 &amp; NH-27 Corridor Impacts</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('NH-10 & NH-27 Corridor Impacts')}</div>
         </div>
 
         <div className="card p-3.5 bg-white dark:bg-slate-900 border-l-4 border-l-amber-500">
-          <div className="text-[10.5px] uppercase font-bold text-amber-600 dark:text-amber-400">Critical Severity</div>
+          <div className="text-[10.5px] uppercase font-bold text-amber-600 dark:text-amber-400">{tx('Critical Severity')}</div>
           <div className="text-2xl font-extrabold text-amber-600 dark:text-amber-400 font-mono mt-1">{criticalCount}</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Imminent Slide &amp; Evac Hazard</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('Imminent Slide & Evac Hazard')}</div>
         </div>
 
         <div className="card p-3.5 bg-white dark:bg-slate-900 border-l-4 border-l-emerald-600">
-          <div className="text-[10.5px] uppercase font-bold text-emerald-600 dark:text-emerald-400">DDMA Verified</div>
+          <div className="text-[10.5px] uppercase font-bold text-emerald-600 dark:text-emerald-400">{tx('DDMA Verified')}</div>
           <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono mt-1">{verifiedCount}</div>
-          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">Confirmed by District Authorities</div>
+          <div className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('Confirmed by District Authorities')}</div>
         </div>
       </div>
 
@@ -335,7 +345,7 @@ const CitizenReportsPage: React.FC = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search location, road, reporter, or ID..."
+              placeholder={tx('Search location, road, reporter, or ID...')}
               className="w-full pl-8 pr-3 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-xl text-slate-800 dark:text-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
             />
             {searchQuery && (
@@ -354,7 +364,7 @@ const CitizenReportsPage: React.FC = () => {
             onChange={(e) => setSelectedState(e.target.value)}
             className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-xl text-slate-800 dark:text-slate-200 font-semibold text-xs focus:ring-1 focus:ring-blue-500 cursor-pointer"
           >
-            <option value="ALL">All NER States</option>
+            <option value="ALL">{tx('All NER States')}</option>
             <option value="Assam">Assam</option>
             <option value="Sikkim">Sikkim</option>
             <option value="Meghalaya">Meghalaya</option>
@@ -371,7 +381,7 @@ const CitizenReportsPage: React.FC = () => {
             onChange={(e) => setSelectedSeverity(e.target.value)}
             className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-xl text-slate-800 dark:text-slate-200 font-semibold text-xs focus:ring-1 focus:ring-blue-500 cursor-pointer"
           >
-            <option value="ALL">All Severities</option>
+            <option value="ALL">{tx('All Severities')}</option>
             <option value="CRITICAL">Critical</option>
             <option value="HIGH">High</option>
             <option value="MODERATE">Moderate</option>
@@ -384,9 +394,9 @@ const CitizenReportsPage: React.FC = () => {
             onChange={(e) => setVerifiedFilter(e.target.value as any)}
             className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-white/10 rounded-xl text-slate-800 dark:text-slate-200 font-semibold text-xs focus:ring-1 focus:ring-blue-500 cursor-pointer"
           >
-            <option value="ALL">All Verification Statuses</option>
-            <option value="VERIFIED">DDMA Verified Only</option>
-            <option value="PENDING">Pending Review Only</option>
+            <option value="ALL">{tx('All Verification Statuses')}</option>
+            <option value="VERIFIED">{tx('DDMA Verified Only')}</option>
+            <option value="PENDING">{tx('Pending Review Only')}</option>
           </select>
         </div>
 
@@ -497,7 +507,7 @@ const CitizenReportsPage: React.FC = () => {
                     {/* Prominent Category Tag */}
                     <div className={clsx("px-2.5 py-1 rounded-lg border text-[11px] font-bold flex items-center gap-1.5", catInfo.color)}>
                       <catInfo.icon className="w-3.5 h-3.5 shrink-0" />
-                      <span className="truncate">{catInfo.label}</span>
+                      <span className="truncate">{categoryKey[report.category] ? tUi(categoryKey[report.category]) : catInfo.label}</span>
                     </div>
 
                     {/* Location & Corridor */}

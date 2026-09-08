@@ -8,9 +8,11 @@ import clsx from 'clsx';
 import BlynkIntegrationPanel from '../components/dashboard/BlynkIntegrationPanel';
 import XGBoostServerConfigPanel from '../components/dashboard/XGBoostServerConfigPanel';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '../i18n/LanguageContext';
 
 const SettingsPage: React.FC = () => {
   const { theme, setTheme } = useTheme();
+  const { t, tx } = useI18n();
   const { 
     state, 
     scenario, 
@@ -34,12 +36,39 @@ const SettingsPage: React.FC = () => {
     quota_remaining: number;
   } | null>(null);
 
-  React.useEffect(() => {
+  const refreshSmsStatus = React.useCallback(() => {
     fetch('/api/alerts/sms-status')
       .then((r) => r.json())
       .then((data) => setSmsStatus(data))
       .catch(() => {});
   }, []);
+
+  React.useEffect(() => {
+    refreshSmsStatus();
+  }, [refreshSmsStatus]);
+
+  const [smsToggling, setSmsToggling] = React.useState(false);
+
+  const toggleFast2Sms = async (enabled: boolean) => {
+    setSmsToggling(true);
+    try {
+      const res = await fetch('/api/alerts/sms-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ enabled }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSmsStatus(data);
+      } else {
+        refreshSmsStatus();
+      }
+    } catch {
+      refreshSmsStatus();
+    } finally {
+      setSmsToggling(false);
+    }
+  };
   
   if (!state) return <LoadingState message="Loading system configuration..." />;
 
@@ -52,21 +81,21 @@ const SettingsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-            Hardware & Ingestion Settings
+            {t('SETTINGS_TITLE')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Configure telemetry ingestion: Real ESP32 Sensors via LoRa Gateway, Fast2SMS Cellular, or Geotechnical Scenarios
+            {t('SETTINGS_SUB')}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-xs font-semibold shadow-xs">
             <Radio className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-            <span>Gateway: <strong>Online</strong></span>
+            <span>{t('GATEWAY_ONLINE')}</span>
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 text-xs font-semibold shadow-xs">
             <MessageSquare className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span>Fast2SMS: <strong>{smsStatus?.enabled ? 'Active' : 'Configured'}</strong></span>
+            <span>{smsStatus?.enabled ? t('FAST2SMS_ACTIVE') : t('FAST2SMS_CONFIGURED')}</span>
           </div>
         </div>
       </div>
@@ -77,7 +106,7 @@ const SettingsPage: React.FC = () => {
           <div className="flex items-center gap-2">
             <Sun className="w-4 h-4 text-amber-500" />
             <span className="font-bold text-xs uppercase tracking-wider text-slate-800 dark:text-slate-200">
-              Appearance & Interface Theme
+              {t('APPEARANCE')}
             </span>
           </div>
           <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
@@ -86,7 +115,7 @@ const SettingsPage: React.FC = () => {
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-          Select your preferred display theme. Dark mode provides an ergonomic, low-light operations room experience with high-contrast safety indicators.
+          {tx('Select your preferred display theme. Dark mode provides an ergonomic, low-light operations room experience with high-contrast safety indicators.')}
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -106,8 +135,8 @@ const SettingsPage: React.FC = () => {
               {theme === 'light' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Light Theme</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">High-key daylight visibility</div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{tx('Light Theme')}</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('High-key daylight visibility')}</div>
             </div>
           </button>
 
@@ -127,8 +156,8 @@ const SettingsPage: React.FC = () => {
               {theme === 'dark' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">Dark Mission Control</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Deep obsidian operations room</div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{tx('Dark Mission Control')}</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('Deep obsidian operations room')}</div>
             </div>
           </button>
 
@@ -148,8 +177,8 @@ const SettingsPage: React.FC = () => {
               {theme === 'system' && <CheckCircle2 className="w-4 h-4 text-blue-600" />}
             </div>
             <div>
-              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">System Default</div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Synchronized with OS preference</div>
+              <div className="text-xs font-bold text-slate-800 dark:text-slate-200">{tx('System Default')}</div>
+              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{tx('Synchronized with OS preference')}</div>
             </div>
           </button>
         </div>
@@ -160,13 +189,13 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Server className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">Telemetry Data Ingestion Source</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{tx('Telemetry Data Ingestion Source')}</span>
           </div>
           <span className={clsx(
             "badge text-[10px]",
             isDemo ? "badge-blue" : isHardware ? "badge-low" : "badge-medium"
           )}>
-            Current Mode: {mode}
+            {tx('Current Mode:')} {mode}
           </span>
         </div>
         <div className="card-body space-y-4">
@@ -185,7 +214,7 @@ const SettingsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <FlaskConical className={clsx("w-5 h-5", isDemo ? "text-blue-600 dark:text-blue-400 animate-pulse" : "text-slate-400")} />
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">FIELD SCENARIO</span>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">{tx('FIELD SCENARIO')}</span>
                   </div>
                   {isDemo && (
                     <span className="px-2 py-0.5 rounded bg-blue-600 text-white font-mono text-[10px] font-bold">
@@ -194,7 +223,7 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-sans leading-relaxed">
-                  Controlled geotechnical progression: Dry soil baseline $\rightarrow$ Precipitation $\rightarrow$ Pore saturation $\rightarrow$ Shear displacement.
+                  {tx('Controlled geotechnical progression: Dry soil baseline → Precipitation → Pore saturation → Shear displacement.')}
                 </p>
               </div>
 
@@ -219,7 +248,7 @@ const SettingsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Radio className={clsx("w-5 h-5", isHardware ? "text-red-600 dark:text-red-400 animate-pulse" : "text-slate-400")} />
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">LIVE HARDWARE</span>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">{tx('LIVE HARDWARE')}</span>
                   </div>
                   {isHardware && (
                     <span className="px-2 py-0.5 rounded bg-red-600 text-white font-mono text-[10px] font-bold">
@@ -228,7 +257,7 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-sans leading-relaxed">
-                  Receives real sensor packets from the physical <strong>ESP32 Sensor Node (LG-N01)</strong> over LoRa via <strong>LG-GW01</strong> gateway.
+                  {tx('Receives real sensor packets from the physical ESP32 Sensor Node (LG-N01) over LoRa via LG-GW01 gateway.')}
                 </p>
               </div>
 
@@ -253,7 +282,7 @@ const SettingsPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Cpu className={clsx("w-5 h-5", mode === 'SIMULATION' ? "text-amber-600 dark:text-amber-400" : "text-slate-400")} />
-                    <span className="font-bold text-sm text-slate-900 dark:text-white">SIMULATION</span>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">{tx('SIMULATION')}</span>
                   </div>
                   {mode === 'SIMULATION' && (
                     <span className="px-2 py-0.5 rounded bg-amber-600 text-white font-mono text-[10px] font-bold">
@@ -262,7 +291,7 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-sans leading-relaxed">
-                  Generates smooth continuous synthetic environmental and geological time-series profiles with controllable parameters.
+                  {tx('Generates smooth continuous synthetic environmental and geological time-series profiles with controllable parameters.')}
                 </p>
               </div>
 
@@ -287,7 +316,7 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Wifi className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">Offline-First Operational Network Tester</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{tx('Offline-First Operational Network Tester')}</span>
           </div>
           <span className={clsx(
             "badge font-mono text-[10px]",
@@ -312,8 +341,8 @@ const SettingsPage: React.FC = () => {
                   : "bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
               )}
             >
-              <div className="font-bold text-sm font-sans">1. ONLINE</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">Normal real-time LoRa stream & WebSocket broadcast.</p>
+              <div className="font-bold text-sm font-sans">{tx('1. ONLINE')}</div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">{tx('Normal real-time LoRa stream & WebSocket broadcast.')}</p>
             </button>
 
             <button
@@ -325,8 +354,8 @@ const SettingsPage: React.FC = () => {
                   : "bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
               )}
             >
-              <div className="font-bold text-sm font-sans">2. DEGRADED</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">High packet latency / sporadic frame loss simulation.</p>
+              <div className="font-bold text-sm font-sans">{tx('2. DEGRADED')}</div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">{tx('High packet latency / sporadic frame loss simulation.')}</p>
             </button>
 
             <button
@@ -338,8 +367,8 @@ const SettingsPage: React.FC = () => {
                   : "bg-slate-50 dark:bg-slate-900/60 border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 hover:border-slate-300 dark:hover:border-slate-700"
               )}
             >
-              <div className="font-bold text-sm font-sans">3. OFFLINE</div>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">Zero internet. Gateway ring buffers; local DB & AI stay live.</p>
+              <div className="font-bold text-sm font-sans">{tx('3. OFFLINE')}</div>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 font-sans mt-1">{tx('Zero internet. Gateway ring buffers; local DB & AI stay live.')}</p>
             </button>
           </div>
         </div>
@@ -350,31 +379,31 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">Geotechnical Soil & Limit Equilibrium Model Parameters</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{tx('Geotechnical Soil & Limit Equilibrium Model Parameters')}</span>
           </div>
           <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-300">Skempton-DeLory Model</span>
         </div>
         <div className="card-body">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono">
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">Effective Cohesion (c')</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">{tx("Effective Cohesion (c')")}</span>
               <span className="text-base font-bold text-slate-900 dark:text-white mt-1 block">5.00 kPa</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Colluvium baseline</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{tx('Colluvium baseline')}</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">Friction Angle (φ')</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">{tx("Friction Angle (φ')")}</span>
               <span className="text-base font-bold text-slate-900 dark:text-white mt-1 block">25.0°</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Internal shear angle</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{tx('Internal shear angle')}</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">Saturated Unit Weight</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">{tx('Saturated Unit Weight')}</span>
               <span className="text-base font-bold text-slate-900 dark:text-white mt-1 block">18.0 kN/m³</span>
               <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">γ_sat soil mass</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">Slip Depth (z)</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider block font-sans">{tx('Slip Depth (z)')}</span>
               <span className="text-base font-bold text-slate-900 dark:text-white mt-1 block">1.50 m</span>
-              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">Failure shear plane</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans">{tx('Failure shear plane')}</span>
             </div>
           </div>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-3 font-sans leading-relaxed">
@@ -388,42 +417,57 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <MessageSquare className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">Fast2SMS Live Cellular Alerting (Quick SMS Route)</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{t('FAST2SMS_CARD')}</span>
           </div>
-          <span className={clsx(
-            "badge text-[10px]",
-            smsStatus?.enabled ? "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700" : "bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
-          )}>
-            {smsStatus?.enabled ? "DISPATCH ACTIVE" : "DISABLED"}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className={clsx(
+              "badge text-[10px]",
+              smsStatus?.enabled ? "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700" : "bg-slate-100 text-slate-600 border-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700"
+            )}>
+              {smsStatus?.enabled ? t('DISPATCH_ACTIVE') : t('DISABLED')}
+            </span>
+            <button
+              type="button"
+              disabled={smsToggling}
+              onClick={() => toggleFast2Sms(!smsStatus?.enabled)}
+              className={clsx(
+                "px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider border transition-colors disabled:opacity-50",
+                smsStatus?.enabled
+                  ? "bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-slate-400"
+                  : "bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700"
+              )}
+            >
+              {smsToggling ? t('LOADING') : smsStatus?.enabled ? t('DISABLE') : t('ENABLE_DISPATCH')}
+            </button>
+          </div>
         </div>
         <div className="card-body space-y-4">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">Status</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">{t('SMS_STATUS')}</span>
               <strong className={clsx("text-sm mt-1 block", smsStatus?.enabled ? "text-emerald-600 dark:text-emerald-400" : "text-slate-600 dark:text-slate-300")}>
-                {smsStatus?.enabled ? "Enabled" : "Disabled"}
+                {smsStatus?.enabled ? t('SMS_ENABLED') : t('SMS_DISABLED')}
               </strong>
-              <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">Automatic push</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">{tx('Automatic push')}</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">Configured Recipients</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">{t('SMS_RECIPIENTS')}</span>
               <strong className="text-sm text-slate-900 dark:text-slate-100 mt-1 block font-mono">
-                {smsStatus ? `${smsStatus.recipients_count} Official${smsStatus.recipients_count === 1 ? '' : 's'}` : "Loading..."}
+                {smsStatus ? `${smsStatus.recipients_count} ${tx('Officials')}` : t('LOADING')}
               </strong>
-              <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">Batch delivered</span>
+              <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">{tx('Batch delivered')}</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">Trigger Severity</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">{t('SMS_TRIGGER')}</span>
               <strong className="text-sm text-orange-600 dark:text-orange-400 mt-1 block font-mono">
                 &ge; {smsStatus?.min_severity || "HIGH"}
               </strong>
               <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">HIGH &amp; CRITICAL</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">Daily Free Plan Cap</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block font-sans">{t('SMS_QUOTA')}</span>
               <strong className="text-sm text-blue-600 dark:text-blue-400 mt-1 block font-mono">
-                {smsStatus ? `${smsStatus.sent_today} / ${smsStatus.max_per_day}` : "Loading..."}
+                {smsStatus ? `${smsStatus.sent_today} / ${smsStatus.max_per_day}` : t('LOADING')}
               </strong>
               <span className="text-[10px] text-slate-500 dark:text-slate-300 font-sans">
                 {smsStatus ? `${smsStatus.quota_remaining} remaining today` : "Resets midnight UTC"}
@@ -465,26 +509,26 @@ const SettingsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">System Runtime & Architecture</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{t('SYSTEM_RUNTIME')}</span>
           </div>
           <span className="badge badge-elite text-[10px]">ONLINE</span>
         </div>
         <div className="card-body">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             <div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">Application</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">{tx('Application')}</span>
               <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">Terrawarn-Ai</span>
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">Version</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">{tx('Version')}</span>
               <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">v0.2.0-modular</span>
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">AI Model</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">{tx('AI Model')}</span>
               <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">XGBoost 2.0.3</span>
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">Explainer</span>
+              <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase block">{tx('Explainer')}</span>
               <span className="text-slate-900 dark:text-slate-100 font-bold mt-0.5 block">SHAP TreeExplainer</span>
             </div>
           </div>

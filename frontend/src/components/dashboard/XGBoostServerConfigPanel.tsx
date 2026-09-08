@@ -15,6 +15,7 @@ import {
   Sliders 
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface XGBoostConfig {
   api_url: string;
@@ -47,6 +48,7 @@ interface TestResult {
 }
 
 const XGBoostServerConfigPanel: React.FC = () => {
+  const { tx } = useI18n();
   const [config, setConfig] = useState<XGBoostConfig>({
     api_url: 'http://34.131.240.174:8000',
     timeout_seconds: 5,
@@ -205,7 +207,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
         <div className="flex items-center gap-2 text-slate-800 dark:text-white">
           <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <span className="font-bold text-xs uppercase tracking-wider">
-            External / Cloud XGBoost Server Integration
+            {tx('External / Cloud XGBoost Server Integration')}
           </span>
         </div>
 
@@ -221,7 +223,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
               {testResult.model_version || 'Connected'} ({testResult.latency_ms}ms)
             </span>
           ) : (
-            <span className="badge badge-elite text-[10px]">RECONFIGURABLE</span>
+            <span className="badge badge-elite text-[10px]">{tx('RECONFIGURABLE')}</span>
           )}
         </div>
       </div>
@@ -234,7 +236,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
         {/* Server URL Input & Presets */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-slate-700 dark:text-slate-200">
-            XGBoost Server IP / URL:
+            {tx('XGBoost Server IP / URL:')}
           </label>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <div className="relative flex-1">
@@ -255,7 +257,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-all cursor-pointer shadow-xs disabled:opacity-50"
               >
                 <Zap className={clsx("w-3.5 h-3.5 text-amber-500", isTesting && "animate-spin")} />
-                <span>{isTesting ? 'Pinging...' : 'Test Connection'}</span>
+                <span>{isTesting ? tx('Syncing...') : tx('Test Connection')}</span>
               </button>
 
               <button
@@ -265,14 +267,14 @@ const XGBoostServerConfigPanel: React.FC = () => {
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50"
               >
                 <Save className="w-3.5 h-3.5" />
-                <span>{isSaving ? 'Saving...' : 'Save & Connect'}</span>
+                <span>{isSaving ? tx('Syncing...') : tx('Save & Connect')}</span>
               </button>
             </div>
           </div>
 
           {/* Quick IP Presets */}
           <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            <span>Quick Presets:</span>
+            <span>{tx('Quick Presets:')}</span>
             <button
               type="button"
               onClick={() => {
@@ -340,25 +342,25 @@ const XGBoostServerConfigPanel: React.FC = () => {
             {testResult.ok ? (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1 font-mono text-[11px]">
                 <div className="bg-white/80 dark:bg-slate-900/60 p-2 rounded-lg border border-emerald-100 dark:border-emerald-900">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">Server Title</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">{tx('Server Title')}</span>
                   <strong className="text-slate-800 dark:text-slate-200 truncate block">
                     {testResult.server_title || 'TerraWarn AI API'}
                   </strong>
                 </div>
                 <div className="bg-white/80 dark:bg-slate-900/60 p-2 rounded-lg border border-emerald-100 dark:border-emerald-900">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">Model Version</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">{tx('Model Version')}</span>
                   <strong className="text-blue-600 dark:text-blue-400 truncate block">
                     {testResult.model_version || 'prototype-xgboost-v1'}
                   </strong>
                 </div>
                 <div className="bg-white/80 dark:bg-slate-900/60 p-2 rounded-lg border border-emerald-100 dark:border-emerald-900">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">Health Status</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">{tx('Health Status')}</span>
                   <strong className="text-emerald-600 dark:text-emerald-400 truncate block">
                     {testResult.health_status || 'healthy'}
                   </strong>
                 </div>
                 <div className="bg-white/80 dark:bg-slate-900/60 p-2 rounded-lg border border-emerald-100 dark:border-emerald-900">
-                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">Telemetry Stream</span>
+                  <span className="text-[10px] text-slate-500 dark:text-slate-400 font-sans block">{tx('Telemetry Stream')}</span>
                   <strong className={testResult.has_telemetry_stream ? "text-emerald-600" : "text-amber-600"}>
                     {testResult.has_telemetry_stream ? 'Available' : 'Custom'}
                   </strong>
@@ -372,7 +374,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
 
             {testResult.sample_telemetry && (
               <div className="text-[10.5px] font-mono text-slate-600 dark:text-slate-300 bg-white/60 dark:bg-slate-900/40 p-2 rounded-lg">
-                <span>Sample Ingestion: </span>
+                <span>{tx('Sample Ingestion:')} </span>
                 <span>Moisture: <strong>{testResult.sample_telemetry.soil_moisture}%</strong></span> | 
                 <span> Rain: <strong>{testResult.sample_telemetry.rainfall_24h}mm</strong></span> | 
                 <span> Tilt: <strong>{testResult.sample_telemetry.tilt_angle}°</strong></span> | 
@@ -402,7 +404,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 hover:border-blue-400 text-slate-700 dark:text-slate-200 text-xs font-semibold shadow-xs transition-all cursor-pointer disabled:opacity-50"
               >
                 <RefreshCw className={clsx("w-3.5 h-3.5 text-blue-600", isSyncing && "animate-spin")} />
-                <span>{isSyncing ? 'Syncing...' : 'Sync 1 Reading'}</span>
+                <span>{isSyncing ? tx('Syncing...') : tx('Sync 1 Reading')}</span>
               </button>
 
               <button
@@ -418,12 +420,12 @@ const XGBoostServerConfigPanel: React.FC = () => {
                 {isAutoStreaming ? (
                   <>
                     <Square className="w-3.5 h-3.5" />
-                    <span>Stop Auto-Stream</span>
+                    <span>{tx('Stop Auto-Stream')}</span>
                   </>
                 ) : (
                   <>
                     <Play className="w-3.5 h-3.5" />
-                    <span>Start Auto-Stream</span>
+                    <span>{tx('Start Auto-Stream')}</span>
                   </>
                 )}
               </button>
@@ -439,7 +441,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
 
           {/* Interval Selector when Auto-Streaming */}
           <div className="flex items-center gap-3 pt-1 text-xs text-slate-600 dark:text-slate-300">
-            <span className="text-[11px] font-medium">Stream Interval:</span>
+            <span className="text-[11px] font-medium">{tx('Stream Interval:')}</span>
             <div className="flex items-center gap-1.5 font-mono text-[11px]">
               {[3, 5, 10, 15].map((sec) => (
                 <button

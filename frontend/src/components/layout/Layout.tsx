@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import Header from './Header';
 import VirtualChatbotModal from '../common/VirtualChatbotModal';
 import ErrorBoundary from '../common/ErrorBoundary';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface LayoutProps {
   alertCount?: number;
@@ -13,6 +14,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const location = useLocation();
+  const { t } = useI18n();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -23,37 +25,37 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
       case '/':
       case '/dashboard':
       case '/metrics':
-        return 'Metrics';
+        return t('PAGE_METRICS');
       case '/sensor':
       case '/node':
       case '/nodes':
-        return 'Station Telemetry';
+        return t('PAGE_STATION_TELEMETRY');
       case '/alerts':
-        return 'Alerts & Incidents';
+        return t('PAGE_ALERTS');
       case '/analytics':
-        return 'Analytics';
+        return t('PAGE_ANALYTICS');
       case '/map':
       case '/gis':
-        return 'Geospatial GIS';
+        return t('PAGE_GIS');
       case '/reports':
-        return 'Citizen Reports';
+        return t('PAGE_REPORTS');
       case '/settings':
-        return 'Settings';
+        return t('PAGE_SETTINGS');
       case '/about':
-        return 'About Terrawarn-Ai';
+        return t('PAGE_ABOUT');
       default:
-        return 'Metrics';
+        return t('PAGE_METRICS');
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f4f6fa] dark:bg-[#080c14] text-[#0f172a] dark:text-[#f8fafc] flex overflow-x-hidden transition-colors duration-200">
+    <div className="app-shell min-h-screen text-[#0b1220] dark:text-[#f4f6fb] flex overflow-x-hidden transition-colors duration-200">
       <Sidebar isOpen={isSidebarOpen} onToggle={toggleSidebar} />
       
       {/* Overlay for mobile sidebar */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-30 lg:hidden"
+          className="fixed inset-0 bg-slate-950/55 backdrop-blur-[2px] z-30 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -66,28 +68,30 @@ const Layout: React.FC<LayoutProps> = ({ alertCount = 0, isConnected = true }) =
           onMenuToggle={toggleSidebar} 
         />
         <main className="flex-1 overflow-auto p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
-          <ErrorBoundary fallbackTitle="Page Error" fallbackMessage="There was an issue rendering this section. Click below to reload.">
-            <Outlet />
-          </ErrorBoundary>
+          <div key={location.pathname} className="page-enter">
+            <ErrorBoundary fallbackTitle={t('PAGE_ERROR')} fallbackMessage={t('PAGE_ERROR_MSG')}>
+              <Outlet />
+            </ErrorBoundary>
+          </div>
         </main>
         
         {/* Global Virtual Chatbot AI Assistant */}
         <VirtualChatbotModal />
 
-        <footer className="border-t border-[#e5e9f2] dark:border-white/10 bg-white dark:bg-[#0f172a] px-6 py-3 text-xs font-sans text-slate-500 dark:text-slate-300 transition-colors">
+        <footer className="border-t border-[#e4e8ef] dark:border-white/[0.07] bg-white/80 dark:bg-[#0c1220]/80 backdrop-blur-md px-6 py-3.5 text-xs font-sans text-slate-500 dark:text-slate-300 transition-colors">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-[1600px] mx-auto">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#10b981]"></span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200">Terrawarn-Ai</span>
-              <span className="text-slate-400 dark:text-slate-400">· Early Warning Mission Control</span>
+              <span className="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_0_3px_rgba(16,185,129,0.18)]"></span>
+              <span className="font-semibold text-slate-800 dark:text-slate-200">{t('FOOTER_BRAND')}</span>
+              <span className="text-slate-400 dark:text-slate-400">· {t('FOOTER_TAGLINE')}</span>
             </div>
             <div className="text-slate-500 dark:text-slate-300 text-[11px]">
-              Edge LoRa Gateway &middot; Limit Equilibrium Bishop Physics &middot; XGBoost SHAP Engine
+              {t('FOOTER_STACK')}
             </div>
             <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-300">
-              <span>Blynk Cloud Synced</span>
+              <span>{t('FOOTER_BLYNK')}</span>
               <span>&bull;</span>
-              <span className="text-[#10b981] font-semibold">Online</span>
+              <span className="text-[#10b981] font-semibold">{t('FOOTER_ONLINE')}</span>
             </div>
           </div>
         </footer>

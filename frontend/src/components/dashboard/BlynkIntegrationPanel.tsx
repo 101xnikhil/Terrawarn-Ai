@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { TelemetryReading, RiskAssessment } from '../../types';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface Props {
   reading: TelemetryReading;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function BlynkIntegrationPanel({ reading, risk }: Props) {
+  const { t, tx } = useI18n();
   const [copied, setCopied] = useState(false);
   const [templateId, setTemplateId] = useState(() => localStorage.getItem('blynk_template_id') || 'TMPL_TERRAWARN');
   const [templateName, setTemplateName] = useState(() => localStorage.getItem('blynk_template_name') || 'Terrawarn-Ai');
@@ -29,15 +31,15 @@ export default function BlynkIntegrationPanel({ reading, risk }: Props) {
   }, [templateId, templateName, blynkAuthToken]);
 
   const virtualPins = [
-    { pin: 'V0', name: 'Soil Moisture', value: `${reading.soil_moisture_pct.toFixed(1)}%`, desc: 'Volumetric Water Content' },
-    { pin: 'V1', name: 'Rainfall 24h', value: `${reading.rainfall_24h_mm.toFixed(1)} mm`, desc: 'Precipitation Ingress' },
-    { pin: 'V2', name: 'Slope Dip Angle', value: `${reading.tilt_angle.toFixed(2)}°`, desc: 'MPU6050 3D Inclination' },
-    { pin: 'V3', name: 'Creep Velocity', value: `${reading.tilt_rate.toFixed(3)}°/m`, desc: 'Angular Displacement' },
-    { pin: 'V4', name: 'Factor of Safety', value: risk.fos_estimate.toFixed(2), desc: 'Bishop Limit Equilibrium' },
-    { pin: 'V5', name: 'Hazard Score', value: `${(risk.risk_score * 100).toFixed(0)}%`, desc: 'XGBoost Risk Probability' },
-    { pin: 'V6', name: 'Hazard Tier', value: risk.risk_level, desc: 'Safety Classification' },
-    { pin: 'V7', name: 'Emergency Siren', value: risk.risk_level === 'CRITICAL' ? '1 (ALARM)' : '0 (OFF)', desc: 'Evacuation Relay Control' },
-    { pin: 'V8', name: 'LoRa RSSI', value: `${reading.rssi_dbm} dBm`, desc: 'RF Link Signal Quality' },
+    { pin: 'V0', name: tx('Soil Moisture'), value: `${reading.soil_moisture_pct.toFixed(1)}%`, desc: 'Volumetric Water Content' },
+    { pin: 'V1', name: tx('Rainfall 24h'), value: `${reading.rainfall_24h_mm.toFixed(1)} mm`, desc: 'Precipitation Ingress' },
+    { pin: 'V2', name: tx('Slope Dip Angle'), value: `${reading.tilt_angle.toFixed(2)}°`, desc: 'MPU6050 3D Inclination' },
+    { pin: 'V3', name: tx('Creep Velocity'), value: `${reading.tilt_rate.toFixed(3)}°/m`, desc: 'Angular Displacement' },
+    { pin: 'V4', name: tx('Factor of Safety'), value: risk.fos_estimate.toFixed(2), desc: 'Bishop Limit Equilibrium' },
+    { pin: 'V5', name: tx('Hazard Score'), value: `${(risk.risk_score * 100).toFixed(0)}%`, desc: 'XGBoost Risk Probability' },
+    { pin: 'V6', name: tx('Hazard Tier'), value: risk.risk_level, desc: 'Safety Classification' },
+    { pin: 'V7', name: tx('Emergency Siren'), value: risk.risk_level === 'CRITICAL' ? '1 (ALARM)' : '0 (OFF)', desc: 'Evacuation Relay Control' },
+    { pin: 'V8', name: tx('LoRa RSSI'), value: `${reading.rssi_dbm} dBm`, desc: 'RF Link Signal Quality' },
   ];
 
   const handleTestBlynkPush = async () => {
@@ -180,22 +182,22 @@ void loop() {
   return (
     <div className="card p-5 space-y-4 font-sans">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f1f5f9] pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#f1f5f9] dark:border-white/10 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-100 shrink-0">
+          <div className="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 border border-blue-100 dark:border-blue-800 shrink-0">
             <Wifi className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base sm:text-lg font-bold text-[#0f172a] tracking-tight">
-                ESP32 Hardware & Blynk IoT Cloud Bridge
+              <h3 className="text-base sm:text-lg font-bold text-[#0b1220] dark:text-white tracking-tight">
+                {t('BLYNK_TITLE')}
               </h3>
-              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
-                BLYNK IOT CLOUD READY
+              <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[10px] font-bold">
+                {tx('BLYNK IOT CLOUD READY')}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5 font-normal">
-              Connect real ESP32 sensors via Wi-Fi or USB Serial to display real-time landslide telemetry simultaneously in Terrawarn-Ai and the Blynk mobile app.
+            <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5 font-normal">
+              {tx('Connect real ESP32 sensors via Wi-Fi or USB Serial to display real-time landslide telemetry simultaneously in Terrawarn-Ai and the Blynk mobile app.')}
             </p>
           </div>
         </div>
@@ -212,7 +214,7 @@ void loop() {
             title="Auto-sync frames every 6 seconds to Blynk Cloud"
           >
             {autoSync ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
-            <span>{autoSync ? 'Auto-Sync Active (6s)' : 'Enable Auto-Sync'}</span>
+            <span>{autoSync ? tx('Auto-Sync Active (6s)') : tx('Enable Auto-Sync')}</span>
           </button>
 
           <button
@@ -221,7 +223,7 @@ void loop() {
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#2563eb] hover:bg-blue-700 text-white font-bold text-xs shadow-sm transition-all disabled:opacity-50"
           >
             <RefreshCw className={clsx("w-3.5 h-3.5", isSyncing && "animate-spin")} />
-            <span>{isSyncing ? 'Syncing...' : 'Sync to Blynk Cloud'}</span>
+            <span>{isSyncing ? tx('Syncing...') : tx('Sync to Blynk Cloud')}</span>
           </button>
         </div>
       </div>
@@ -230,7 +232,7 @@ void loop() {
       <div className="bg-slate-50 dark:bg-slate-900/60 p-3.5 rounded-2xl border border-slate-200 dark:border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
         <div>
           <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
-            Blynk Template ID
+            {tx('Blynk Template ID')}
           </label>
           <input
             type="text"
@@ -243,7 +245,7 @@ void loop() {
 
         <div>
           <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
-            Blynk Template Name
+            {tx('Blynk Template Name')}
           </label>
           <input
             type="text"
@@ -256,7 +258,7 @@ void loop() {
 
         <div>
           <label className="block text-[10.5px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-300 mb-1">
-            Blynk Device Auth Token
+            {tx('Blynk Device Auth Token')}
           </label>
           <input
             type="text"
@@ -364,7 +366,7 @@ void loop() {
               className="flex items-center gap-1 px-3 py-1 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-colors"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copied ? 'Copied to Clipboard' : 'Copy Firmware Code'}</span>
+              <span>{copied ? tx('Copied to Clipboard') : tx('Copy Firmware Code')}</span>
             </button>
           )}
         </div>

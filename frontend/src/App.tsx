@@ -11,6 +11,7 @@ import AboutPage from './pages/AboutPage';
 import CitizenReportsPage from './pages/CitizenReportsPage';
 import { useMockTelemetry } from './hooks/useMockTelemetry';
 import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider } from './i18n/LanguageContext';
 import type { Alert } from './types';
 
 const App: React.FC = () => {
@@ -21,6 +22,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider>
+      <LanguageProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<Layout alertCount={unacknowledgedCount} isConnected={isConnected} />}>
@@ -46,6 +48,7 @@ const App: React.FC = () => {
         </Route>
       </Routes>
       </BrowserRouter>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };

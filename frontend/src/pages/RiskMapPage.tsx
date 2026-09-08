@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useTheme } from '../context/ThemeContext';
-import { useLanguage } from '../utils/i18n';
+import { useI18n } from '../i18n/LanguageContext';
 import ReportIncidentModal from '../components/reports/ReportIncidentModal';
 
 // Fix Leaflet marker asset paths
@@ -1004,7 +1004,7 @@ const RiskMapPage: React.FC = () => {
   // Default to Street (OpenStreetMap) so all Indian location and city names are immediately visible!
   const [activeBaseLayer, setActiveBaseLayer] = useState<'street' | 'satellite' | 'topo'>('street');
   
-  const { t } = useLanguage();
+  const { t, tx } = useI18n();
   // Layer visibility toggles - Location Names enabled by default!
   const [showLocationNames, setShowLocationNames] = useState<boolean>(true);
   const [showGeofences, setShowGeofences] = useState<boolean>(true);
@@ -1226,10 +1226,10 @@ const RiskMapPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-            Geospatial Sector GIS & Road Network
+            {t('MAP_TITLE')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Pan-India landslide monitoring stations, slope hazard overlays, and relief shelter routing
+            {t('MAP_SUB')}
           </p>
         </div>
 
@@ -1341,7 +1341,7 @@ const RiskMapPage: React.FC = () => {
               )}
               title="Standard Cartographic Map with Cities, Towns, Roads & State Names"
             >
-              <span>🗺️ Cities &amp; Roads</span>
+              <span>🗺️ {t('CITIES_ROADS')}</span>
             </button>
             <button
               onClick={() => setActiveBaseLayer('satellite')}
@@ -1353,7 +1353,7 @@ const RiskMapPage: React.FC = () => {
               )}
               title="High-Resolution Satellite Orthophoto with Place Name Overlay"
             >
-              <span>🛰️ Satellite</span>
+              <span>🛰️ {t('SATELLITE')}</span>
             </button>
             <button
               onClick={() => setActiveBaseLayer('topo')}
@@ -1365,7 +1365,7 @@ const RiskMapPage: React.FC = () => {
               )}
               title="Topographic Relief & Mountain Elevation Contours"
             >
-              <span>⛰️ Topo</span>
+              <span>⛰️ {t('TOPO')}</span>
             </button>
           </div>
 
@@ -1376,7 +1376,7 @@ const RiskMapPage: React.FC = () => {
             title="Reset map view to show all Indian landslide corridors"
           >
             <Globe className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span>Pan-India</span>
+            <span>{tx('Pan-India')}</span>
           </button>
 
           <button
@@ -1386,7 +1386,7 @@ const RiskMapPage: React.FC = () => {
             title="Focus on North Eastern Region corridors (Assam, Sikkim, Meghalaya, Arunachal, Manipur)"
           >
             <Navigation className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-            <span>NER Corridors</span>
+            <span>{tx('NER Corridors')}</span>
           </button>
 
           <button
@@ -1396,7 +1396,7 @@ const RiskMapPage: React.FC = () => {
             title="Jump to primary live hardware station"
           >
             <Crosshair className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span>Live Node (LG-N01)</span>
+            <span>{t('LIVE_NODE')}</span>
           </button>
 
           <button
@@ -1406,7 +1406,7 @@ const RiskMapPage: React.FC = () => {
             title="Submit geo-tagged field incident report (cracks, rockfall, blocked road)"
           >
             <Camera className="w-3.5 h-3.5 text-white" />
-            <span>Report Hazard</span>
+            <span>{t('REPORT_HAZARD')}</span>
           </button>
         </div>
       </div>
@@ -1456,7 +1456,7 @@ const RiskMapPage: React.FC = () => {
             />
             <span className="flex items-center gap-1">
               <Tag className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-              <span>Location Names</span>
+              <span>{tx('Location Names')}</span>
             </span>
           </label>
 
@@ -1469,7 +1469,7 @@ const RiskMapPage: React.FC = () => {
             />
             <span className="flex items-center gap-1">
               <Route className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-              <span>Road Status ({roadCorridors.length})</span>
+              <span>{tx('Road Status')} ({roadCorridors.length})</span>
             </span>
           </label>
 
@@ -1482,7 +1482,7 @@ const RiskMapPage: React.FC = () => {
             />
             <span className="flex items-center gap-1">
               <Camera className="w-3 h-3 text-indigo-600 dark:text-indigo-400" />
-              <span>Field Reports ({citizenReports.length})</span>
+              <span>{tx('Field Reports')} ({citizenReports.length})</span>
             </span>
           </label>
 
@@ -1493,7 +1493,7 @@ const RiskMapPage: React.FC = () => {
               onChange={(e) => setShowGeofences(e.target.checked)}
               className="rounded text-blue-600 focus:ring-0"
             />
-            <span>Hazard Radii</span>
+            <span>{tx('Hazard Radii')}</span>
           </label>
 
           <label className="flex items-center gap-1.5 cursor-pointer select-none bg-white dark:bg-slate-900/70 border border-slate-300 dark:border-white/10 px-2.5 py-1 rounded-xl shadow-2xs">
@@ -1503,7 +1503,7 @@ const RiskMapPage: React.FC = () => {
               onChange={(e) => setShowEvacRoutes(e.target.checked)}
               className="rounded text-sky-600 focus:ring-0"
             />
-            <span>Evac Routes</span>
+            <span>{tx('Evac Routes')}</span>
           </label>
 
           <label className="flex items-center gap-1.5 cursor-pointer select-none bg-white dark:bg-slate-900/70 border border-slate-300 dark:border-white/10 px-2.5 py-1 rounded-xl shadow-2xs">
@@ -1513,7 +1513,7 @@ const RiskMapPage: React.FC = () => {
               onChange={(e) => setShowShelters(e.target.checked)}
               className="rounded text-emerald-600 focus:ring-0"
             />
-            <span>Shelters</span>
+            <span>{tx('Shelters')}</span>
           </label>
 
           <label className="flex items-center gap-1.5 cursor-pointer select-none bg-white dark:bg-slate-900/70 border border-slate-300 dark:border-white/10 px-2.5 py-1 rounded-xl shadow-2xs">
@@ -1523,7 +1523,7 @@ const RiskMapPage: React.FC = () => {
               onChange={(e) => setShowHistoricalScars(e.target.checked)}
               className="rounded text-rose-600 focus:ring-0"
             />
-            <span>Scars</span>
+            <span>{tx('Scars')}</span>
           </label>
 
           {/* Region Filter */}
@@ -2118,7 +2118,7 @@ const RiskMapPage: React.FC = () => {
               {/* Designated Safe Shelter & Route Info */}
               <div className="p-2.5 rounded-xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 text-[10.5px]">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide text-[9.5px]">Designated Safe Shelter</span>
+                  <span className="font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wide text-[9.5px]">{tx('Designated Safe Shelter')}</span>
                   <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-mono font-bold">{activeShelter.capacity} Cap</span>
                 </div>
                 <div className="font-bold text-slate-900 dark:text-white text-xs">{activeShelter.name}</div>
@@ -2134,7 +2134,7 @@ const RiskMapPage: React.FC = () => {
                   className="mt-2 w-full py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] transition-all flex items-center justify-center gap-1 shadow-2xs"
                 >
                   <Navigation className="w-3 h-3" />
-                  <span>Fly to Shelter Coordinates</span>
+                  <span>{tx('Fly to Shelter Coordinates')}</span>
                 </button>
               </div>
 
@@ -2145,7 +2145,7 @@ const RiskMapPage: React.FC = () => {
                 className="w-full py-2 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-md shadow-red-500/20"
               >
                 <BellRing className="w-3.5 h-3.5" />
-                <span>Simulate Emergency SMS Drill</span>
+                <span>{tx('Simulate Emergency SMS Drill')}</span>
               </button>
             </div>
           </div>

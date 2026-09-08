@@ -2,6 +2,7 @@ import React from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface ThemeToggleProps {
   variant?: 'icon' | 'segmented';
@@ -10,6 +11,7 @@ interface ThemeToggleProps {
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', className }) => {
   const { theme, resolvedTheme, setTheme, toggleTheme } = useTheme();
+  const { t } = useI18n();
 
   if (variant === 'segmented') {
     return (
@@ -70,12 +72,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = 'icon', clas
       className={clsx(
         'relative p-2 rounded-xl border transition-all duration-200 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-blue-500/40',
         resolvedTheme === 'dark'
-          ? 'bg-slate-800/80 border-slate-700 text-amber-400 hover:text-amber-300 hover:bg-slate-700 hover:border-slate-600 shadow-xs'
-          : 'bg-white border-[#e5e9f2] text-slate-600 hover:text-blue-600 hover:border-slate-300 shadow-xs',
+          ? 'bg-[#121a2b] border-white/10 text-amber-300 hover:text-amber-200 hover:bg-[#1a2438] hover:border-white/16 shadow-xs'
+          : 'bg-white border-[#e4e8ef] text-slate-600 hover:text-blue-600 hover:border-slate-300 shadow-xs',
         className
       )}
-      title={resolvedTheme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
-      aria-label={resolvedTheme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme'}
+      title={resolvedTheme === 'dark' ? t('THEME_LIGHT') : t('THEME_DARK')}
+      aria-label={resolvedTheme === 'dark' ? t('THEME_LIGHT') : t('THEME_DARK')}
     >
       {resolvedTheme === 'dark' ? (
         <Sun className="w-4 h-4 transition-transform duration-300 rotate-0 hover:rotate-45" />

@@ -11,14 +11,16 @@ import { RISK_COLORS } from '../types';
 import { formatTimeShort } from '../utils/formatters';
 import { BarChart3, TrendingUp, Cpu, Table, Activity } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { useI18n } from '../i18n/LanguageContext';
 
 const AnalyticsPage: React.FC = () => {
   const { state } = useMockTelemetry();
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
+  const { t, tx } = useI18n();
   
   if (!state) {
-    return <LoadingState message="Computing time-series analytics..." />;
+    return <LoadingState message={t('LOADING')} />;
   }
   
   const chartData = getGenerator().getChartData();
@@ -47,10 +49,10 @@ const AnalyticsPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3.5">
         <div>
           <h2 className="text-xl sm:text-2xl font-bold text-[#0f172a] dark:text-white tracking-tight">
-            Telemetry Analytics & AI Explainability
+            {t('ANALYTICS_TITLE')}
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
-            Time-series telemetry decomposition, limit equilibrium Bishop curves, and SHAP feature attributions
+            {t('ANALYTICS_SUB')}
           </p>
         </div>
 
@@ -71,7 +73,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Table className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">Telemetry Statistics Summary (Buffer: {readingHistory.length} Samples)</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{t('STATS_SUMMARY')} (Buffer: {readingHistory.length} Samples)</span>
           </div>
           <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-400">10s Telemetry Interval</span>
         </div>
@@ -79,18 +81,18 @@ const AnalyticsPage: React.FC = () => {
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-white/10 text-[10px] uppercase text-slate-500 dark:text-slate-300 font-bold tracking-wider">
               <tr>
-                <th className="py-3 px-4">Metric / Channel</th>
-                <th className="py-3 px-4">Unit</th>
-                <th className="py-3 px-4">Current</th>
-                <th className="py-3 px-4">Minimum</th>
-                <th className="py-3 px-4">Maximum</th>
-                <th className="py-3 px-4">Mean (μ)</th>
-                <th className="py-3 px-4">Status</th>
+                <th className="py-3 px-4">{t('COL_METRIC')}</th>
+                <th className="py-3 px-4">{t('COL_UNIT')}</th>
+                <th className="py-3 px-4">{t('COL_CURRENT')}</th>
+                <th className="py-3 px-4">{t('COL_MIN')}</th>
+                <th className="py-3 px-4">{t('COL_MAX')}</th>
+                <th className="py-3 px-4">{t('COL_MEAN')}</th>
+                <th className="py-3 px-4">{t('COL_STATUS')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-white/10 font-mono">
               <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Volumetric Soil Moisture</td>
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">{t('METRIC_VWC')}</td>
                 <td className="py-3 px-4 text-slate-500 dark:text-slate-400">%</td>
                 <td className="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{moistureStats.cur.toFixed(1)}%</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{moistureStats.min.toFixed(1)}%</td>
@@ -98,12 +100,12 @@ const AnalyticsPage: React.FC = () => {
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{moistureStats.avg.toFixed(1)}%</td>
                 <td className="py-3 px-4">
                   <span className={moistureStats.cur > 80 ? "badge badge-low" : moistureStats.cur > 50 ? "badge badge-medium" : "badge badge-elite"}>
-                    {moistureStats.cur > 80 ? "Critical" : moistureStats.cur > 50 ? "Elevated" : "Nominal"}
+                    {moistureStats.cur > 80 ? t('BADGE_CRITICAL') : moistureStats.cur > 50 ? t('STATUS_ELEVATED') : t('STATUS_NOMINAL')}
                   </span>
                 </td>
               </tr>
               <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">24h Rainfall Accumulation</td>
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">{t('METRIC_RAIN')}</td>
                 <td className="py-3 px-4 text-slate-500 dark:text-slate-400">mm</td>
                 <td className="py-3 px-4 font-bold text-blue-600 dark:text-blue-400">{rainStats.cur.toFixed(1)} mm</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{rainStats.min.toFixed(1)} mm</td>
@@ -111,21 +113,21 @@ const AnalyticsPage: React.FC = () => {
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{rainStats.avg.toFixed(1)} mm</td>
                 <td className="py-3 px-4">
                   <span className={rainStats.cur > 50 ? "badge badge-low" : "badge badge-elite"}>
-                    {rainStats.cur > 50 ? "Heavy" : "Normal"}
+                    {rainStats.cur > 50 ? t('STATUS_HEAVY') : t('STATUS_NORMAL')}
                   </span>
                 </td>
               </tr>
               <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Slope Dip Angle</td>
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">{t('METRIC_DIP')}</td>
                 <td className="py-3 px-4 text-slate-500 dark:text-slate-400">°</td>
                 <td className="py-3 px-4 font-bold text-emerald-600 dark:text-emerald-400">{tiltStats.cur.toFixed(2)}°</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.min.toFixed(2)}°</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.max.toFixed(2)}°</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltStats.avg.toFixed(2)}°</td>
-                <td className="py-3 px-4"><span className="badge badge-elite">Active</span></td>
+                <td className="py-3 px-4"><span className="badge badge-elite">{t('BADGE_ACTIVE')}</span></td>
               </tr>
               <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Tilt Displacement Rate</td>
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">{tx('Tilt Displacement Rate')}</td>
                 <td className="py-3 px-4 text-slate-500 dark:text-slate-400">°/min</td>
                 <td className="py-3 px-4 font-bold text-orange-600 dark:text-orange-400">{tiltRateStats.cur.toFixed(3)}</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltRateStats.min.toFixed(3)}</td>
@@ -133,12 +135,12 @@ const AnalyticsPage: React.FC = () => {
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{tiltRateStats.avg.toFixed(3)}</td>
                 <td className="py-3 px-4">
                   <span className={Math.abs(tiltRateStats.cur) > 0.05 ? "badge badge-low" : "badge badge-elite"}>
-                    {Math.abs(tiltRateStats.cur) > 0.05 ? "Creep Detected" : "Stable"}
+                    {Math.abs(tiltRateStats.cur) > 0.05 ? tx('Creep Detected') : tx('Stable')}
                   </span>
                 </td>
               </tr>
               <tr className="hover:bg-slate-50/60 dark:hover:bg-slate-800/60 transition-colors">
-                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">Factor of Safety (FoS)</td>
+                <td className="py-3 px-4 font-sans font-semibold text-slate-900 dark:text-white">{tx('Factor of Safety (FoS)')}</td>
                 <td className="py-3 px-4 text-slate-500 dark:text-slate-400">ratio</td>
                 <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">{fosStats.cur.toFixed(2)}</td>
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{fosStats.min.toFixed(2)}</td>
@@ -146,7 +148,7 @@ const AnalyticsPage: React.FC = () => {
                 <td className="py-3 px-4 text-slate-700 dark:text-slate-200">{fosStats.avg.toFixed(2)}</td>
                 <td className="py-3 px-4">
                   <span className={fosStats.cur < 1.0 ? "badge badge-low" : fosStats.cur < 1.3 ? "badge badge-medium" : "badge badge-elite"}>
-                    {fosStats.cur < 1.0 ? "Failure Imminent" : fosStats.cur < 1.3 ? "Warning" : "Stable"}
+                    {fosStats.cur < 1.0 ? tx('Failure Imminent') : fosStats.cur < 1.3 ? tx('Warning') : tx('Stable')}
                   </span>
                 </td>
               </tr>
@@ -161,7 +163,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
-              Soil Moisture Time-Series & Thresholds
+              {tx('Soil Moisture Time-Series & Thresholds')}
             </h3>
             <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">{moistureStats.cur.toFixed(1)}%</span>
           </div>
@@ -193,7 +195,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
-              24-Hour Precipitation Accumulation (mm)
+              {tx('24-Hour Precipitation Accumulation (mm)')}
             </h3>
             <span className="font-mono text-xs text-blue-600 dark:text-blue-400 font-bold">{rainStats.cur.toFixed(1)} mm</span>
           </div>
@@ -228,7 +230,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
-              AI Hazard Risk Score Probability Trajectory
+              {tx('AI Hazard Risk Score Probability Trajectory')}
             </h3>
             <span className="font-mono text-xs text-orange-600 font-bold">{(currentRisk.risk_score * 100).toFixed(0)}%</span>
           </div>
@@ -261,7 +263,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card p-5 flex flex-col justify-between">
           <div className="flex justify-between items-center mb-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-200">
-              Factor of Safety (FoS) Infinite Slope Limit Equilibrium
+              {tx('Factor of Safety (FoS) Infinite Slope Limit Equilibrium')}
             </h3>
             <span className="font-mono text-xs text-emerald-600 font-bold">{currentRisk.fos_estimate.toFixed(2)}</span>
           </div>
@@ -296,7 +298,7 @@ const AnalyticsPage: React.FC = () => {
         <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
           <div className="flex items-center gap-2 text-slate-800 dark:text-white">
             <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-            <span className="font-bold text-xs uppercase tracking-wider">SHAP Global Feature Attribution Weights</span>
+            <span className="font-bold text-xs uppercase tracking-wider">{tx('SHAP Global Feature Attribution Weights')}</span>
           </div>
           <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-400">TreeExplainer Kernel</span>
         </div>

@@ -2,13 +2,23 @@ import React from 'react';
 import { ShieldCheck, Shield, ShieldAlert } from 'lucide-react';
 import clsx from 'clsx';
 import { RiskLevel } from '../../types';
+import { useI18n } from '../../i18n/LanguageContext';
+import type { UIStringKey } from '../../i18n/strings';
 
 interface RiskBadgeProps {
   level: RiskLevel;
   size?: 'sm' | 'md' | 'lg';
 }
 
+const RISK_LABEL: Record<RiskLevel, UIStringKey> = {
+  LOW: 'RISK_LOW',
+  MODERATE: 'RISK_MODERATE',
+  HIGH: 'RISK_HIGH',
+  CRITICAL: 'RISK_CRITICAL',
+};
+
 const RiskBadge: React.FC<RiskBadgeProps> = ({ level, size = 'md' }) => {
+  const { t } = useI18n();
   const getIcon = () => {
     switch (level) {
       case 'LOW':
@@ -42,7 +52,7 @@ const RiskBadge: React.FC<RiskBadgeProps> = ({ level, size = 'md' }) => {
   return (
     <div className={clsx('inline-flex items-center font-bold rounded-full border', sizeClasses[size], badgeClass)}>
       <Icon className={iconSizes[size]} />
-      <span>{level}</span>
+      <span>{t(RISK_LABEL[level] || 'RISK_LOW')}</span>
     </div>
   );
 };

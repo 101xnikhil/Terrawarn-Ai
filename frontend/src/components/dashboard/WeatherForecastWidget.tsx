@@ -4,6 +4,7 @@ import {
   Droplets, ShieldAlert, ArrowUpRight, Radio, RefreshCw 
 } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface ForecastStation {
   station: string;
@@ -28,6 +29,7 @@ interface RadarInfo {
 }
 
 export const WeatherForecastWidget: React.FC = () => {
+  const { tx } = useI18n();
   const [stations, setStations] = useState<ForecastStation[]>([]);
   const [radars, setRadars] = useState<RadarInfo[]>([]);
   const [synopticText, setSynopticText] = useState<string>('');
@@ -64,10 +66,10 @@ export const WeatherForecastWidget: React.FC = () => {
           </div>
           <div>
             <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              IMD Weather-Linked Landslide Forecast (72h Model)
+              {tx('IMD Weather-Linked Landslide Forecast (72h Model)')}
             </h3>
             <p className="text-[10.5px] text-slate-500 dark:text-slate-400">
-              Antecedent Rainfall Index (ARI-7) &middot; Doppler Radar Reflectivity
+              {tx('Antecedent Rainfall Index (ARI-7) · Doppler Radar Reflectivity')}
             </p>
           </div>
         </div>
@@ -76,7 +78,7 @@ export const WeatherForecastWidget: React.FC = () => {
           type="button"
           onClick={fetchWeather}
           className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white"
-          title="Refresh Radar Feeds"
+          title={tx('Refresh Radar Feeds')}
         >
           <RefreshCw className={clsx("w-3.5 h-3.5", loading && "animate-spin text-blue-600")} />
         </button>
@@ -86,7 +88,7 @@ export const WeatherForecastWidget: React.FC = () => {
       {synopticText && (
         <div className="p-2.5 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-[11px] text-blue-900 dark:text-blue-200 flex items-center gap-2">
           <Wind className="w-4 h-4 text-blue-600 shrink-0" />
-          <span><strong>Synoptic Guidance:</strong> {synopticText}</span>
+          <span><strong>{tx('Synoptic Guidance:')}</strong> {tx(synopticText)}</span>
         </div>
       )}
 

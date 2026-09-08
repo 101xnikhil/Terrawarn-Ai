@@ -3,6 +3,7 @@ import { SensorNode, TelemetryReading } from '../../types';
 import { formatRelativeTime } from '../../utils/formatters';
 import { CheckCircle2, XCircle, Cpu, Radio, BatteryMedium } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface Props {
   node: SensorNode | null;
@@ -10,10 +11,11 @@ interface Props {
 }
 
 export default function DeviceHealth({ node, reading }: Props) {
+  const { tx } = useI18n();
   if (!node) {
     return (
       <div className="card h-full min-h-[220px] flex items-center justify-center p-4 text-slate-400 text-xs">
-        <Cpu className="w-5 h-5 animate-pulse mr-2" /> Initializing Node Diagnostics...
+        <Cpu className="w-5 h-5 animate-pulse mr-2" /> {tx('Initializing Node Diagnostics...')}
       </div>
     );
   }
@@ -26,11 +28,11 @@ export default function DeviceHealth({ node, reading }: Props) {
       <span className="text-slate-600 dark:text-slate-200">{label}</span>
       {ok ? (
         <span className="flex items-center gap-1 text-[#10b981] font-bold text-[10.5px]">
-          <CheckCircle2 size={13} /> OK
+          <CheckCircle2 size={13} /> {tx('OK')}
         </span>
       ) : (
         <span className="flex items-center gap-1 text-[#ef4444] font-bold text-[10.5px]">
-          <XCircle size={13} /> FAIL
+          <XCircle size={13} /> {tx('FAIL')}
         </span>
       )}
     </div>
@@ -42,7 +44,7 @@ export default function DeviceHealth({ node, reading }: Props) {
       <div className="card-header border-b border-[#f1f5f9] dark:border-white/10 flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-slate-800 dark:text-white">
           <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-          <span className="font-bold text-xs uppercase tracking-wider">Node Diagnostics</span>
+          <span className="font-bold text-xs uppercase tracking-wider">{tx('Node Diagnostics')}</span>
         </div>
         <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
           {node.id}
@@ -53,15 +55,15 @@ export default function DeviceHealth({ node, reading }: Props) {
         {/* Core System Properties */}
         <div className="grid grid-cols-2 gap-2 text-xs bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-white/10">
           <div>
-            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">Firmware</span>
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">{tx('Firmware')}</span>
             <span className="text-slate-800 dark:text-white font-mono text-xs font-bold">{node.firmware_version}</span>
           </div>
           <div>
-            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">Uptime</span>
+            <span className="text-[10px] font-semibold text-slate-400 dark:text-slate-300 uppercase tracking-wider block">{tx('Uptime')}</span>
             <span className="text-slate-800 dark:text-white font-mono text-xs font-bold">{node.uptime_hours.toFixed(1)} hrs</span>
           </div>
           <div className="col-span-2 pt-1.5 border-t border-slate-200/80 dark:border-white/10 flex justify-between items-center text-[10px]">
-            <span className="text-slate-400 dark:text-slate-300 font-semibold">LAST TELEMETRY INGEST:</span>
+            <span className="text-slate-400 dark:text-slate-300 font-semibold">{tx('LAST TELEMETRY INGEST:')}</span>
             <span className="font-mono text-slate-700 dark:text-slate-100 font-bold">{formatRelativeTime(node.last_seen)}</span>
           </div>
         </div>
@@ -69,11 +71,11 @@ export default function DeviceHealth({ node, reading }: Props) {
         {/* Sensor Bus Status */}
         <div className="space-y-0.5">
           <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-300 mb-1">
-            Sensor Hardware Channels
+            {tx('Sensor Hardware Channels')}
           </div>
-          <SensorItem label="Capacitive Moisture V2 (ADC)" ok={node.sensors.soil_moisture} />
-          <SensorItem label="MPU6050 6-DOF IMU (I²C)" ok={node.sensors.accelerometer} />
-          <SensorItem label="FC-37 Rain Surface (ADC/DIO)" ok={node.sensors.rain_gauge} />
+          <SensorItem label={tx('Capacitive Moisture V2 (ADC)')} ok={node.sensors.soil_moisture} />
+          <SensorItem label={tx('MPU6050 6-DOF IMU (I²C)')} ok={node.sensors.accelerometer} />
+          <SensorItem label={tx('FC-37 Rain Surface (ADC/DIO)')} ok={node.sensors.rain_gauge} />
         </div>
 
         {/* Power Subsystem */}
@@ -81,7 +83,7 @@ export default function DeviceHealth({ node, reading }: Props) {
           <div className="flex justify-between text-[11px] font-mono mb-1.5">
             <span className="text-slate-500 dark:text-slate-300 flex items-center gap-1">
               <BatteryMedium className="w-3.5 h-3.5 text-slate-400 dark:text-slate-300" />
-              Li-Ion Cell:
+              {tx('Li-Ion Cell:')}
             </span>
             <span className="text-slate-800 dark:text-white font-bold">
               {batteryPct}% <span className="text-slate-400 dark:text-slate-300 font-normal">({reading ? (reading.battery_mv / 1000).toFixed(2) : '--'}V)</span>
@@ -95,8 +97,8 @@ export default function DeviceHealth({ node, reading }: Props) {
 
       {/* Footer Status */}
       <div className="px-4 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-[#f1f5f9] dark:border-white/10 flex justify-between items-center text-[10px] font-sans text-slate-500 dark:text-slate-300">
-        <span>Sampling Rate: 10s</span>
-        <span className="text-[#10b981] font-semibold">RF Link Active</span>
+        <span>{tx('Sampling Rate: 10s')}</span>
+        <span className="text-[#10b981] font-semibold">{tx('RF Link Active')}</span>
       </div>
     </div>
   );

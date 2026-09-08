@@ -22,6 +22,10 @@ class SendSMSRequest(BaseModel):
     alert_id: Optional[int] = None
 
 
+class SmsAlertsToggleRequest(BaseModel):
+    enabled: bool = True
+
+
 def format_alert_response(alert) -> AlertResponse:
     reasons = [r.strip() for r in alert.trigger_reason.split(";")] if alert.trigger_reason else []
     return AlertResponse(
@@ -168,6 +172,14 @@ def get_live_sms_status():
     Returns live Fast2SMS Quick Route status and daily quota utilization.
     Does not expose sensitive API keys or phone numbers.
     """
+    return sms_service.get_sms_status()
+
+
+@router.post("/sms-status", status_code=status.HTTP_200_OK)
+def set_live_sms_status(payload: SmsAlertsToggleRequest):
+    """Enable or disable Fast2SMS automatic dispatch at runtime."""
+    settings.SMS_ALERTS_ENABLED = bool(payload.enabled)
+    settings.SMS_ENABLED = bool(payload.enabled)
     return sms_service.get_sms_status()
 
 

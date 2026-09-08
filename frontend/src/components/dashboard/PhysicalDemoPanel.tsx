@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { RiskAssessment, RiskLevel, TelemetryReading, DemoStageId, SihDemoStateKey } from '../../types';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
+import type { UIStringKey } from '../../i18n/strings';
 
 interface Props {
   currentStage?: DemoStageId;
@@ -164,6 +166,10 @@ export default function PhysicalDemoPanel({
 }: Props) {
   const [isAutoRunning, setIsAutoRunning] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const { t, tx } = useI18n();
+  const riskKey = (level: RiskLevel): UIStringKey => (
+    level === 'CRITICAL' ? 'RISK_CRITICAL' : level === 'HIGH' ? 'RISK_HIGH' : level === 'MODERATE' ? 'RISK_MODERATE' : 'RISK_LOW'
+  );
 
   const resolvedStateKey: SihDemoStateKey = currentSihState || (
     currentStage === 1 ? 'NORMAL' :
@@ -221,14 +227,14 @@ export default function PhysicalDemoPanel({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="text-lg font-bold text-[#0f172a] dark:text-white tracking-tight">
-                Geotechnical Scenario & Telemetry Controller
+                {tx('Geotechnical Scenario & Telemetry Controller')}
               </h3>
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-300 text-[10px] font-bold">
-                Interactive Lab Suite
+                {tx('Interactive Lab Suite')}
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-              Test dynamic pore-water pressure spikes, shear angle changes, and automated emergency response protocols.
+              {tx('Test dynamic pore-water pressure spikes, shear angle changes, and automated emergency response protocols.')}
             </p>
           </div>
         </div>
@@ -238,10 +244,10 @@ export default function PhysicalDemoPanel({
           <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
           <div>
             <span className="font-bold text-slate-800 dark:text-white block text-[10.5px]">
-              Active Simulation Pipeline
+              {tx('Active Simulation Pipeline')}
             </span>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">
-              Synchronized with Local Physics & XGBoost AI
+              {tx('Synchronized with Local Physics & XGBoost AI')}
             </span>
           </div>
         </div>
@@ -252,10 +258,10 @@ export default function PhysicalDemoPanel({
         <div className="flex items-center justify-between mb-2.5">
           <div className="flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-200 uppercase">
             <Sparkles className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-            <span>Select Geotechnical Condition (Click to trigger):</span>
+            <span>{tx('Select Geotechnical Condition (Click to trigger):')}</span>
           </div>
           <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
-            Active: [{activeStateConfig.label}]
+            {tx('Active:')} [{tx(activeStateConfig.label)}]
           </span>
         </div>
 
@@ -286,15 +292,15 @@ export default function PhysicalDemoPanel({
                       s.riskLevel === 'MODERATE' ? 'bg-amber-100 dark:bg-amber-950/70 text-amber-700 dark:text-amber-300 border-amber-200 dark:border-amber-800' :
                       'bg-emerald-100 dark:bg-emerald-950/70 text-emerald-700 dark:text-emerald-300 border-emerald-200 dark:border-emerald-800'
                     )}>
-                      {s.riskLevel}
+                      {t(riskKey(s.riskLevel))}
                     </span>
                   </div>
 
                   <div className="text-xs font-bold text-slate-900 dark:text-white tracking-tight mt-1">
-                    {s.label}
+                    {tx(s.label)}
                   </div>
                   <div className="text-[10px] text-slate-500 dark:text-slate-300 leading-tight mt-0.5 truncate">
-                    {s.sublabel}
+                    {tx(s.sublabel)}
                   </div>
                 </div>
 
@@ -309,7 +315,7 @@ export default function PhysicalDemoPanel({
                 {/* Active Indicator */}
                 {isActive && (
                   <div className="mt-2 text-center py-0.5 rounded bg-blue-600 text-[9px] font-bold text-white shadow-xs">
-                    CURRENT ACTIVE
+                    {tx('CURRENT ACTIVE')}
                   </div>
                 )}
               </button>
@@ -324,10 +330,10 @@ export default function PhysicalDemoPanel({
         <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-white/10 rounded-xl p-4 flex flex-col justify-between space-y-3">
           <div>
             <div className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider mb-1">
-              Automated Scenario Sequencer
+              {tx('Automated Scenario Sequencer')}
             </div>
             <p className="text-[11px] text-slate-500 dark:text-slate-300 font-sans">
-              Runs continuous rainfall-to-failure progression automatically across all 6 geotechnical phases.
+              {tx('Runs continuous rainfall-to-failure progression automatically across all 6 geotechnical phases.')}
             </p>
           </div>
 
@@ -343,7 +349,7 @@ export default function PhysicalDemoPanel({
               )}
             >
               <Play className="w-3.5 h-3.5 fill-current" />
-              <span>{isAutoRunning ? `Running Sequence (${countdown}s)...` : 'Run Automated Progression'}</span>
+              <span>{isAutoRunning ? `${tx('Run Automated Progression')} (${countdown}s)` : tx('Run Automated Progression')}</span>
             </button>
 
             <div className="flex gap-2">
@@ -355,7 +361,7 @@ export default function PhysicalDemoPanel({
                 disabled={stateIndex <= 0}
                 className="flex-1 py-1.5 px-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors"
               >
-                ◀ Prev Step
+                ◀ {tx('Prev Step')}
               </button>
               <button
                 onClick={() => {
@@ -365,12 +371,12 @@ export default function PhysicalDemoPanel({
                 disabled={stateIndex >= SIH_STATES.length - 1}
                 className="flex-1 py-1.5 px-2 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 disabled:opacity-40 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors"
               >
-                Next Step ▶
+                {tx('Next Step')} ▶
               </button>
               <button
                 onClick={onReset}
                 className="py-1.5 px-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-white/10 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
-                title="Reset to Dry Baseline"
+                title={tx('Reset to Dry Baseline')}
               >
                 <RotateCcw className="w-3.5 h-3.5" />
               </button>
@@ -385,11 +391,11 @@ export default function PhysicalDemoPanel({
               <div className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 <span className="text-xs font-bold text-slate-800 dark:text-white uppercase tracking-wider">
-                  Geotechnical Event Timeline & Thresholds
+                  {tx('Geotechnical Event Timeline & Thresholds')}
                 </span>
               </div>
               <span className="text-[10px] text-slate-500 dark:text-slate-300 font-bold">
-                MONITORING LOG
+                {tx('MONITORING LOG')}
               </span>
             </div>
 
@@ -422,11 +428,11 @@ export default function PhysicalDemoPanel({
                         )}
                       </div>
                       <div className="font-bold text-[11px] leading-tight text-slate-900 dark:text-white">
-                        "{m.label}"
+                        "{tx(m.label)}"
                       </div>
                     </div>
                     <div className="text-[9.5px] text-slate-500 dark:text-slate-300 font-sans mt-1">
-                      {m.desc}
+                      {tx(m.desc)}
                     </div>
                   </div>
                 );

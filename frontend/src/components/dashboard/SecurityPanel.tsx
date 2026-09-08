@@ -3,6 +3,7 @@ import { ShieldCheck, ShieldAlert, Lock, CheckCircle2, XCircle, AlertTriangle, R
 import { SecurityEvent } from '../../types';
 import { formatTime, formatRelativeTime } from '../../utils/formatters';
 import clsx from 'clsx';
+import { useI18n } from '../../i18n/LanguageContext';
 
 interface Props {
   events: SecurityEvent[];
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnauthorized }: Props) {
+  const { tx } = useI18n();
   const [filterAction, setFilterAction] = useState<string>('ALL');
 
   const filteredEvents = events.filter((e) => {
@@ -53,7 +55,7 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
       <div className="card-header border-b border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-2 text-slate-200">
           <ShieldCheck className="w-4 h-4 text-cyan-400" />
-          <span className="font-bold">Edge Cybersecurity & Replay Defense Guard</span>
+          <span className="font-bold">{tx('Edge Cybersecurity & Replay Defense Guard')}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1">
@@ -87,7 +89,7 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
         <div className="p-2.5 rounded-lg bg-slate-950/90 border border-slate-800 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Terminal className="w-3.5 h-3.5 text-orange-400" />
-            <span className="text-[11px] font-mono font-bold text-slate-300">Live Attack Simulator:</span>
+            <span className="text-[11px] font-mono font-bold text-slate-300">{tx('Live Attack Simulator:')}</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -95,14 +97,14 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
               className="px-2.5 py-1 rounded bg-red-950/80 hover:bg-red-900 text-red-200 border border-red-800 text-[10px] font-mono font-bold uppercase transition-colors"
               title="Test Replay Attack: Transmits duplicate sequence number 1842"
             >
-              Simulate Replay Attack (Seq #1842)
+              {tx('Simulate Replay Attack (Seq #1842)')}
             </button>
             <button
               onClick={onSimulateUnauthorized}
               className="px-2.5 py-1 rounded bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-800 text-[10px] font-mono font-bold uppercase transition-colors"
               title="Test Rogue Device: Transmits with unregistered ID ROGUE-NODE-99"
             >
-              Simulate Rogue Node
+              {tx('Simulate Rogue Node')}
             </button>
           </div>
         </div>
@@ -132,7 +134,7 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
           <div className="divide-y divide-slate-800/80 border border-slate-800 rounded-lg overflow-y-auto max-h-[160px] bg-slate-950/60 font-mono text-xs">
             {filteredEvents.length === 0 ? (
               <div className="p-4 text-center text-slate-500 text-xs">
-                NO SECURITY EVENTS RECORDED
+                {tx('NO SECURITY EVENTS RECORDED')}
               </div>
             ) : (
               filteredEvents.map((evt) => {

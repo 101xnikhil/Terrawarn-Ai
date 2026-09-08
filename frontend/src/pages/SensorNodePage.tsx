@@ -5,12 +5,14 @@ import { formatNumber, formatDegrees, formatPercent, getSignalQuality, formatRSS
 import PrototypeLabel from '../components/common/PrototypeLabel';
 import { Radio, Cpu, Battery, Signal, Mountain, Droplets, CloudRain, Activity, Layers, Compass, CheckCircle2, Sliders } from 'lucide-react';
 import clsx from 'clsx';
+import { useI18n } from '../i18n/LanguageContext';
 
 const SensorNodePage: React.FC = () => {
   const { state } = useMockTelemetry();
+  const { t, tx } = useI18n();
   
   if (!state) {
-    return <LoadingState message="Connecting to node telemetry interface..." />;
+    return <LoadingState message={t('CONNECTING_NODE')} />;
   }
   
   const { node, currentReading } = state;
@@ -27,7 +29,7 @@ const SensorNodePage: React.FC = () => {
               {node.name} ({node.id})
             </h2>
             <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 text-[10px] font-bold">
-              LIVE STREAM
+              {t('LIVE_STREAM')}
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-300 font-normal mt-0.5">
@@ -58,43 +60,43 @@ const SensorNodePage: React.FC = () => {
           <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
             <div className="flex items-center gap-2 text-slate-800 dark:text-white">
               <Cpu className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="font-bold text-xs uppercase tracking-wider">Hardware Platform Specifications</span>
+              <span className="font-bold text-xs uppercase tracking-wider">{t('HARDWARE_SPECS')}</span>
             </div>
             <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-300">ESP32-WROOM-32D</span>
           </div>
           <div className="card-body">
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Node ID</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('NODE_ID')}</dt>
                 <dd className="text-sm font-bold text-slate-900 dark:text-white mt-1 font-mono">{node.id}</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Firmware</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('FIRMWARE')}</dt>
                 <dd className="text-sm font-bold text-blue-600 dark:text-blue-400 mt-1 font-mono">{node.firmware_version}</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">System Uptime</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('SYSTEM_UPTIME')}</dt>
                 <dd className="text-sm font-bold text-slate-900 dark:text-white mt-1 font-mono">{node.uptime_hours.toFixed(1)} hrs</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Tx Interval</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{t('TX_INTERVAL')}</dt>
                 <dd className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mt-1 font-mono">{node.reading_interval_s} seconds</dd>
               </div>
 
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">GPS Latitude</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{tx('GPS Latitude')}</dt>
                 <dd className="text-xs text-slate-800 dark:text-slate-200 font-mono mt-1 font-semibold">{node.location.lat.toFixed(6)}° N</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">GPS Longitude</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{tx('GPS Longitude')}</dt>
                 <dd className="text-xs text-slate-800 dark:text-slate-200 font-mono mt-1 font-semibold">{node.location.lng.toFixed(6)}° E</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Altitude ASL</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{tx('Altitude ASL')}</dt>
                 <dd className="text-xs text-slate-800 dark:text-slate-200 font-mono mt-1 font-semibold">{node.location.altitude_m} meters</dd>
               </div>
               <div className="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-white/10">
-                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">Seq Number</dt>
+                <dt className="text-[10px] font-semibold text-slate-500 dark:text-slate-300 uppercase tracking-wider">{tx('Seq Number')}</dt>
                 <dd className="text-xs font-bold text-blue-600 dark:text-blue-400 font-mono mt-1">#{currentReading.seq_num}</dd>
               </div>
             </dl>
@@ -106,25 +108,25 @@ const SensorNodePage: React.FC = () => {
           <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
             <div className="flex items-center gap-2 text-slate-800 dark:text-white">
               <Radio className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="font-bold text-xs uppercase tracking-wider">RF & Power Diagnostics</span>
+              <span className="font-bold text-xs uppercase tracking-wider">{tx('RF & Power Diagnostics')}</span>
             </div>
             <span className="font-mono text-[10.5px] font-bold text-emerald-600 dark:text-emerald-400">433.0 MHz</span>
           </div>
           <div className="card-body space-y-4">
             <div>
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-500 dark:text-slate-300 font-medium">LoRa RSSI / Quality:</span>
+                <span className="text-slate-500 dark:text-slate-300 font-medium">{tx('LoRa RSSI / Quality:')}</span>
                 <span className="text-slate-900 dark:text-white font-bold font-mono">{formatRSSI(currentReading.rssi_dbm)} ({signalQuality.toUpperCase()})</span>
               </div>
               <div className="flex justify-between text-[11px] font-mono text-slate-500 dark:text-slate-300">
-                <span>Signal-to-Noise Ratio:</span>
+                <span>{tx('Signal-to-Noise Ratio:')}</span>
                 <span className="text-slate-800 dark:text-slate-100 font-bold">{currentReading.snr_db > 0 ? `+${currentReading.snr_db.toFixed(1)}` : currentReading.snr_db.toFixed(1)} dB</span>
               </div>
             </div>
 
             <div className="pt-3 border-t border-slate-100 dark:border-white/10">
               <div className="flex justify-between text-xs mb-1">
-                <span className="text-slate-500 dark:text-slate-300 font-medium">Battery Subsystem:</span>
+                <span className="text-slate-500 dark:text-slate-300 font-medium">{tx('Battery Subsystem:')}</span>
                 <span className="text-slate-900 dark:text-white font-bold font-mono">{currentReading.battery_pct}% ({formatBattery(currentReading.battery_mv)})</span>
               </div>
               <div className="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
@@ -150,7 +152,7 @@ const SensorNodePage: React.FC = () => {
           <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
             <div className="flex items-center gap-2 text-slate-800 dark:text-white">
               <Activity className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span className="font-bold text-xs uppercase tracking-wider">MPU6050 6-Axis Motion Telemetry</span>
+              <span className="font-bold text-xs uppercase tracking-wider">{tx('MPU6050 6-Axis Motion Telemetry')}</span>
             </div>
             <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-300">I²C Bus (0x68)</span>
           </div>
@@ -186,8 +188,8 @@ const SensorNodePage: React.FC = () => {
             </div>
           </div>
           <div className="px-4 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-[#f1f5f9] dark:border-white/10 text-[10px] font-sans text-slate-600 dark:text-slate-300 flex justify-between">
-            <span>Computed Slope Angle: <strong className="text-emerald-600 dark:text-emerald-400 font-mono">{formatDegrees(currentReading.tilt_angle)}</strong></span>
-            <span>Creep Rate: <strong className="text-blue-600 dark:text-blue-400 font-mono">{currentReading.tilt_rate.toFixed(3)} °/min</strong></span>
+            <span>{tx('Computed Slope Angle:')} <strong className="text-emerald-600 dark:text-emerald-400 font-mono">{formatDegrees(currentReading.tilt_angle)}</strong></span>
+            <span>{tx('Creep Rate:')} <strong className="text-blue-600 dark:text-blue-400 font-mono">{currentReading.tilt_rate.toFixed(3)} °/min</strong></span>
           </div>
         </div>
 
@@ -196,7 +198,7 @@ const SensorNodePage: React.FC = () => {
           <div className="card-header flex items-center justify-between border-b border-slate-100 dark:border-white/10">
             <div className="flex items-center gap-2 text-slate-800 dark:text-white">
               <Layers className="w-4 h-4 text-blue-600 dark:text-blue-400" />
-              <span className="font-bold text-xs uppercase tracking-wider">Analog Transducer Calibration Constants</span>
+              <span className="font-bold text-xs uppercase tracking-wider">{tx('Analog Transducer Calibration Constants')}</span>
             </div>
             <span className="font-mono text-[10.5px] font-bold text-slate-500 dark:text-slate-300">ADC1 (12-bit)</span>
           </div>
@@ -228,8 +230,8 @@ const SensorNodePage: React.FC = () => {
             </div>
           </div>
           <div className="px-4 py-2 bg-slate-50 dark:bg-slate-900/60 border-t border-[#f1f5f9] dark:border-white/10 text-[10px] font-sans text-slate-600 dark:text-slate-300 flex justify-between">
-            <span>Calibration Status: Verified</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-bold">All Sensors Nominal</span>
+            <span>{tx('Calibration Status: Verified')}</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-bold">{tx('All Sensors Nominal')}</span>
           </div>
         </div>
       </div>
