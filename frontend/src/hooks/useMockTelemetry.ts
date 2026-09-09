@@ -149,45 +149,54 @@ export function useMockTelemetry(
 
     let isSubscribed = true;
 
-    // A. Fetch initial telemetry history & risk from REST API
-    const fetchInitialData = async () => {
+    const mapApiReading = (item: any): TelemetryReading => ({
+      node_id: item.node_id || 'LG-N01',
+      timestamp: item.timestamp || new Date().toISOString(),
+      seq_num: item.seq_num || 0,
+      soil_moisture: item.soil_moisture_raw || 2000,
+      soil_moisture_pct: Number(item.soil_moisture ?? item.soil_moisture_pct ?? 0),
+      rainfall: item.rainfall || 0,
+      rainfall_pct: item.rainfall || 0,
+      rainfall_24h_mm: Number(item.rainfall_24h ?? item.rainfall_24h_mm ?? 0),
+      rain_detected: item.rain_detected ?? (item.rainfall > 5),
+      accel_x: item.accel_x || 0,
+      accel_y: item.accel_y || 0,
+      accel_z: item.accel_z || 1.0,
+      gyro_x: 0,
+      gyro_y: 0,
+      gyro_z: 0,
+      tilt_angle: Number(item.tilt_angle ?? 20),
+      tilt_rate: Number(item.tilt_rate ?? 0),
+      battery_mv: item.battery_mv || 3800,
+      battery_pct: item.battery || 80,
+      rssi_dbm: item.rssi || -65,
+      snr_db: item.snr || 9.0,
+      sensor_status: 'online' as const,
+      is_hardware: true,
+    });
+
+    // A. Fetch latest + history from this backend (cloud XGBoost is ingested here)
+    const fetchInitialData = async (silent = false) => {
       try {
-        const [telemetryRes, riskRes, alertsRes] = await Promise.all([
+        const [telemetryRes, latestRes, riskRes] = await Promise.all([
           fetch(`${API_BASE_URL}/telemetry/LG-N01/history?limit=60`).catch(() => null),
+          fetch(`${API_BASE_URL}/telemetry/LG-N01`).catch(() => null),
           fetch(`${API_BASE_URL}/risk/LG-N01`).catch(() => null),
-          fetch(`${API_BASE_URL}/alerts?limit=20`).catch(() => null),
         ]);
 
         if (!isSubscribed) return;
 
         let readings: TelemetryReading[] = [];
         if (telemetryRes && telemetryRes.ok) {
-          const rawList = await telemetryRes.json();
-          readings = rawList.map((item: any) => ({
-            node_id: item.node_id || 'LG-N01',
-            timestamp: item.timestamp || new Date().toISOString(),
-            seq_num: item.seq_num || 0,
-            soil_moisture: item.soil_moisture_raw || 2000,
-            soil_moisture_pct: item.soil_moisture || 0,
-            rainfall: item.rainfall || 0,
-            rainfall_pct: item.rainfall || 0,
-            rainfall_24h_mm: item.rainfall_24h || 0,
-            rain_detected: item.rain_detected ?? (item.rainfall > 5),
-            accel_x: item.accel_x || 0,
-            accel_y: item.accel_y || 0,
-            accel_z: item.accel_z || 1.0,
-            gyro_x: 0,
-            gyro_y: 0,
-            gyro_z: 0,
-            tilt_angle: item.tilt_angle || 20,
-            tilt_rate: item.tilt_rate || 0,
-            battery_mv: item.battery_mv || 3800,
-            battery_pct: item.battery || 80,
-            rssi_dbm: item.rssi || -65,
-            snr_db: item.snr || 9.0,
-            sensor_status: 'online' as const,
-            is_hardware: true,
-          }));
+          const raw = await telemetryRes.json();
+          const rawList = Array.isArray(raw) ? raw : (raw?.readings || []);
+          readings = rawList.map(mapApiReading).reverse();
+        }
+
+        if (latestRes && latestRes.ok) {
+          const latest = mapApiReading(await latestRes.json());
+          const already = readings.some((r) => r.timestamp === latest.timestamp);
+          if (!already) readings.push(latest);
         }
 
         let currentRisk: RiskAssessment = {
@@ -215,6 +224,24 @@ export function useMockTelemetry(
             shap_values: riskData.shap_values || [],
             model_version: riskData.model_version || 'v0.2.0-hardware',
           };
+        }
+
+        if (silent) {
+          const latestReading = readings[readings.length - 1];
+          if (!latestReading) return;
+          setState((prev) => {
+            if (!prev) return prev;
+            return {
+              ...prev,
+              currentReading: latestReading,
+              currentRisk,
+              readingHistory: readings.length > 0 ? readings : prev.readingHistory,
+              lastUpdated: new Date().toISOString(),
+              isHardwareActive: true,
+              mode: 'HARDWARE',
+            };
+          });
+          return;
         }
 
         const latestReading = readings[readings.length - 1] || {
@@ -288,6 +315,9 @@ export function useMockTelemetry(
     };
 
     fetchInitialData();
+    const pollId = globalThis.setInterval(() => {
+      void fetchInitialData(true);
+    }, 4000);
 
     // B. Connect to Live WebSocket for real-time ESP32 packet streaming
     const connectWebSocket = () => {
@@ -383,6 +413,7 @@ export function useMockTelemetry(
 
     return () => {
       isSubscribed = false;
+      globalThis.clearInterval(pollId);
       if (wsRef.current) {
         wsRef.current.close();
       }

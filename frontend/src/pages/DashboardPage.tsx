@@ -128,6 +128,12 @@ const DashboardPage: React.FC = () => {
             <p className="text-xs text-slate-500 dark:text-slate-300 font-normal">
               {t('GEOTECH_STATUS_SUB')}
             </p>
+            {mode === 'HARDWARE' && (
+              <div className="mt-2 inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-[11px] font-semibold text-emerald-800 dark:text-emerald-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                Cloud XGBoost live · Moisture {reading.soil_moisture_pct.toFixed(1)}% · Rain {reading.rainfall_24h_mm.toFixed(1)} mm · Risk {(risk.risk_score > 1 ? risk.risk_score : risk.risk_score * 100).toFixed(1)}% {risk.risk_level}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2">

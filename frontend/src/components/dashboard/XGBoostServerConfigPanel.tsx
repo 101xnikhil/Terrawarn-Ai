@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import clsx from 'clsx';
 import { useI18n } from '../../i18n/LanguageContext';
+import { useMockTelemetry } from '../../hooks/useMockTelemetry';
 
 interface XGBoostConfig {
   api_url: string;
@@ -49,6 +50,7 @@ interface TestResult {
 
 const XGBoostServerConfigPanel: React.FC = () => {
   const { tx } = useI18n();
+  const { setMode } = useMockTelemetry();
   const [config, setConfig] = useState<XGBoostConfig>({
     api_url: 'http://34.131.240.174:8000',
     timeout_seconds: 5,
@@ -168,6 +170,7 @@ const XGBoostServerConfigPanel: React.FC = () => {
           ...prev,
           last_synced_at: new Date().toISOString(),
         }));
+        setMode('HARDWARE');
       } else {
         setSyncFeedback(`Sync failed: ${data.detail || 'Bad Gateway'}`);
       }
