@@ -239,7 +239,7 @@ class XGBoostClientService:
         from app.services.telemetry_service import telemetry_service
 
         telemetry_in = TelemetryCreate(
-            node_id=telem.get("node_id", "LG-N01"),
+            node_id=telem.get("node_id", "TW-N01"),
             soil_moisture=float(telem.get("soil_moisture", 45.0)),
             rainfall=float(telem.get("rainfall_1h", 0.0)),
             rainfall_24h=float(telem.get("rainfall_24h", 0.0)),

@@ -17,13 +17,13 @@ BLYNK_CLOUD_API_BASE = "https://blynk.cloud/external/api"
 
 class BlynkSyncRequest(BaseModel):
     auth_token: str
-    node_id: Optional[str] = "LG-N01"
+    node_id: Optional[str] = "TW-N01"
     server_url: Optional[str] = BLYNK_CLOUD_API_BASE
 
 
 class BlynkWebhookPayload(BaseModel):
     token: Optional[str] = None
-    node_id: Optional[str] = "LG-N01"
+    node_id: Optional[str] = "TW-N01"
     soil_moisture: Optional[float] = 25.0
     rainfall: Optional[float] = 0.0
     rainfall_24h: Optional[float] = 0.0
@@ -142,7 +142,7 @@ async def blynk_inbound_webhook(
     If the evaluated risk is CRITICAL or HIGH, automatically triggers incident alert creation and SMS broadcast.
     """
     telemetry_create = TelemetryCreate(
-        node_id=payload.node_id or "LG-N01",
+        node_id=payload.node_id or "TW-N01",
         seq_num=1,
         soil_moisture=payload.soil_moisture if payload.soil_moisture is not None else 25.0,
         soil_moisture_raw=int(3200 - ((payload.soil_moisture or 25.0) / 100.0) * 1800),

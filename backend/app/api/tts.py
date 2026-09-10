@@ -1,8 +1,9 @@
-from fastapi import APIRouter, HTTPException, Query, Response, status
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Response, status
 from pydantic import BaseModel, Field
 from typing import Optional, List, Dict
 
 from app.services.tts_service import tts_service, CURATED_VOICES, DEFAULT_VOICE
+from app.services.stt_service import stt_health, transcribe_audio
 
 router = APIRouter(prefix="/tts", tags=["Neural Text-To-Speech"])
 
@@ -29,7 +30,31 @@ def get_tts_health():
         "cached_items_memory": len(tts_service.memory_cache),
         "available_voices": len(CURATED_VOICES),
         "default_voice": DEFAULT_VOICE,
+        "stt": stt_health(),
     }
+
+
+@router.post("/transcribe")
+async def transcribe_speech(
+    audio: UploadFile = File(...),
+    lang: str = Form("en-IN"),
+):
+    """Transcribe a browser microphone clip. Used by Brave, which blocks Web Speech."""
+    payload = await audio.read()
+    if not payload:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Empty audio clip")
+    if len(payload) > 8_000_000:
+        raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Audio clip too large")
+    try:
+        text = transcribe_audio(payload, audio.filename or "clip.webm", lang)
+        return {"text": text, "lang": lang}
+    except ValueError as ve:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(ve))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Transcription failed: {exc}",
+        )
 
 
 @router.post("/speak")

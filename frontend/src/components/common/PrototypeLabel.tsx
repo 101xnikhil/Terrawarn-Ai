@@ -11,7 +11,7 @@ export default function PrototypeLabel({ text, className = '' }: Props) {
     ? text.replace(/SIH\s*2026\s*Prototype/gi, 'Live Telemetry Active')
           .replace(/Prototype/gi, 'Operational')
           .replace(/Synthetic Data Model Diagnostics — SIH 2026/gi, 'Geotechnical AI Model Diagnostics')
-          .replace(/Single Node Prototype/gi, 'Station LG-N01 Active')
+          .replace(/Single Node Prototype/gi, 'Station TW-N01 Active')
     : 'Telemetry Engine Active';
 
   return (

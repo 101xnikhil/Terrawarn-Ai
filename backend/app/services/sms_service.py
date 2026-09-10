@@ -46,7 +46,7 @@ class SMSService:
         Never exposes the API key or raw recipient phone numbers.
         """
         self._reset_counter_if_new_day()
-        recipients = settings.alert_sms_recipients_list
+        recipients = settings.all_sms_recipients
         sent = self._sent_today_count
         max_quota = settings.SMS_MAX_PER_DAY
         remaining = max(0, max_quota - sent)
@@ -233,7 +233,7 @@ class SMSService:
             return
 
         # 2. Check Recipients
-        recipients = settings.alert_sms_recipients_list
+        recipients = settings.all_sms_recipients
         if not recipients:
             err_msg = "No recipients configured in ALERT_SMS_RECIPIENTS"
             logger.debug(f"Alert #{alert.id}: {err_msg}")
@@ -245,7 +245,7 @@ class SMSService:
         fos_str = f" FoS={alert.risk_result.factor_of_safety:.2f}" if getattr(alert, "risk_result", None) and alert.risk_result.factor_of_safety else ""
         
         # Example format (approx 125-140 chars):
-        # [TERRAWARN ALERT] CRITICAL hazard on LG-N01! FoS=0.88 Risk=88%. Immediate evacuation advised. Helpline: 1070/112
+        # [TERRAWARN ALERT] CRITICAL hazard on TW-N01! FoS=0.88 Risk=88%. Immediate evacuation advised. Helpline: 1070/112
         message = (
             f"[TERRAWARN ALERT] {alert_sev} hazard on {alert.node_id}!{fos_str} "
             f"Risk={risk_pct}%. Immediate caution. Emergency: 1070/112"

@@ -4,7 +4,7 @@ from typing import Optional, List, Dict, Any
 
 
 class TelemetryCreate(BaseModel):
-    node_id: str = Field(min_length=1, max_length=32, description="Node identifier, e.g. LG-N01")
+    node_id: str = Field(min_length=1, max_length=32, description="Node identifier, e.g. TW-N01")
     timestamp: Optional[datetime] = Field(default=None, description="UTC reading timestamp")
     
     # Telemetry measurements (flat format)
@@ -44,7 +44,7 @@ class TelemetryCreate(BaseModel):
             net_obj = data.get("network", {})
             
             flattened = {
-                "node_id": data.get("node_id", "LG-N01"),
+                "node_id": data.get("node_id", "TW-N01"),
                 "timestamp": data.get("timestamp", datetime.utcnow()),
                 "seq_num": data.get("seq_num"),
                 "soil_moisture": soil.get("pct", 0.0),

@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
         logger.info("Seeding default authentication accounts...")
         auth_service.seed_default_users(db)
 
-        # 2. Seed default node LG-N01
+        # 2. Seed default node TW-N01
         node = db.query(Node).filter(Node.node_id == settings.DEFAULT_NODE_ID).first()
         if not node:
             logger.info(f"Seeding default station node '{settings.DEFAULT_NODE_ID}'...")

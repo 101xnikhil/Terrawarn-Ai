@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Smartphone, Radio, Send, Bell, ShieldAlert, CheckCircle2, 
   MapPin, Users, Volume2, VolumeX, AlertTriangle, RefreshCw, 
@@ -37,6 +37,14 @@ interface NearbyBleDevice {
   phoneMock: string;
   passivePacketReceived: boolean;
 }
+
+const ALERT_SMS_ROSTER = [
+  '+91 63938 29250',
+  '+91 75210 61191',
+  '+91 87077 86851',
+  '+91 76079 89426',
+  '+91 95067 58710',
+];
 
 const INITIAL_BLE_DEVICES: NearbyBleDevice[] = [
   {
@@ -165,7 +173,8 @@ export default function EmergencySmsBroadcastPanel() {
   const { state } = useMockTelemetry();
   const [isAutoBroadcastEnabled, setIsAutoBroadcastEnabled] = useState(true);
   const [isBleScanning, setIsBleScanning] = useState(true);
-  const [customPhone, setCustomPhone] = useState('+91 95067 58710');
+  const [customPhone, setCustomPhone] = useState(ALERT_SMS_ROSTER.join(', '));
+  const [alertRoster, setAlertRoster] = useState<string[]>(ALERT_SMS_ROSTER);
   const [targetSector, setTargetSector] = useState('Sector 7 (Shimla — Solan NH-5 Corridor, HP)');
   const [customActionText, setCustomActionText] = useState('Evacuate downhill homes immediately. Avoid NH-5 cutting zone. Shelter: Govt Senior Sec School.');
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
@@ -192,12 +201,19 @@ export default function EmergencySmsBroadcastPanel() {
   const [dispatchNotice, setDispatchNotice] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const [smsConfig, setSmsConfig] = useState<{ active_mode: string; sms_enabled: boolean } | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
 
   // Load SMS config & real dispatch history on mount
   useEffect(() => {
     fetch('/api/alerts/sms/config')
       .then((res) => res.json())
-      .then((data) => setSmsConfig(data))
+      .then((data) => {
+        setSmsConfig(data);
+        if (Array.isArray(data.alert_recipients) && data.alert_recipients.length) {
+          setAlertRoster(data.alert_recipients);
+          setCustomPhone(data.alert_recipients.join(', '));
+        }
+      })
       .catch(() => {});
 
     fetch('/api/alerts/sms/history?limit=10')
@@ -224,25 +240,46 @@ export default function EmergencySmsBroadcastPanel() {
       .catch(() => {});
   }, []);
 
-  // Audio beep player
-  const playAlertChime = () => {
-    if (!isSoundEnabled) return;
+  const unlockAudio = (force = false) => {
+    if (!force && !isSoundEnabled) return;
     try {
-      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
-      osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.3);
-      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.35);
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!audioCtxRef.current) {
+        audioCtxRef.current = new AudioContextClass();
+      }
+      if (audioCtxRef.current.state === 'suspended') {
+        void audioCtxRef.current.resume();
+      }
     } catch {
-      // Audio context not allowed without interaction
+      // Audio context not allowed without a click
     }
+  };
+
+  const playDeliveryAlert = (force = false) => {
+    if (!force && !isSoundEnabled) return;
+    unlockAudio(force);
+    const ctx = audioCtxRef.current;
+    if (!ctx) return;
+
+    const playTone = (start: number, freq: number, duration: number) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + start + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + start);
+      osc.stop(ctx.currentTime + start + duration + 0.03);
+    };
+
+    playTone(0, 880, 0.28);
+    playTone(0.3, 698, 0.28);
+    playTone(0.6, 880, 0.28);
+    playTone(0.9, 698, 0.36);
   };
 
   // Real-time jitter on BLE devices signal strength (RSSI)
@@ -270,7 +307,7 @@ export default function EmergencySmsBroadcastPanel() {
   // Handle manual / simulated broadcast dispatch
   const triggerEmergencyBroadcast = async (severity: 'CRITICAL' | 'HIGH' | 'WARNING' = 'CRITICAL', mode: string = 'Manual Push') => {
     setIsDispatching(true);
-    playAlertChime();
+    unlockAudio();
     setDispatchNotice(null);
 
     const moisture = state?.currentReading.soil_moisture_pct.toFixed(1) || '84.2';
@@ -282,8 +319,8 @@ export default function EmergencySmsBroadcastPanel() {
     const newSms: DispatchedSms = {
       id: `sms-${Date.now()}`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-      recipientGroup: `Target: ${customPhone}`,
-      recipientCount: bleDevices.length + 1420,
+      recipientGroup: `Alert roster (${alertRoster.length} phones)`,
+      recipientCount: alertRoster.length,
       sector: targetSector,
       severity,
       message: formattedMessage,
@@ -300,11 +337,11 @@ export default function EmergencySmsBroadcastPanel() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to_phone: customPhone,
+          to_phone: alertRoster.join(','),
           message: formattedMessage,
           severity: severity,
           custom_action: customActionText,
-          node_id: state?.currentReading.node_id || 'LG-N01',
+          node_id: state?.currentReading.node_id || 'TW-N01',
         }),
       });
       const data = await resp.json();
@@ -322,9 +359,10 @@ export default function EmergencySmsBroadcastPanel() {
           } : s)
         );
         if (status === 'DELIVERED') {
+          playDeliveryAlert();
           setDispatchNotice({
             type: 'success',
-            text: `SMS dispatched successfully to ${customPhone} via ${(report.provider || 'Fast2SMS').toUpperCase()}!`,
+            text: `Same alert SMS sent to all ${report.total_recipients || alertRoster.length} numbers via ${(report.provider || 'Fast2SMS').toUpperCase()}.`,
           });
         } else {
           setDispatchNotice({
@@ -416,7 +454,14 @@ export default function EmergencySmsBroadcastPanel() {
 
             {/* Audio Toggle */}
             <button
-              onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+              onClick={() => {
+                const next = !isSoundEnabled;
+                setIsSoundEnabled(next);
+                if (next) {
+                  unlockAudio(true);
+                  window.setTimeout(() => playDeliveryAlert(true), 50);
+                }
+              }}
               className={clsx(
                 'p-2 rounded-xl border text-xs font-mono transition-colors',
                 isSoundEnabled ? 'bg-orange-500/20 text-orange-300 border-orange-500/40' : 'bg-slate-900 text-slate-400 border-slate-800'
@@ -600,15 +645,18 @@ export default function EmergencySmsBroadcastPanel() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
                 <div>
                   <label className="block text-[10.5px] text-slate-700 dark:text-slate-300 uppercase font-bold mb-1">
-                    {tx('Audience Target Mobile Number')}
+                    {tx('Alert SMS roster — one send reaches all')}
                   </label>
-                  <input
-                    type="text"
-                    value={customPhone}
-                    onChange={(e) => setCustomPhone(e.target.value)}
-                    placeholder="+91 98765 43210"
-                    className="w-full bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-orange-500 font-mono text-xs shadow-xs"
-                  />
+                  <div className="flex flex-wrap gap-1.5">
+                    {alertRoster.map((phone) => (
+                      <span
+                        key={phone}
+                        className="px-2 py-1 rounded-lg bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800 text-[11px] font-mono font-semibold text-orange-800 dark:text-orange-200"
+                      >
+                        {phone}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex items-end gap-2">

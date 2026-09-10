@@ -171,7 +171,7 @@ def get_telemetry_history(
 async def generate_mock_telemetry(
     scenario: str = Query(default="escalation", description="dry_stable | moderate_rain | heavy_rain | crisis | escalation"),
     count: int = Query(default=1, ge=1, le=50, description="Number of readings to generate"),
-    node_id: str = Query(default="LG-N01"),
+    node_id: str = Query(default="TW-N01"),
     db: Session = Depends(get_db),
 ):
     """Generates synthetic telemetry readings for simulation & testing."""

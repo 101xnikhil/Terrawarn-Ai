@@ -69,7 +69,7 @@ export default function SecurityPanel({ events, onSimulateReplay, onSimulateUnau
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono">
           <div className="p-2 rounded bg-slate-950/80 border border-slate-800">
             <span className="text-slate-500 block">DEVICE ID WHITELIST</span>
-            <strong className="text-slate-200">LG-N01 .. LG-N04</strong>
+            <strong className="text-slate-200">TW-N01 .. LG-N04</strong>
           </div>
           <div className="p-2 rounded bg-slate-950/80 border border-slate-800">
             <span className="text-slate-500 block">REPLAY DETECTION</span>

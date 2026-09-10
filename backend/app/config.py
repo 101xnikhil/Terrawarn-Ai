@@ -24,7 +24,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:4173",
         "*",
     ]
-    DEFAULT_NODE_ID: str = "LG-N01"
+    DEFAULT_NODE_ID: str = "TW-N01"
     SIMULATION_MODE: bool = True
     DEMO_MODE: bool = True
     DEMO_DISCLAIMER: str = "Controlled laboratory prototype demonstration"
@@ -38,7 +38,7 @@ class Settings(BaseSettings):
     # Cybersecurity & Edge Authorization Settings (Phase 14)
     GATEWAY_API_KEY: str = "landguard-edge-gw-sih2026-key"
     REQUIRE_API_KEY: bool = False
-    AUTHORIZED_NODES: List[str] = ["LG-N01", "LG-N02", "LG-N03", "LG-N04"]
+    AUTHORIZED_NODES: List[str] = ["TW-N01", "LG-N01", "LG-N02", "LG-N03", "LG-N04"]
 
     # SMS Gateway & Cellular Alert Broadcast Settings
     SMS_ENABLED: bool = True
@@ -49,13 +49,21 @@ class Settings(BaseSettings):
     FAST2SMS_API_KEY: str = ""
     CUSTOM_SMS_GATEWAY_URL: str = ""
     CUSTOM_SMS_API_KEY: str = ""
-    EMERGENCY_PHONE_NUMBERS: Union[List[str], str] = ["+919506758710"]
+    EMERGENCY_PHONE_NUMBERS: Union[List[str], str] = [
+        "+916393829250",
+        "+917521061191",
+        "+918707786851",
+        "+917607989426",
+        "+919506758710",
+    ]
 
     # Fast2SMS Quick Route (q) Live Alert Settings
-    ALERT_SMS_RECIPIENTS: Union[List[str], str] = ""
+    ALERT_SMS_RECIPIENTS: Union[List[str], str] = (
+        "6393829250,7521061191,8707786851,7607989426,9506758710"
+    )
     SMS_ALERTS_ENABLED: bool = True
     SMS_MIN_SEVERITY: str = "HIGH"
-    SMS_MAX_PER_DAY: int = 20
+    SMS_MAX_PER_DAY: int = 50
 
     # Google Cloud & Blynk Integration Settings
     BLYNK_AUTH_TOKEN: str = ""
@@ -111,6 +119,19 @@ class Settings(BaseSettings):
             elif digits:
                 clean_numbers.append(digits)
         return clean_numbers
+
+    @property
+    def all_sms_recipients(self) -> List[str]:
+        """Unique 10-digit Indian mobiles for one-shot alert broadcast."""
+        seen = set()
+        merged: List[str] = []
+        for item in list(self.alert_sms_recipients_list) + list(self.emergency_phones):
+            digits = "".join(ch for ch in str(item) if ch.isdigit())
+            key = digits[-10:] if len(digits) >= 10 else digits
+            if key and key not in seen:
+                seen.add(key)
+                merged.append(key)
+        return merged
 
 
 settings = Settings()

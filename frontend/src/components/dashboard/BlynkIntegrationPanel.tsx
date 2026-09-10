@@ -51,7 +51,7 @@ export default function BlynkIntegrationPanel({ reading, risk }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           auth_token: blynkAuthToken,
-          node_id: 'LG-N01',
+          node_id: 'TW-N01',
         }),
       });
       const data = await res.json();
@@ -153,7 +153,7 @@ void sendTelemetryToBlynk() {
   Blynk.virtualWrite(V8, WiFi.RSSI());     // V8: Signal RSSI (dBm)
 
   // 6. Emit JSON over Serial for Local Gateway Bridge
-  Serial.printf("{\\"node_id\\":\\"LG-N01\\",\\"soil_moisture_pct\\":%.1f,\\"rainfall_24h_mm\\":%.1f,\\"tilt_angle\\":%.2f,\\"tilt_rate\\":%.3f,\\"battery_pct\\":92.0,\\"rssi_dbm\\":%d}\\n",
+  Serial.printf("{\\"node_id\\":\\"TW-N01\\",\\"soil_moisture_pct\\":%.1f,\\"rainfall_24h_mm\\":%.1f,\\"tilt_angle\\":%.2f,\\"tilt_rate\\":%.3f,\\"battery_pct\\":92.0,\\"rssi_dbm\\":%d}\\n",
     moistPct, rainfall24h, currentTilt, tiltRate, WiFi.RSSI());
 }
 

@@ -170,7 +170,7 @@ export const UI_STRINGS = {
   MAP_TITLE: 'Geospatial Sector GIS & Road Network',
   MAP_SUB: 'Pan-India landslide monitoring stations, slope hazard overlays, and relief shelter routing',
   REPORT_HAZARD: 'Report Hazard',
-  LIVE_NODE: 'Live Node (LG-N01)',
+  LIVE_NODE: 'Live Node (TW-N01)',
   CITIES_ROADS: 'Cities & Roads',
   SATELLITE: 'Satellite',
   TOPO: 'Topo',

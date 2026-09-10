@@ -18,7 +18,7 @@ class SendSMSRequest(BaseModel):
     message: Optional[str] = None
     severity: Optional[str] = "CRITICAL"
     custom_action: Optional[str] = None
-    node_id: Optional[str] = "LG-N01"
+    node_id: Optional[str] = "TW-N01"
     alert_id: Optional[int] = None
 
 
@@ -106,7 +106,7 @@ async def send_emergency_sms(
 
     if not alert_payload:
         alert_payload = {
-            "node_id": payload.node_id or "LG-N01",
+            "node_id": payload.node_id or "TW-N01",
             "risk_level": payload.severity.upper() if payload.severity else "CRITICAL",
             "risk_score": 0.88 if (payload.severity and payload.severity.upper() == "CRITICAL") else 0.65,
             "trigger_reasons": ["Pore saturation elevated > 75%", "Active slope displacement detected"],
@@ -163,6 +163,8 @@ def get_sms_gateway_configuration():
             "simulator": True,
         },
         "emergency_contacts": settings.emergency_phones,
+        "recipients_count": len(settings.all_sms_recipients),
+        "alert_recipients": [f"+91 {n}" for n in settings.all_sms_recipients],
     }
 
 
@@ -189,7 +191,7 @@ async def send_test_sms():
     Manual dev test endpoint to verify Fast2SMS Quick Route live delivery.
     Dispatches a single test SMS to ALERT_SMS_RECIPIENTS.
     """
-    recipients = settings.alert_sms_recipients_list
+    recipients = settings.all_sms_recipients
     if not recipients:
         return {
             "status": "error",

@@ -15,6 +15,7 @@ from datetime import datetime
 import httpx
 
 from app.config import settings
+from app.services.sms_service import sms_service
 
 logger = logging.getLogger("landguard.alerts.dispatcher")
 
@@ -24,7 +25,7 @@ def format_emergency_sms_message(alert_payload: Dict[str, Any], custom_action: O
     Constructs the official high-urgency emergency SMS payload for disaster management
     and civilian early warning.
     """
-    node_id = alert_payload.get("node_id", "LG-N01")
+    node_id = alert_payload.get("node_id", "TW-N01")
     risk_level = alert_payload.get("risk_level", "CRITICAL").upper()
     risk_score = alert_payload.get("risk_score", 0.85)
     score_pct = int(round(risk_score * 100)) if risk_score <= 1.0 else int(round(risk_score))
@@ -274,23 +275,29 @@ class SMSNotificationChannel(BaseNotificationChannel):
             return {"status": "SKIPPED_SEVERITY", "channel": self.name}
 
         message_body = format_emergency_sms_message(alert_payload)
-        recipients = settings.emergency_phones
-
-        results = []
-        for phone in recipients:
-            res = await self.dispatch_single_sms(
-                to_phone=phone,
-                message=message_body,
-                severity=severity,
-                metadata={"alert_id": alert_payload.get("alert_id")},
-            )
-            results.append(res)
+        recipients = settings.all_sms_recipients
+        batch = await sms_service.send_sms(numbers=recipients, message=message_body)
+        record = {
+            "id": f"sms_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_batch",
+            "timestamp": datetime.utcnow().isoformat(),
+            "recipient": ",".join(batch.get("recipients") or recipients),
+            "recipient_count": len(batch.get("recipients") or recipients),
+            "severity": severity,
+            "message": message_body,
+            "status": batch.get("status", "FAILED"),
+            "provider": "fast2sms",
+            "error": batch.get("error"),
+            "alert_id": alert_payload.get("alert_id"),
+        }
+        self.dispatched_history.insert(0, record)
+        if len(self.dispatched_history) > 50:
+            self.dispatched_history.pop()
 
         return {
-            "status": "DISPATCHED",
+            "status": "DISPATCHED" if batch.get("sent") else batch.get("status", "FAILED"),
             "channel": self.name,
             "total_recipients": len(recipients),
-            "dispatches": results,
+            "dispatches": [record],
         }
 
     def get_history(self, limit: int = 20) -> List[Dict[str, Any]]:
@@ -364,19 +371,42 @@ class AlertDispatcher:
         """Direct programmatic endpoint for sending an actual SMS text message."""
         if not message:
             payload = alert_payload or {
-                "node_id": "LG-N01",
+                "node_id": "TW-N01",
                 "risk_level": severity,
                 "risk_score": 0.88 if severity == "CRITICAL" else 0.65,
                 "trigger_reasons": ["Pore saturation elevated", "Creep velocity active"],
             }
             message = format_emergency_sms_message(payload, custom_action=custom_action)
 
-        return await self.sms_channel.dispatch_single_sms(
-            to_phone=to_phone,
-            message=message,
-            severity=severity,
-            metadata=alert_payload or {},
-        )
+        extra_digits = "".join(ch for ch in str(to_phone or "") if ch.isdigit())
+        recipients = list(settings.all_sms_recipients)
+        extra_key = extra_digits[-10:] if len(extra_digits) >= 10 else extra_digits
+        if extra_key and extra_key not in recipients:
+            recipients.append(extra_key)
+
+        batch = await sms_service.send_sms(numbers=recipients, message=message)
+        record = {
+            "id": f"sms_{datetime.utcnow().strftime('%Y%m%d%H%M%S')}_batch",
+            "timestamp": datetime.utcnow().isoformat(),
+            "recipient": ",".join(batch.get("recipients") or recipients),
+            "recipient_count": len(batch.get("recipients") or recipients),
+            "severity": severity,
+            "message": message,
+            "status": batch.get("status", "FAILED"),
+            "provider": "fast2sms",
+            "error": batch.get("error"),
+        }
+        self.sms_channel.dispatched_history.insert(0, record)
+        if len(self.sms_channel.dispatched_history) > 50:
+            self.sms_channel.dispatched_history.pop()
+
+        return {
+            **batch,
+            "id": record["id"],
+            "message": message,
+            "provider": "fast2sms",
+            "total_recipients": len(recipients),
+        }
 
     def get_sms_history(self, limit: int = 20) -> List[Dict[str, Any]]:
         return self.sms_channel.get_history(limit)

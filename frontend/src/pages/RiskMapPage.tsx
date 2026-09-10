@@ -104,7 +104,7 @@ export interface HistoricalLandslideScar {
 // ─── 8 Pan-India Geotechnical Stations ─────────────────────────
 const PAN_INDIA_STATIONS: MapStation[] = [
   {
-    id: 'LG-N01',
+    id: 'TW-N01',
     name: 'Slope Monitor Alpha',
     sector: 'Shimla Ridge — Northern face, Sector 7',
     region: 'Himalayas',
@@ -465,7 +465,7 @@ const EMERGENCY_SHELTERS: EmergencyShelter[] = [
     capacity: 1500,
     type: 'Designated Safe Zone',
     facilities: 'Medical Triage, Satellite Comms, Potable Water',
-    associatedNodeId: 'LG-N01',
+    associatedNodeId: 'TW-N01',
   },
   {
     id: 'SHELTER-02',
@@ -561,7 +561,7 @@ const EMERGENCY_SHELTERS: EmergencyShelter[] = [
 const EVACUATION_ROUTES: EvacuationRoute[] = [
   {
     id: 'EVAC-01',
-    stationId: 'LG-N01',
+    stationId: 'TW-N01',
     shelterId: 'SHELTER-01',
     name: 'Shimla North Ridge Crest Safe Corridor',
     distance_km: 1.2,
@@ -998,7 +998,7 @@ const RiskMapPage: React.FC = () => {
   const isDark = resolvedTheme === 'dark';
   const { state } = useMockTelemetry();
   
-  const [selectedNodeId, setSelectedNodeId] = useState<string>('LG-N01');
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('TW-N01');
   const [selectedRegion, setSelectedRegion] = useState<string>('ALL');
   
   // Default to Street (OpenStreetMap) so all Indian location and city names are immediately visible!
@@ -1045,10 +1045,10 @@ const RiskMapPage: React.FC = () => {
     return <LoadingState message="Initializing geospatial GIS engine..." />;
   }
 
-  // Merge live hardware telemetry into LG-N01 dynamically
+  // Merge live hardware telemetry into TW-N01 dynamically
   const stations: MapStation[] = useMemo(() => {
     return PAN_INDIA_STATIONS.map((st) => {
-      if (st.id === 'LG-N01' && state) {
+      if (st.id === 'TW-N01' && state) {
         return {
           ...st,
           risk_level: state.currentRisk.risk_level,

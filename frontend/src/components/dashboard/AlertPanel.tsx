@@ -111,7 +111,7 @@ export default function AlertPanel({ alerts, onAcknowledge }: Props) {
                     {getSeverityBadge(latestActive.severity).label}
                   </span>
                   <span className="font-mono text-xs font-bold text-slate-200">
-                    Node: {latestActive.node_id || 'LG-N01'}
+                    Node: {latestActive.node_id || 'TW-N01'}
                   </span>
                 </div>
                 <span className="text-[10px] font-mono text-slate-400">

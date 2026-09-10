@@ -11,7 +11,7 @@ class MockTelemetryGenerator:
     geological and environmental sensor response.
     """
 
-    def __init__(self, node_id: str = "LG-N01"):
+    def __init__(self, node_id: str = "TW-N01"):
         self.node_id = node_id
         self.seq_num = 1000
         self.tick_count = 0

@@ -14,7 +14,7 @@ class NodeBase(BaseModel):
 
 
 class NodeCreate(NodeBase):
-    node_id: str = Field(min_length=2, max_length=32, description="Unique node identifier, e.g. LG-N01")
+    node_id: str = Field(min_length=2, max_length=32, description="Unique node identifier, e.g. TW-N01")
 
 
 class NodeUpdate(BaseModel):

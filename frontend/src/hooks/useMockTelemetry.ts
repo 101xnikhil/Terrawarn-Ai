@@ -150,7 +150,7 @@ export function useMockTelemetry(
     let isSubscribed = true;
 
     const mapApiReading = (item: any): TelemetryReading => ({
-      node_id: item.node_id || 'LG-N01',
+      node_id: item.node_id || 'TW-N01',
       timestamp: item.timestamp || new Date().toISOString(),
       seq_num: item.seq_num || 0,
       soil_moisture: item.soil_moisture_raw || 2000,
@@ -179,9 +179,9 @@ export function useMockTelemetry(
     const fetchInitialData = async (silent = false) => {
       try {
         const [telemetryRes, latestRes, riskRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/telemetry/LG-N01/history?limit=60`).catch(() => null),
-          fetch(`${API_BASE_URL}/telemetry/LG-N01`).catch(() => null),
-          fetch(`${API_BASE_URL}/risk/LG-N01`).catch(() => null),
+          fetch(`${API_BASE_URL}/telemetry/TW-N01/history?limit=60`).catch(() => null),
+          fetch(`${API_BASE_URL}/telemetry/TW-N01`).catch(() => null),
+          fetch(`${API_BASE_URL}/risk/TW-N01`).catch(() => null),
         ]);
 
         if (!isSubscribed) return;
@@ -245,7 +245,7 @@ export function useMockTelemetry(
         }
 
         const latestReading = readings[readings.length - 1] || {
-          node_id: 'LG-N01',
+          node_id: 'TW-N01',
           timestamp: new Date().toISOString(),
           seq_num: 1,
           soil_moisture: 2100,
@@ -272,13 +272,13 @@ export function useMockTelemetry(
 
         setState({
           node: {
-            id: 'LG-N01',
+            id: 'TW-N01',
             name: 'Physical Slope Station Alpha (ESP32 + LoRa)',
             location: {
               lat: 31.1048,
               lng: 77.1734,
               altitude_m: 2276,
-              description: 'Shimla Ridge — Physical Node LG-N01 via Gateway LG-GW01',
+              description: 'Shimla Ridge — Physical Node TW-N01 via Gateway LG-GW01',
             },
             status: 'online',
             last_seen: new Date().toISOString(),
@@ -337,7 +337,7 @@ export function useMockTelemetry(
               const risk = data.risk || null;
 
               const newReading: TelemetryReading = {
-                node_id: tel.node_id || 'LG-N01',
+                node_id: tel.node_id || 'TW-N01',
                 timestamp: tel.timestamp || new Date().toISOString(),
                 seq_num: tel.seq_num || Date.now(),
                 soil_moisture: tel.soil_moisture_raw || 2000,
@@ -524,7 +524,7 @@ export function useMockTelemetry(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        node_id: 'LG-N01',
+        node_id: 'TW-N01',
         seq_num: event.sequence_num || 1842,
         soil_moisture: 25.0,
         rainfall: 0.0,

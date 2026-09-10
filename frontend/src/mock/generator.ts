@@ -75,7 +75,7 @@ const SCENARIOS: Record<Scenario, ScenarioParams> = {
 // ─── Node Definition ─────────────────────────────────────────
 
 const MOCK_NODE: SensorNode = {
-  id: 'LG-N01',
+  id: 'TW-N01',
   name: 'Slope Monitor Alpha',
   location: {
     lat: 31.1048,
@@ -128,7 +128,7 @@ class MockTelemetryGenerator {
       {
         id: 'sec-101',
         timestamp: new Date(now.getTime() - 45000).toISOString(),
-        node_id: 'LG-N01',
+        node_id: 'TW-N01',
         sequence_num: 1840,
         action: 'ACCEPTED',
         reason: 'Valid authorized telemetry frame accepted (Sequence #1840).',
@@ -137,7 +137,7 @@ class MockTelemetryGenerator {
       {
         id: 'sec-102',
         timestamp: new Date(now.getTime() - 30000).toISOString(),
-        node_id: 'LG-N01',
+        node_id: 'TW-N01',
         sequence_num: 1841,
         action: 'ACCEPTED',
         reason: 'Valid authorized telemetry frame accepted (Sequence #1841).',
@@ -146,7 +146,7 @@ class MockTelemetryGenerator {
       {
         id: 'sec-103',
         timestamp: new Date(now.getTime() - 15000).toISOString(),
-        node_id: 'LG-N01',
+        node_id: 'TW-N01',
         sequence_num: 1842,
         action: 'ACCEPTED',
         reason: 'Valid authorized telemetry frame accepted (Sequence #1842).',
@@ -165,7 +165,7 @@ class MockTelemetryGenerator {
     const event: SecurityEvent = {
       id: `sec-${Date.now()}`,
       timestamp: now,
-      node_id: 'LG-N01',
+      node_id: 'TW-N01',
       sequence_num: lastSeq,
       action: 'REJECTED_REPLAY',
       reason: `REPLAY DETECTED — Duplicate sequence #${lastSeq} rejected by edge gateway.`,
@@ -420,7 +420,7 @@ class MockTelemetryGenerator {
     const ay = gaussian() * 0.02;
 
     const reading: TelemetryReading = {
-      node_id: 'LG-N01',
+      node_id: 'TW-N01',
       timestamp: now,
       seq_num: this.seqNum,
       soil_moisture: moistureRaw,
@@ -473,7 +473,7 @@ class MockTelemetryGenerator {
             ? '🔴 CRITICAL: Immediate slope failure alert'
             : '🟠 HIGH: Elevated landslide risk detected',
         message: this.generateAlertMessage(risk),
-        node_id: 'LG-N01',
+        node_id: 'TW-N01',
         risk_score: risk.risk_score,
         risk_level: risk.risk_level,
         trigger_reason: reasons.join('; '),

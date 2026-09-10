@@ -257,7 +257,7 @@ const SettingsPage: React.FC = () => {
                   )}
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 mt-2 font-sans leading-relaxed">
-                  {tx('Receives real sensor packets from the physical ESP32 Sensor Node (LG-N01) over LoRa via LG-GW01 gateway.')}
+                  {tx('Receives real sensor packets from the physical ESP32 Sensor Node (TW-N01) over LoRa via LG-GW01 gateway.')}
                 </p>
               </div>
 

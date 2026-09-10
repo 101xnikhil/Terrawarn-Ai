@@ -272,6 +272,8 @@ class TTSService {
       .replace(/\bVWC\b/g, 'Volumetric Water Content')
       .replace(/\bIMU\b/g, 'I M U')
       .replace(/\bLoRa\b/g, 'Lora')
+      .replace(/\bStation\s+TW-N0(\d)\b/g, 'Station T W N 0 $1')
+      .replace(/\bTW-N0(\d)\b/g, 'Station T W N 0 $1')
       .replace(/\bStation\s+LG-N0(\d)\b/g, 'Station L G N 0 $1')
       .replace(/\bLG-N0(\d)\b/g, 'Station L G N 0 $1')
       .replace(/°\/min/g, ' degrees per minute')
