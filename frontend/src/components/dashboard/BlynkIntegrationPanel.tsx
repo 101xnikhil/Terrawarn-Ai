@@ -6,6 +6,7 @@ import {
 import { TelemetryReading, RiskAssessment } from '../../types';
 import clsx from 'clsx';
 import { useI18n } from '../../i18n/LanguageContext';
+import { useMockTelemetry } from '../../hooks/useMockTelemetry';
 
 interface Props {
   reading: TelemetryReading;
@@ -14,6 +15,8 @@ interface Props {
 
 export default function BlynkIntegrationPanel({ reading, risk }: Props) {
   const { t, tx } = useI18n();
+  const { setMode } = useMockTelemetry();
+  const [blynkReady, setBlynkReady] = useState(false);
   const [copied, setCopied] = useState(false);
   const [templateId, setTemplateId] = useState(() => localStorage.getItem('blynk_template_id') || 'TMPL_TERRAWARN');
   const [templateName, setTemplateName] = useState(() => localStorage.getItem('blynk_template_name') || 'Terrawarn-Ai');
@@ -23,6 +26,17 @@ export default function BlynkIntegrationPanel({ reading, risk }: Props) {
   const [autoSync, setAutoSync] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
   const [activeCodeTab, setActiveCodeTab] = useState<'arduino' | 'serial' | 'webhook'>('arduino');
+
+  useEffect(() => {
+    fetch('/api/blynk/config')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.template_id) setTemplateId(data.template_id);
+        if (data.template_name) setTemplateName(data.template_name);
+        setBlynkReady(Boolean(data.configured));
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('blynk_template_id', templateId);
@@ -193,7 +207,7 @@ void loop() {
                 {t('BLYNK_TITLE')}
               </h3>
               <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800 text-[10px] font-bold">
-                {tx('BLYNK IOT CLOUD READY')}
+                {blynkReady ? tx('BLYNK LIVE ON DASHBOARD') : tx('BLYNK IOT CLOUD READY')}
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-300 mt-0.5 font-normal">
@@ -215,6 +229,14 @@ void loop() {
           >
             {autoSync ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
             <span>{autoSync ? tx('Auto-Sync Active (6s)') : tx('Enable Auto-Sync')}</span>
+          </button>
+
+          <button
+            onClick={() => setMode('HARDWARE')}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>{tx('Show on live dashboard')}</span>
           </button>
 
           <button

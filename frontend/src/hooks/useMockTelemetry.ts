@@ -178,10 +178,11 @@ export function useMockTelemetry(
     // A. Fetch latest + history from this backend (cloud XGBoost is ingested here)
     const fetchInitialData = async (silent = false) => {
       try {
-        const [telemetryRes, latestRes, riskRes] = await Promise.all([
+        const [telemetryRes, latestRes, riskRes, blynkRes] = await Promise.all([
           fetch(`${API_BASE_URL}/telemetry/TW-N01/history?limit=60`).catch(() => null),
           fetch(`${API_BASE_URL}/telemetry/TW-N01`).catch(() => null),
           fetch(`${API_BASE_URL}/risk/TW-N01`).catch(() => null),
+          fetch(`${API_BASE_URL}/blynk/live?node_id=TW-N01`).catch(() => null),
         ]);
 
         if (!isSubscribed) return;
@@ -197,6 +198,19 @@ export function useMockTelemetry(
           const latest = mapApiReading(await latestRes.json());
           const already = readings.some((r) => r.timestamp === latest.timestamp);
           if (!already) readings.push(latest);
+        }
+
+        let blynkLive: any = null;
+        if (blynkRes && blynkRes.ok) {
+          blynkLive = await blynkRes.json();
+          if (blynkLive?.telemetry) {
+            readings.push(mapApiReading({
+              ...blynkLive.telemetry,
+              timestamp: new Date().toISOString(),
+              seq_num: Date.now(),
+              is_hardware: true,
+            }));
+          }
         }
 
         let currentRisk: RiskAssessment = {
@@ -223,6 +237,17 @@ export function useMockTelemetry(
             features: riskData.features || {},
             shap_values: riskData.shap_values || [],
             model_version: riskData.model_version || 'v0.2.0-hardware',
+          };
+        }
+
+        if (blynkLive?.risk) {
+          currentRisk = {
+            ...currentRisk,
+            timestamp: new Date().toISOString(),
+            risk_score: Number(blynkLive.risk.risk_score ?? currentRisk.risk_score),
+            risk_level: blynkLive.risk.risk_level || currentRisk.risk_level,
+            fos_estimate: Number(blynkLive.risk.factor_of_safety ?? currentRisk.fos_estimate),
+            model_version: 'blynk-live',
           };
         }
 

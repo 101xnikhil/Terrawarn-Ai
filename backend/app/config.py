@@ -55,11 +55,12 @@ class Settings(BaseSettings):
         "+918707786851",
         "+917607989426",
         "+919506758710",
+        "+919928968494",
     ]
 
     # Fast2SMS Quick Route (q) Live Alert Settings
     ALERT_SMS_RECIPIENTS: Union[List[str], str] = (
-        "6393829250,7521061191,8707786851,7607989426,9506758710"
+        "6393829250,7521061191,8707786851,7607989426,9506758710,9928968494"
     )
     SMS_ALERTS_ENABLED: bool = True
     SMS_MIN_SEVERITY: str = "HIGH"
@@ -67,6 +68,9 @@ class Settings(BaseSettings):
 
     # Google Cloud & Blynk Integration Settings
     BLYNK_AUTH_TOKEN: str = ""
+    BLYNK_TEMPLATE_ID: str = ""
+    BLYNK_TEMPLATE_NAME: str = ""
+    BLYNK_SERVER_URL: str = "https://blynk.cloud/external/api"
     GCP_WEBHOOK_URL: str = ""
 
     # External XGBoost ML Server API Integration

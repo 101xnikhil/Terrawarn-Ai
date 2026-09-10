@@ -44,6 +44,7 @@ const ALERT_SMS_ROSTER = [
   '+91 87077 86851',
   '+91 76079 89426',
   '+91 95067 58710',
+  '+91 99289 68494',
 ];
 
 const INITIAL_BLE_DEVICES: NearbyBleDevice[] = [

@@ -303,6 +303,8 @@ export const EXTRA_UI_STRINGS: string[] = [
   'Safety margin is thin. Keep phones on for SMS.',
   'Buffer is still above the warning line.',
   'Alert SMS roster — one send reaches all',
+  'Show on live dashboard',
+  'BLYNK LIVE ON DASHBOARD',
 ];
 
 export const EXTRA_PACKS: Record<string, Record<string, string>> = {
@@ -606,5 +608,7 @@ export const EXTRA_PACKS: Record<string, Record<string, string>> = {
     'Safety margin is thin. Keep phones on for SMS.': 'सुरक्षा मार्जिन पतला है। SMS के लिए फोन चालू रखें।',
     'Buffer is still above the warning line.': 'बफर अभी भी चेतावनी रेखा से ऊपर है।',
     'Alert SMS roster — one send reaches all': 'अलर्ट एसएमएस सूची — एक बार में सभी को जाएगा',
+    'Show on live dashboard': 'लाइव डैशबोर्ड पर दिखाएँ',
+    'BLYNK LIVE ON DASHBOARD': 'ब्लिंक लाइव डैशबोर्ड',
   },
 };
